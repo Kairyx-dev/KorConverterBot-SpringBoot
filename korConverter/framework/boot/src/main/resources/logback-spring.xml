@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <Pattern>%date{ISO8601} ${TIMEZONE:-UNDEFINED} %highlight(%-6level) %magenta(${PID:-UNDEFINED}) --- [%20.20t] %cyan(%20.20logger{16}:%-3line) : %msg%n
+      </Pattern>
+    </encoder>
+  </appender>
+
+  <appender name="SYSLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <encoder>
+      <pattern>%date{ISO8601} ${TIMEZONE:-UNDEFINED} %5p ${PID:-UNDEFINED} --- [%-15.15t] %30.30logger{16}:%-3line : %m%n%ex{full}</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+    <file>log/kor-bot.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>log/kor-bot.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+      <cleanHistoryOnStart>false</cleanHistoryOnStart>
+      <maxFileSize>50MB</maxFileSize>
+      <totalSizeCap>1GB</totalSizeCap>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+  </appender>
+
+  <root level="info">
+    <appender-ref ref="console"/>
+    <appender-ref ref="SYSLOG"/>
+  </root>
+
+</configuration>

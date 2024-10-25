@@ -1,0 +1,30 @@
+[versions]
+# plugin
+springframework-boot = "3.3.5"
+spring-dependency-management = "1.1.6"
+linecorp-build-recipe-plugin = "1.1.1"
+
+# libs
+projectlombok-lombok = "1.18.34"
+junit-bom = "5.11.0"
+slf4j-api = "2.0.16"
+mapstruct = "1.6.2"
+dev8tion-jda = "5.1.2"
+
+[libraries]
+springframework-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter" }
+springframework-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test" }
+slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j-api" }
+junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit-bom" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+projectlombok-lombok = { group = "org.projectlombok", name = "lombok", version.ref = "projectlombok-lombok" }
+h2database = { group = "com.h2database", name = "h2" }
+springframework-boot-starter-data-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
+mapstruct = { group = "org.mapstruct", name = "mapstruct", version.ref = "mapstruct" }
+mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", version.ref = "mapstruct" }
+dev8tion-jda = { group = "net.dv8tion", name = "JDA", version.ref = "dev8tion-jda" }
+
+[plugins]
+springframework-boot = { id = "org.springframework.boot", version.ref = "springframework-boot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
+linecorp-build-recipe-plugin = { id = "com.linecorp.build-recipe-plugin", version.ref = "linecorp-build-recipe-plugin" }
