@@ -1,14 +1,19 @@
 package org.specter.converter.adapter.bot.listener;
 
+import lombok.AllArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.jetbrains.annotations.NotNull;
 import org.specter.converter.adapter.bot.entity.BotCommand;
+import org.specter.converter.adapter.bot.properties.BotProperties;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class CommandListener extends ListenerAdapter {
+  private final BotProperties botProperties;
+
   @Override
   public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
     super.onSlashCommandInteraction(event);
@@ -30,7 +35,7 @@ public class CommandListener extends ListenerAdapter {
   }
 
   private void onEcoVersion(@NotNull SlashCommandInteractionEvent event) {
-    String content = String.format("현재 bot의 버전은 %s 입니다.", "111");
+    String content = String.format("현재 bot의 버전은 v%s 입니다.", botProperties.getBotVersion());
     event.reply(content).queue();
   }
 
