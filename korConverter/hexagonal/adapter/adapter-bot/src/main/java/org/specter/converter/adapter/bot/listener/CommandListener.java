@@ -1,6 +1,8 @@
 package org.specter.converter.adapter.bot.listener;
 
+import java.util.Objects;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -11,12 +13,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
+@Slf4j
 public class CommandListener extends ListenerAdapter {
   private final BotProperties botProperties;
 
   @Override
   public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
     super.onSlashCommandInteraction(event);
+    log.info("Slash command coming {}", event.getName());
     BotCommand command = BotCommand.fromCommand(event.getName());
 
     switch (command) {
@@ -29,9 +33,7 @@ public class CommandListener extends ListenerAdapter {
   private void onEcoTest(@NotNull SlashCommandInteractionEvent event){
     String ecoContents = event.getOption("content", OptionMapping::getAsString);
 
-    if (ecoContents != null) {
-      event.reply(ecoContents).queue();
-    }
+    event.reply(Objects.requireNonNullElse(ecoContents, "이 명령어는 메시지가 필요합니다.")).queue();
   }
 
   private void onEcoVersion(@NotNull SlashCommandInteractionEvent event) {

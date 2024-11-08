@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
@@ -39,7 +40,8 @@ public class BotConfiguration {
 
     commandUpdateAction.addCommands(
         Commands.slash(BotCommand.ECO_TEST.getCommand(),
-            BotCommand.ECO_TEST.getDescription()),
+            BotCommand.ECO_TEST.getDescription())
+            .addOption(OptionType.STRING, "content", "봇이 따라할 대사입니다."),
         Commands.slash(BotCommand.ECO_VERSION.getCommand(),
             BotCommand.ECO_VERSION.getDescription())
     ).queue();

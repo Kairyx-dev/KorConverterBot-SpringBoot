@@ -8,8 +8,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum BotCommand {
   ECO_VERSION("version", "봇의 현재 버전이 몇인지 물어봅니다"),
-  ECO_TEST("eco", "dump unknown description"),
-  UNKNOWN("unknown", "지정한 대사를 봇이 입력하도록 명령합니다. (테스트용)");
+  ECO_TEST("eco", "지정한 대사를 봇이 입력하도록 명령합니다. (테스트용)"),
+  UNKNOWN("unknown", "dump unknown description");
 
   private final String command;
   private final String description;
