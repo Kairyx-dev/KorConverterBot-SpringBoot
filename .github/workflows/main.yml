@@ -1,0 +1,55 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # chckout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # jdk set up
+      - name: JDK 21 set-up
+        uses: actions/setup-java@v2
+        with:
+          java-version: 21
+          distribution: corretto
+
+      # grant gradle script
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew clean build
+
+      - name: Set up Docker buildx
+        uses: docker/setup-buildx-action@v3
+
+      # docker login
+      - name: docker login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.DOCKER_PAT }}
+
+      # docker build and push
+      - name: docker build
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: deploy/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_USER }}/${{ secrets.DOCKER_REPOSITORY }}:${{ github.ref_name }}
+            ${{ secrets.DOCKER_USER }}/${{ secrets.DOCKER_REPOSITORY }}:latest
+          labels: version=${{ github.ref_name }}

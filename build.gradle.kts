@@ -62,5 +62,15 @@ configureByLabel("spring") {
 configureByLabel("boot") {
     tasks.withType<BootJar> {
         enabled = true
+
+        doLast {
+            val deployPath = "${projectDir}\\..\\..\\..\\deploy\\libs"
+            delete(deployPath)
+
+            copy {
+                from("${projectDir}\\build\\libs\\${archiveFileName.get()}")
+                into(deployPath)
+            }
+        }
     }
 }
