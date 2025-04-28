@@ -24,19 +24,23 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @AllArgsConstructor
 public class MessageListener extends ListenerAdapter {
-  private final ConverterInPort converterInPort;
 
+  private final ConverterInPort converterInPort;
 
   @Override
   public void onMessageReceived(@NotNull MessageReceivedEvent event) {
     if (event.isFromType(ChannelType.PRIVATE)) {
-      log.info("Message from Private Channel {}: {}", event.getAuthor().getName(),
-          event.getMessage().getContentDisplay());
+      log.atInfo()
+          .addKeyValue("author", event.getAuthor().getName())
+          .addKeyValue("content", event.getMessage().getContentDisplay())
+          .log("Message from Private Channel");
     } else {
-      log.info("Original MSG [{}] [{}] {}: {}", event.getGuild().getName(),
-          event.getChannel().getName(),
-          event.getMember().getEffectiveName(),
-          event.getMessage().getContentRaw());
+      log.atInfo()
+          .addKeyValue("guild", event.getGuild().getName())
+          .addKeyValue("channel", event.getChannel().getName())
+          .addKeyValue("member.effectiveName", event.getMember().getEffectiveName())
+          .addKeyValue("content", event.getMessage().getContentRaw())
+          .log("Original Message");
 
       if (event.getAuthor().isBot()) {
         return;
@@ -46,7 +50,9 @@ public class MessageListener extends ListenerAdapter {
       String after = converterInPort.engToKor(before);
 
       if (!converterInPort.checkAvailableStr(before)) {
-        log.warn("UnParseable String {}", before);
+        log.atWarn()
+            .addKeyValue("before", before)
+            .log("UnParseable String");
         return;
       }
 
@@ -59,12 +65,17 @@ public class MessageListener extends ListenerAdapter {
           event.getMember().getUser().getEffectiveName() + "(" + event.getMember().getUser()
               .getName() + ")";
 
-      log.info("Parsing: {} -> {}", before, after);
+      log.atInfo()
+          .addKeyValue("before", before)
+          .addKeyValue("after", after)
+          .log("Parsing");
       try {
         event.getMessage().delete().complete();
         editEmbed(serverName, before, after, event);
       } catch (UnEditableMessageException e) {
-        log.warn("Can not edit past message: {}", e.getMessage());
+        log.atWarn()
+            .addKeyValue("cause.message", e.getMessage())
+            .log("Can not edit past message");
         sendEmbed(serverName, avatarUrl, before, after, event);
       }
     }
@@ -82,7 +93,13 @@ public class MessageListener extends ListenerAdapter {
         .build();
 
     event.getChannel().sendMessage(data).onErrorMap(throwable -> {
-      log.error("Error when send message", throwable);
+
+      log.atError()
+          .setCause(throwable)
+          .addKeyValue("after", after)
+          .addKeyValue("authorName", authorName)
+          .addKeyValue("avatarUrl", avatarUrl)
+          .log("Error when send message");
       return null;
     }).queue();
   }
@@ -114,7 +131,12 @@ public class MessageListener extends ListenerAdapter {
         .build();
 
     message.editMessage(data).onErrorMap(throwable -> {
-      log.error("Error when editting message", throwable);
+
+      log.atError()
+          .setCause(throwable)
+          .addKeyValue("after", after)
+          .addKeyValue("authorName", authorName)
+          .log("Error when send message");
       return null;
     }).queue();
   }
