@@ -4,6 +4,5 @@ services:
     container_name: kor-converter-bot
     image: devkshull/korconverter-spring-boot:latest
     volumes:
-      - application.yml:/app/cfg/application.yml
-      - logback-spring.xml:/app/cfg/logback-spring.xml
-      - ./log:app/log
+      - ./cfg:/app/cfg
+      - ./log:/app/log
