@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.springframework.boot)
     alias(libs.plugins.spring.dependency.management)
     alias(libs.plugins.linecorp.build.recipe.plugin)
+    alias(libs.plugins.com.google.cloud.tools.jib)
 }
 
 allprojects {
@@ -60,17 +61,31 @@ configureByLabel("spring") {
 }
 
 configureByLabel("boot") {
+    apply(plugin = "com.google.cloud.tools.jib")
     tasks.withType<BootJar> {
         enabled = true
+    }
 
-        doLast {
-            val deployPath = "${projectDir}\\..\\..\\..\\deploy\\libs"
-            delete(deployPath)
+    jib {
+        from {
+            image = "amazoncorretto:21.0.7-alpine"
+        }
 
-            copy {
-                from("${projectDir}\\build\\libs\\${archiveFileName.get()}")
-                into(deployPath)
-            }
+        to {
+            val dockerId = System.getProperty("dockerId") ?: "UNKNOWN"
+            val repositoryName = System.getProperty("dockerRepository") ?: "UNKNOWN"
+
+            image = "$dockerId/$repositoryName"
+            tags = setOf("${project.version}")
+        }
+
+        container {
+            creationTime.set("USE_CURRENT_TIMESTAMP")
+            jvmFlags = listOf(
+                "-Dspring.config.location=file:./config/application.yml",
+                "-Dlogging.config=file:./config/logback-spring.xml"
+            )
+            workingDirectory = "/app"
         }
     }
 }
