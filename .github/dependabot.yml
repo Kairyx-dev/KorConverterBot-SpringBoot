@@ -19,14 +19,6 @@ updates:
         patterns:
           - "*junit*"
           - "*mockito*"
-      etc:
-        patterns:
-          - "*"
-        ignore:
-          - "org.springframework.boot:*"
-          - "*spring-boot*"
-          - "*junit*"
-          - "*mockito*"
 
     assignees:
       - Kairyx-dev
@@ -57,6 +49,11 @@ updates:
     commit-message:
       prefix: "[Dependabot-CI]"
       include: scope
+
+    groups:
+      actions-deps:
+        patterns:
+          - "*"
 
     labels:
       - "dependencies"
