@@ -13,7 +13,8 @@ updates:
     groups:
       spring-boot:
         patterns:
-          - "org.springframework.boot.*"
+          - "org.springframework.boot"
+          - "*springframework*"
       testing:
         patterns:
           - "*junit*"
