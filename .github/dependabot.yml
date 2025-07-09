@@ -10,15 +10,15 @@ updates:
     open-pull-requests-limit: 5
     target-branch: main
 
-    groups:
-      spring-boot:
-        patterns:
-          - "org.springframework.boot:*"
-          - "*spring-boot*"
-      testing:
-        patterns:
-          - "*junit*"
-          - "*mockito*"
+#    groups:
+#      spring-boot:
+#        patterns:
+#          - "org.springframework.boot:*"
+#          - "*spring-boot*"
+#      testing:
+#        patterns:
+#          - "*junit*"
+#          - "*mockito*"
 
     assignees:
       - Kairyx-dev
