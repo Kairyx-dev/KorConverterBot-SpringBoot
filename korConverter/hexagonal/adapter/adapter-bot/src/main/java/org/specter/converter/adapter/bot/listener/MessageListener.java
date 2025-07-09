@@ -1,6 +1,7 @@
 package org.specter.converter.adapter.bot.listener;
 
 import java.awt.Color;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -47,23 +48,19 @@ public class MessageListener extends ListenerAdapter {
       }
 
       String before = event.getMessage().getContentRaw();
-      String after = converterInPort.engToKor(before);
 
       if (!converterInPort.checkAvailableStr(before)) {
-        log.atWarn()
+        log.atInfo()
             .addKeyValue("before", before)
             .log("UnParseable String");
         return;
       }
 
-      User author = event.getMessage().getAuthor();
-      String avatarUrl = author.getAvatarUrl() != null ?
-          author.getAvatarUrl() :
-          author.getDefaultAvatarUrl();
+      String after = converterInPort.engToKor(before);
 
-      String serverName =
-          event.getMember().getUser().getEffectiveName() + "(" + event.getMember().getUser()
-              .getName() + ")";
+      User author = event.getMessage().getAuthor();
+      String avatarUrl = Optional.ofNullable(author.getAvatarUrl()).orElse(author.getDefaultAvatarUrl());
+      String authorName = "%s (%s)".formatted(author.getEffectiveName(), author.getName());
 
       log.atInfo()
           .addKeyValue("before", before)
@@ -71,12 +68,12 @@ public class MessageListener extends ListenerAdapter {
           .log("Parsing");
       try {
         event.getMessage().delete().complete();
-        editEmbed(serverName, before, after, event);
+        editEmbed(authorName, before, after, event);
       } catch (UnEditableMessageException e) {
         log.atWarn()
             .addKeyValue("cause.message", e.getMessage())
             .log("Can not edit past message");
-        sendEmbed(serverName, avatarUrl, before, after, event);
+        sendEmbed(authorName, avatarUrl, before, after, event);
       }
     }
   }
@@ -118,6 +115,7 @@ public class MessageListener extends ListenerAdapter {
     if (!isMyBot) {
       throw UnEditableMessageException.notMyBot();
     }
+
     MessageEmbed existEmbed = message.getEmbeds().getFirst();
     if (!existEmbed.getAuthor().getName().equals(authorName)) {
       throw UnEditableMessageException.diffName();
