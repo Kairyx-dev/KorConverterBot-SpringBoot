@@ -1,7 +1,8 @@
 package org.specter.converter.boot.configuration;
 
-import org.specter.converter.aplication.inport.ConverterInPort;
-import org.specter.converter.aplication.inport.ConverterInPortImpl;
+import org.specter.converter.aplication.inport.DiscordBotInPort;
+import org.specter.converter.aplication.inport.DiscordBotInPortImpl;
+import org.specter.converter.aplication.outport.JpaOutPort;
 import org.specter.converter.domain.ConverterCore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +16,7 @@ public class InPortConfiguration {
   }
 
   @Bean
-  public ConverterInPort getConverterInPort(ConverterCore core) {
-    return new ConverterInPortImpl(core);
+  public DiscordBotInPort getConverterInPort(ConverterCore core, JpaOutPort jpaOutPort) {
+    return new DiscordBotInPortImpl(core, jpaOutPort);
   }
 }

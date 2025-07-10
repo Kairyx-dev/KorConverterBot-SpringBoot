@@ -9,13 +9,17 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.specter.converter.adapter.bot.entity.BotCommand;
 import org.specter.converter.adapter.bot.properties.BotProperties;
+import org.specter.converter.aplication.inport.DiscordBotInPort;
+import org.specter.converter.domain.model.IgnoreUser;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
 @Slf4j
 public class CommandListener extends ListenerAdapter {
+
   private final BotProperties botProperties;
+  private final DiscordBotInPort discordBotInPort;
 
   @Override
   public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
@@ -27,10 +31,12 @@ public class CommandListener extends ListenerAdapter {
       case ECO_VERSION -> onEcoVersion(event);
       case ECO_TEST -> onEcoTest(event);
       case UNKNOWN -> onUnknownCommand(event);
+      case IGNORE_ME -> onIgnoreMe(event);
+      case UN_IGNORE_ME -> onUnIgnoreMe(event);
     }
   }
 
-  private void onEcoTest(@Nonnull SlashCommandInteractionEvent event){
+  private void onEcoTest(@Nonnull SlashCommandInteractionEvent event) {
     String ecoContents = event.getOption("content", OptionMapping::getAsString);
 
     event.reply(Objects.requireNonNullElse(ecoContents, "이 명령어는 메시지가 필요합니다.")).queue();
@@ -43,5 +49,30 @@ public class CommandListener extends ListenerAdapter {
 
   private void onUnknownCommand(@Nonnull SlashCommandInteractionEvent event) {
     event.reply("알수없는 명령어 입니다.").queue();
+  }
+
+  private void onIgnoreMe(@Nonnull SlashCommandInteractionEvent event) {
+    IgnoreUser saved = discordBotInPort.addIgnoreUser(IgnoreUser.builder()
+        .userId(event.getUser().getIdLong())
+        .name(event.getUser().getEffectiveName())
+        .channelId(event.getChannelIdLong())
+        .build());
+
+    log.atInfo()
+        .addKeyValue("ignored", saved)
+        .log("User ignored");
+
+    event.reply(event.getUser().getEffectiveName() + "님의 메시지가 무시됩니다.").queue();
+  }
+
+  private void onUnIgnoreMe(@Nonnull SlashCommandInteractionEvent event) {
+    discordBotInPort.removeIgnoreUser(event.getUser().getIdLong(), event.getChannelIdLong());
+
+    log.atInfo()
+        .addKeyValue("userId", event.getUser().getIdLong())
+        .addKeyValue("channelId", event.getChannelIdLong())
+        .log("remove ignore user");
+
+    event.reply(event.getUser().getEffectiveName() + "님의 메시지 무시가 취소되었습니다.").queue();
   }
 }
