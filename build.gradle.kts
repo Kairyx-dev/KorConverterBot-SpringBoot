@@ -82,8 +82,8 @@ configureByLabel("boot") {
         container {
             creationTime.set("USE_CURRENT_TIMESTAMP")
             jvmFlags = listOf(
-                "-Dspring.config.location=file:./config/application.yml",
-                "-Dlogging.config=file:./config/logback-spring.xml"
+                "-Dspring.config.location=file:./cfg/application.yml",
+                "-Dlogging.config=file:./cfg/logback-spring.xml"
             )
             workingDirectory = "/app"
         }
