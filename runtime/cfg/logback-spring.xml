@@ -3,14 +3,14 @@
 
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <Pattern>%date{ISO8601} ${TIMEZONE:-UNDEFINED} %highlight(%-6level) %magenta(${PID:-UNDEFINED}) --- [%20.20t] %cyan(%20.20logger{16}:%-3line) : %msg %kvp{NONE}%n
+      <Pattern>%date{ISO8601} --- [%20.20t] %cyan(%20.20logger{16}:%-3line) : %msg %kvp{NONE}%n
       </Pattern>
     </encoder>
   </appender>
 
   <appender name="SYSLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <encoder>
-      <pattern>%date{ISO8601} ${TIMEZONE:-UNDEFINED} %5p ${PID:-UNDEFINED} --- [%-15.15t] %30.30logger{16}:%-3line : %m %kvp{NONE}%n%ex{full}</pattern>
+      <pattern>%date{ISO8601} --- [%-15.15t] %30.30logger{16}:%-3line : %m %kvp{NONE}%n%ex{full}</pattern>
       <charset>UTF-8</charset>
     </encoder>
     <file>log/kor-bot.log</file>

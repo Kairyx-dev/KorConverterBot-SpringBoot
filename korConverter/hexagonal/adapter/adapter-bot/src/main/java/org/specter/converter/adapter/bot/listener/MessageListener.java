@@ -19,7 +19,6 @@ import net.dv8tion.jda.api.utils.messages.MessageEditData;
 import org.jetbrains.annotations.NotNull;
 import org.specter.converter.adapter.bot.entity.UnEditableMessageException;
 import org.specter.converter.aplication.inport.DiscordBotInPort;
-import org.specter.converter.domain.model.IgnoreUser;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -34,7 +33,8 @@ public class MessageListener extends ListenerAdapter {
     log.atInfo()
         .addKeyValue("guild", event.getGuild().getName())
         .addKeyValue("channel", event.getChannel().getName())
-        .addKeyValue("member.effectiveName", event.getMember().getEffectiveName())
+        .addKeyValue("nickName", getNickNameOrUserName(event))
+        .addKeyValue("effectiveName", event.getAuthor().getEffectiveName())
         .addKeyValue("content", event.getMessage().getContentRaw())
         .log("Original Message");
 
@@ -46,7 +46,8 @@ public class MessageListener extends ListenerAdapter {
   private boolean checkConvertable(@NotNull MessageReceivedEvent event) {
     if (event.isFromType(ChannelType.PRIVATE)) {
       log.atInfo()
-          .addKeyValue("author", event.getAuthor().getName())
+          .addKeyValue("author.nickname", getNickNameOrUserName(event))
+          .addKeyValue("author.effectiveName", event.getAuthor().getEffectiveName())
           .addKeyValue("content", event.getMessage().getContentDisplay())
           .log("Message from Private Channel");
       return false;
@@ -85,7 +86,7 @@ public class MessageListener extends ListenerAdapter {
 
     User author = event.getMessage().getAuthor();
     String avatarUrl = Optional.ofNullable(author.getAvatarUrl()).orElse(author.getDefaultAvatarUrl());
-    String authorName = "%s (%s)".formatted(author.getEffectiveName(), author.getName());
+    String authorName = "%s (%s)".formatted(getNickNameOrUserName(event), author.getEffectiveName());
 
     log.atInfo()
         .addKeyValue("before", before)
@@ -95,7 +96,7 @@ public class MessageListener extends ListenerAdapter {
       event.getMessage().delete().complete();
       editEmbed(authorName, before, after, event);
     } catch (UnEditableMessageException e) {
-      log.atWarn()
+      log.atInfo()
           .addKeyValue("cause.message", e.getMessage())
           .log("Can not edit past message");
       sendEmbed(authorName, avatarUrl, before, after, event);
@@ -141,7 +142,10 @@ public class MessageListener extends ListenerAdapter {
     }
 
     MessageEmbed existEmbed = message.getEmbeds().getFirst();
-    if (!existEmbed.getAuthor().getName().equals(authorName)) {
+    if (Optional.ofNullable(existEmbed.getAuthor())
+            .map(MessageEmbed.AuthorInfo::getName)
+            .filter(name -> name.equals(authorName))
+            .isEmpty()) {
       throw UnEditableMessageException.diffName();
     }
 
@@ -161,5 +165,9 @@ public class MessageListener extends ListenerAdapter {
           .log("Error when send message");
       return null;
     }).queue();
+  }
+
+  private String getNickNameOrUserName(MessageReceivedEvent event) {
+    return event.getMember() != null ? event.getMember().getEffectiveName() : event.getAuthor().getEffectiveName();
   }
 }

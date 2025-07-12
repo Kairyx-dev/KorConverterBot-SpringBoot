@@ -6,6 +6,7 @@ import org.specter.converter.adapter.jpa.service.IgnoreUserService;
 import org.specter.converter.aplication.outport.JpaOutPort;
 import org.specter.converter.domain.model.IgnoreUser;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class JpaOutPortImpl implements JpaOutPort {
@@ -32,6 +33,7 @@ public class JpaOutPortImpl implements JpaOutPort {
   }
 
   @Override
+  @Transactional
   public void deleteIgnoreUser(long userId, long channelId) {
     ignoreUserService.deleteByUserId(userId, channelId);
   }

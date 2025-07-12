@@ -33,10 +33,10 @@ public class IgnoreUserEntity extends BaseTimeEntity {
   private long channelId;
 
   @Builder
-  public IgnoreUserEntity(Long id, String name, Long userId, Long ChannelId) {
+  public IgnoreUserEntity(Long id, String name, long userId, long channelId) {
     this.id = id;
     this.name = name;
     this.userId = userId;
-    this.channelId = ChannelId;
+    this.channelId = channelId;
   }
 }

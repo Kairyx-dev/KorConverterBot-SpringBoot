@@ -54,7 +54,7 @@ public class CommandListener extends ListenerAdapter {
   private void onIgnoreMe(@Nonnull SlashCommandInteractionEvent event) {
     IgnoreUser saved = discordBotInPort.addIgnoreUser(IgnoreUser.builder()
         .userId(event.getUser().getIdLong())
-        .name(event.getUser().getEffectiveName())
+        .name(getNickNameOrUserName(event))
         .channelId(event.getChannelIdLong())
         .build());
 
@@ -62,7 +62,7 @@ public class CommandListener extends ListenerAdapter {
         .addKeyValue("ignored", saved)
         .log("User ignored");
 
-    event.reply(event.getUser().getEffectiveName() + "님의 메시지가 무시됩니다.").queue();
+    event.reply(saved.name() + "님의 메시지가 무시됩니다.").queue();
   }
 
   private void onUnIgnoreMe(@Nonnull SlashCommandInteractionEvent event) {
@@ -73,6 +73,10 @@ public class CommandListener extends ListenerAdapter {
         .addKeyValue("channelId", event.getChannelIdLong())
         .log("remove ignore user");
 
-    event.reply(event.getUser().getEffectiveName() + "님의 메시지 무시가 취소되었습니다.").queue();
+    event.reply(getNickNameOrUserName(event) + "님의 메시지 무시가 취소되었습니다.").queue();
+  }
+
+  private String getNickNameOrUserName(SlashCommandInteractionEvent event) {
+    return event.getMember() != null ? event.getMember().getEffectiveName() : event.getUser().getEffectiveName();
   }
 }
