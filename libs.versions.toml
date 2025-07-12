@@ -11,6 +11,7 @@ junit-bom = "5.11.0"
 slf4j-api = "2.0.16"
 mapstruct = "1.6.2"
 dev8tion-jda = "5.1.2"
+org-postgresql = "42.7.7"
 
 [libraries]
 springframework-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter" }
@@ -24,6 +25,7 @@ springframework-boot-starter-data-jpa = { group = "org.springframework.boot", na
 mapstruct = { group = "org.mapstruct", name = "mapstruct", version.ref = "mapstruct" }
 mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", version.ref = "mapstruct" }
 dev8tion-jda = { group = "net.dv8tion", name = "JDA", version.ref = "dev8tion-jda" }
+org-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "org-postgresql" }
 
 [plugins]
 springframework-boot = { id = "org.springframework.boot", version.ref = "springframework-boot" }

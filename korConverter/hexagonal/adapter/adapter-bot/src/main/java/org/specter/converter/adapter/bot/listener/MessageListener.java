@@ -18,7 +18,7 @@ import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
 import org.jetbrains.annotations.NotNull;
 import org.specter.converter.adapter.bot.entity.UnEditableMessageException;
-import org.specter.converter.aplication.inport.ConverterInPort;
+import org.specter.converter.aplication.inport.DiscordBotInPort;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,55 +26,80 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class MessageListener extends ListenerAdapter {
 
-  private final ConverterInPort converterInPort;
+  private final DiscordBotInPort discordBotInPort;
 
   @Override
   public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+    log.atInfo()
+        .addKeyValue("guild", event.getGuild().getName())
+        .addKeyValue("channel", event.getChannel().getName())
+        .addKeyValue("nickName", getNickNameOrUserName(event))
+        .addKeyValue("effectiveName", event.getAuthor().getEffectiveName())
+        .addKeyValue("content", event.getMessage().getContentRaw())
+        .log("Original Message");
+
+    if (checkConvertable(event)) {
+      convertAndSend(event);
+    }
+  }
+
+  private boolean checkConvertable(@NotNull MessageReceivedEvent event) {
     if (event.isFromType(ChannelType.PRIVATE)) {
       log.atInfo()
-          .addKeyValue("author", event.getAuthor().getName())
+          .addKeyValue("author.nickname", getNickNameOrUserName(event))
+          .addKeyValue("author.effectiveName", event.getAuthor().getEffectiveName())
           .addKeyValue("content", event.getMessage().getContentDisplay())
           .log("Message from Private Channel");
-    } else {
+      return false;
+    }
+
+    if (event.getAuthor().isBot()) {
+      return false;
+    }
+
+    long userId = event.getAuthor().getIdLong();
+    long channelId = event.getChannel().getIdLong();
+
+    if (discordBotInPort.checkIgnoredUser(userId, channelId)) {
       log.atInfo()
-          .addKeyValue("guild", event.getGuild().getName())
-          .addKeyValue("channel", event.getChannel().getName())
-          .addKeyValue("member.effectiveName", event.getMember().getEffectiveName())
-          .addKeyValue("content", event.getMessage().getContentRaw())
-          .log("Original Message");
+          .addKeyValue("userId", userId)
+          .addKeyValue("channelId", channelId)
+          .log("this is ignored user");
+      return false;
+    }
 
-      if (event.getAuthor().isBot()) {
-        return;
-      }
+    String before = event.getMessage().getContentRaw();
 
-      String before = event.getMessage().getContentRaw();
-
-      if (!converterInPort.checkAvailableStr(before)) {
-        log.atInfo()
-            .addKeyValue("before", before)
-            .log("UnParseable String");
-        return;
-      }
-
-      String after = converterInPort.engToKor(before);
-
-      User author = event.getMessage().getAuthor();
-      String avatarUrl = Optional.ofNullable(author.getAvatarUrl()).orElse(author.getDefaultAvatarUrl());
-      String authorName = "%s (%s)".formatted(author.getEffectiveName(), author.getName());
-
+    if (!discordBotInPort.checkAvailableStr(before)) {
       log.atInfo()
           .addKeyValue("before", before)
-          .addKeyValue("after", after)
-          .log("Parsing");
-      try {
-        event.getMessage().delete().complete();
-        editEmbed(authorName, before, after, event);
-      } catch (UnEditableMessageException e) {
-        log.atWarn()
-            .addKeyValue("cause.message", e.getMessage())
-            .log("Can not edit past message");
-        sendEmbed(authorName, avatarUrl, before, after, event);
-      }
+          .log("UnParseable String");
+      return false;
+    }
+
+    return true;
+  }
+
+  private void convertAndSend(@NotNull MessageReceivedEvent event) {
+    String before = event.getMessage().getContentRaw();
+    String after = discordBotInPort.engToKor(before);
+
+    User author = event.getMessage().getAuthor();
+    String avatarUrl = Optional.ofNullable(author.getAvatarUrl()).orElse(author.getDefaultAvatarUrl());
+    String authorName = "%s (%s)".formatted(getNickNameOrUserName(event), author.getEffectiveName());
+
+    log.atInfo()
+        .addKeyValue("before", before)
+        .addKeyValue("after", after)
+        .log("Parsing");
+    try {
+      event.getMessage().delete().complete();
+      editEmbed(authorName, before, after, event);
+    } catch (UnEditableMessageException e) {
+      log.atInfo()
+          .addKeyValue("cause.message", e.getMessage())
+          .log("Can not edit past message");
+      sendEmbed(authorName, avatarUrl, before, after, event);
     }
   }
 
@@ -117,7 +142,10 @@ public class MessageListener extends ListenerAdapter {
     }
 
     MessageEmbed existEmbed = message.getEmbeds().getFirst();
-    if (!existEmbed.getAuthor().getName().equals(authorName)) {
+    if (Optional.ofNullable(existEmbed.getAuthor())
+            .map(MessageEmbed.AuthorInfo::getName)
+            .filter(name -> name.equals(authorName))
+            .isEmpty()) {
       throw UnEditableMessageException.diffName();
     }
 
@@ -137,5 +165,9 @@ public class MessageListener extends ListenerAdapter {
           .log("Error when send message");
       return null;
     }).queue();
+  }
+
+  private String getNickNameOrUserName(MessageReceivedEvent event) {
+    return event.getMember() != null ? event.getMember().getEffectiveName() : event.getAuthor().getEffectiveName();
   }
 }
