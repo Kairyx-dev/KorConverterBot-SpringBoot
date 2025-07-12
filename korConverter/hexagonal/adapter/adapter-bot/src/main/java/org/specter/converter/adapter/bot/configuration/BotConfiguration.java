@@ -42,8 +42,9 @@ public class BotConfiguration {
         Commands.slash(BotCommand.ECO_TEST.getCommand(),
             BotCommand.ECO_TEST.getDescription())
             .addOption(OptionType.STRING, "content", "봇이 따라할 대사입니다."),
-        Commands.slash(BotCommand.ECO_VERSION.getCommand(),
-            BotCommand.ECO_VERSION.getDescription())
+        Commands.slash(BotCommand.ECO_VERSION.getCommand(), BotCommand.ECO_VERSION.getDescription()),
+        Commands.slash(BotCommand.IGNORE_ME.getCommand(), BotCommand.IGNORE_ME.getDescription()),
+        Commands.slash(BotCommand.UN_IGNORE_ME.getCommand(), BotCommand.UN_IGNORE_ME.getDescription())
     ).queue();
 
     return jda;
