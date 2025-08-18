@@ -15,7 +15,7 @@ jobs:
     steps:
       # chckout
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # jdk set up
       - name: JDK 21 set-up
