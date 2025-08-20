@@ -13,7 +13,7 @@ allprojects {
     group = "org.specter.converter"
     version = "2.0.8"
 
-    tasks.withType<BootJar>() {
+    tasks.withType<BootJar> {
         enabled = false
     }
 }
@@ -29,15 +29,12 @@ configureByLabel("java") {
     java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
     dependencies {
-        //BOM
-        implementation(platform(rootProject.libs.junit.bom))
-
         // Library
         implementation(rootProject.libs.projectlombok.lombok)
         annotationProcessor(rootProject.libs.projectlombok.lombok)
 
-        // Test
-        testRuntimeOnly(rootProject.libs.junit.platform.launcher)
+        testImplementation(rootProject.libs.projectlombok.lombok)
+        testAnnotationProcessor(rootProject.libs.projectlombok.lombok)
     }
 
     repositories {
@@ -55,8 +52,23 @@ configureByLabel("spring") {
 
     dependencies {
         implementation(rootProject.libs.springframework.boot.starter)
+        implementation(rootProject.libs.springframework.boot.starter.actuator)
 
         testImplementation(rootProject.libs.springframework.boot.starter.test)
+    }
+}
+
+configureByLabel("test") {
+    dependencies {
+
+        testImplementation(platform(rootProject.libs.junit.bom))
+
+        testRuntimeOnly(rootProject.libs.junit.platform.launcher)
+        testRuntimeOnly(rootProject.libs.junit.jupiter.engine)
+
+        testImplementation(rootProject.libs.junit.jupiter.api)
+        testImplementation(rootProject.libs.junit.jupiter.params)
+        testImplementation(rootProject.libs.assertj)
     }
 }
 

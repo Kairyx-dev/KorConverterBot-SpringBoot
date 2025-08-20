@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -16,15 +17,14 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
 @Slf4j
+@Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties(value = {BotProperties.class})
 public class BotConfiguration {
 
 
   @Bean
-  public JDA getJda(BotProperties botProperties, MessageListener messageListener,
-      CommandListener commandListener) {
+  public JDA getJda(BotProperties botProperties, MessageListener messageListener, CommandListener commandListener) {
     log.info("build new jda instance");
     JDA jda = JDABuilder
         .createDefault(botProperties.getToken())
@@ -39,8 +39,7 @@ public class BotConfiguration {
     CommandListUpdateAction commandUpdateAction = jda.updateCommands();
 
     commandUpdateAction.addCommands(
-        Commands.slash(BotCommand.ECO_TEST.getCommand(),
-            BotCommand.ECO_TEST.getDescription())
+        Commands.slash(BotCommand.ECO_TEST.getCommand(), BotCommand.ECO_TEST.getDescription())
             .addOption(OptionType.STRING, "content", "봇이 따라할 대사입니다."),
         Commands.slash(BotCommand.ECO_VERSION.getCommand(), BotCommand.ECO_VERSION.getDescription()),
         Commands.slash(BotCommand.IGNORE_ME.getCommand(), BotCommand.IGNORE_ME.getDescription()),
@@ -51,3 +50,4 @@ public class BotConfiguration {
   }
 
 }
+

@@ -12,20 +12,28 @@ slf4j-api = "2.0.16"
 mapstruct = "1.6.2"
 dev8tion-jda = "5.1.2"
 org-postgresql = "42.7.7"
+assertJ = "3.27.4"
 
 [libraries]
 springframework-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter" }
 springframework-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test" }
+springframework-boot-starter-actuator = { group = "org.springframework.boot", name = "spring-boot-starter-actuator" }
+springframework-boot-starter-data-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j-api" }
-junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit-bom" }
-junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
 projectlombok-lombok = { group = "org.projectlombok", name = "lombok", version.ref = "projectlombok-lombok" }
 h2database = { group = "com.h2database", name = "h2" }
-springframework-boot-starter-data-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
 mapstruct = { group = "org.mapstruct", name = "mapstruct", version.ref = "mapstruct" }
 mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", version.ref = "mapstruct" }
 dev8tion-jda = { group = "net.dv8tion", name = "JDA", version.ref = "dev8tion-jda" }
 org-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "org-postgresql" }
+assertj = { group="org.assertj", name="assertj-core", version.ref="assertJ"}
+
+# for domain
+junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit-bom" }
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
+junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api" }
+junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine" }
+junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params" }
 
 [plugins]
 springframework-boot = { id = "org.springframework.boot", version.ref = "springframework-boot" }
