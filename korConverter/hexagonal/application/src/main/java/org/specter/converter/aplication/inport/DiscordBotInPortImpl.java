@@ -3,13 +3,13 @@ package org.specter.converter.aplication.inport;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.specter.converter.aplication.outport.JpaOutPort;
-import org.specter.converter.domain.ConverterCore;
+import org.specter.converter.domain.core.ConverterCoreV2;
 import org.specter.converter.domain.model.IgnoreUser;
 
 @AllArgsConstructor
 public class DiscordBotInPortImpl implements DiscordBotInPort {
 
-  private final ConverterCore core;
+  private final ConverterCoreV2 core;
   private final JpaOutPort jpaOutPort;
 
   @Override

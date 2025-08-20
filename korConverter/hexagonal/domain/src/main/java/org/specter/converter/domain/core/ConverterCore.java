@@ -1,4 +1,4 @@
-package org.specter.converter.domain;
+package org.specter.converter.domain.core;
 
 public class ConverterCore {
 
