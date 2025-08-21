@@ -62,6 +62,10 @@ class ConverterTest {
         TestCase.builder()
             .eng("whdqt")
             .kor("종ㅄ")
+            .build(),
+        TestCase.builder()
+            .eng("djEja")
+            .kor("어떰")
             .build()
     );
   }

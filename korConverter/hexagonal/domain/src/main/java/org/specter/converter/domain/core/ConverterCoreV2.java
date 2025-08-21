@@ -111,11 +111,17 @@ public class ConverterCoreV2 {
     return resultInfo;
   }
 
-  private KrDataIndex insertJongsung(final KrDataIndex indexInfo, StringBuilder resultStringBuilder,
-      int currentChoIndex) {
+  private KrDataIndex insertJongsung(final KrDataIndex indexInfo, StringBuilder resultStringBuilder, int currentChoIndex) {
     if (!indexInfo.jongsungIndexed()) { // 종성이 없는경우 입력된 값은 종성으로 사용
-      return indexInfo.withJongsung(
-          KeyboardIndex.JONGSUNG_INDEX_MAP.get(KeyboardIndex.CHO_DATA.charAt(currentChoIndex)));
+      char kor = KeyboardIndex.CHO_DATA.charAt(currentChoIndex);
+      Integer jongsung = KeyboardIndex.JONGSUNG_INDEX_MAP.get(kor);
+
+      if (jongsung == null) { // 종성 사용이 불가능한 초성이 입력 됨
+        resultStringBuilder.append(composeSyllableFromIndex(indexInfo));
+        return KrDataIndex.create().withChosung(currentChoIndex);
+      } else {
+        return indexInfo.withJongsung(jongsung);
+      }
     } else {
       var existJongsung = KeyboardIndex.JONG_DATA.charAt(indexInfo.jongsung());
       var newJongsung = KeyboardIndex.CHO_DATA.charAt(currentChoIndex);
