@@ -58,4 +58,4 @@ jobs:
           username: ${{ secrets.DEPLOY_USERNAME }}
           password: ${{ secrets.DEPLOY_PASSWORD }}
           script: |
-            python ~/docker/korConverter/script/restart.py
+            python3 ~/docker/korConverter/script/restart.py
