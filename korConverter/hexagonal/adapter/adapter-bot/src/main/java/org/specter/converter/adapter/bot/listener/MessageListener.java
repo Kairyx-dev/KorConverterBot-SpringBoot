@@ -19,6 +19,8 @@ import net.dv8tion.jda.api.utils.messages.MessageEditData;
 import org.jetbrains.annotations.NotNull;
 import org.specter.converter.adapter.bot.entity.UnEditableMessageException;
 import org.specter.converter.aplication.inport.DiscordBotInPort;
+import org.specter.converter.domain.model.MessageLog;
+import org.specter.converter.domain.model.MessageLog.MessageLogBuilder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -40,7 +42,20 @@ public class MessageListener extends ListenerAdapter {
 
     if (checkConvertable(event)) {
       convertAndSend(event);
+    } else if (!event.getAuthor().isBot()) {
+      logOnlyMessage(event);
     }
+  }
+
+  private void logOnlyMessage(@NotNull MessageReceivedEvent event) {
+    // log not convertable message
+    discordBotInPort.logMessage(MessageLog.builder()
+        .guild(event.getGuild().getName())
+        .channel(event.getChannel().getName())
+        .nickName(getNickNameOrUserName(event))
+        .effectiveName(event.getAuthor().getEffectiveName())
+        .message(event.getMessage().getContentRaw())
+        .build());
   }
 
   private boolean checkConvertable(@NotNull MessageReceivedEvent event) {
@@ -101,6 +116,7 @@ public class MessageListener extends ListenerAdapter {
           .log("Can not edit past message");
       sendEmbed(authorName, avatarUrl, before, after, event);
     }
+    logConvertedMessage(event, after);
   }
 
   private void sendEmbed(String authorName, String avatarUrl, String before, String after,
@@ -143,9 +159,9 @@ public class MessageListener extends ListenerAdapter {
 
     MessageEmbed existEmbed = message.getEmbeds().getFirst();
     if (Optional.ofNullable(existEmbed.getAuthor())
-            .map(MessageEmbed.AuthorInfo::getName)
-            .filter(name -> name.equals(authorName))
-            .isEmpty()) {
+        .map(MessageEmbed.AuthorInfo::getName)
+        .filter(name -> name.equals(authorName))
+        .isEmpty()) {
       throw UnEditableMessageException.diffName();
     }
 
@@ -169,5 +185,17 @@ public class MessageListener extends ListenerAdapter {
 
   private String getNickNameOrUserName(MessageReceivedEvent event) {
     return event.getMember() != null ? event.getMember().getEffectiveName() : event.getAuthor().getEffectiveName();
+  }
+
+  private void logConvertedMessage(MessageReceivedEvent event, String converted) {
+    discordBotInPort.logMessage(MessageLog.builder()
+        .guild(event.getGuild().getName())
+        .channel(event.getChannel().getName())
+        .nickName(getNickNameOrUserName(event))
+        .effectiveName(event.getAuthor().getEffectiveName())
+        .message(event.getMessage().getContentRaw())
+        .isConverted(true)
+        .convertedMessage(converted)
+        .build());
   }
 }

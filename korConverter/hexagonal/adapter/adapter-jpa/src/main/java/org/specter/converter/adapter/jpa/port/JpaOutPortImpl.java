@@ -3,8 +3,10 @@ package org.specter.converter.adapter.jpa.port;
 import java.util.List;
 import java.util.Optional;
 import org.specter.converter.adapter.jpa.service.IgnoreUserService;
+import org.specter.converter.adapter.jpa.service.MessageLogService;
 import org.specter.converter.aplication.outport.JpaOutPort;
 import org.specter.converter.domain.model.IgnoreUser;
+import org.specter.converter.domain.model.MessageLog;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,9 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class JpaOutPortImpl implements JpaOutPort {
 
   private final IgnoreUserService ignoreUserService;
+  private final MessageLogService messageLogService;
 
-  public JpaOutPortImpl(IgnoreUserService ignoreUserService) {
+  public JpaOutPortImpl(IgnoreUserService ignoreUserService, MessageLogService messageLogService) {
     this.ignoreUserService = ignoreUserService;
+    this.messageLogService = messageLogService;
   }
 
   @Override
@@ -30,6 +34,11 @@ public class JpaOutPortImpl implements JpaOutPort {
   @Override
   public IgnoreUser saveIgnoreUser(IgnoreUser ignoreUser) {
     return ignoreUserService.save(ignoreUser);
+  }
+
+  @Override
+  public MessageLog saveMessageLog(MessageLog messageLog) {
+    return messageLogService.save(messageLog);
   }
 
   @Override

@@ -1,7 +1,7 @@
 [versions]
 # plugin
-springframework-boot = "3.3.5"
-spring-dependency-management = "1.1.6"
+springframework-boot = "3.5.4"
+spring-dependency-management = "1.1.7"
 linecorp-build-recipe-plugin = "1.1.1"
 com-googel-cloud-tools-jib = "3.4.5"
 
@@ -13,6 +13,7 @@ mapstruct = "1.6.2"
 dev8tion-jda = "5.1.2"
 org-postgresql = "42.7.7"
 assertJ = "3.27.4"
+ch-qos-logback = "1.5.18"
 
 [libraries]
 springframework-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter" }
@@ -34,6 +35,9 @@ junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform
 junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api" }
 junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine" }
 junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params" }
+
+ch-qos-logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "ch-qos-logback" }
+ch-qos-logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "ch-qos-logback" }
 
 [plugins]
 springframework-boot = { id = "org.springframework.boot", version.ref = "springframework-boot" }
