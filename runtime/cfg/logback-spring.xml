@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<configuration>
+<configuration scan="true" scanPeriod="30 seconds">
+  <define class="org.specter.converter.common.utils.TimeZoneDefiner" name="TIMEZONE"/>
 
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <Pattern>%date{ISO8601} %highlight(%-6level) --- [%20.20t] %cyan(%20.20logger{16}:%-3line) : %msg %kvp{NONE}%n
+      <Pattern>%date{ISO8601} ${TIMEZONE:-UNDEFINED} %highlight(%-6level) --- [%20.20t] %cyan(%20.20logger{16}:%-3line) : %msg %kvp{NONE}%n
       </Pattern>
     </encoder>
   </appender>
 
-  <appender name="SYSLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+  <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <encoder>
-      <pattern>%date{ISO8601} %5p --- [%-15.15t] %30.30logger{16}:%-3line : %m %kvp{NONE}%n%ex{full}</pattern>
+      <pattern>%date{ISO8601} ${TIMEZONE:-UNDEFINED} %5p --- [%-15.15t] %30.30logger{16}:%-3line : %m %kvp{NONE}%n%ex{full}</pattern>
       <charset>UTF-8</charset>
     </encoder>
     <file>log/kor-bot.log</file>
@@ -23,9 +24,34 @@
     </rollingPolicy>
   </appender>
 
+  <appender name="file-warn" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>WARN</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>NEUTRAL</onMismatch>
+    </filter>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>ERROR</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+    <encoder>
+      <pattern>%date{ISO8601} ${TIMEZONE:-UNDEFINED} %5p ${PID:-UNDEFINED} --- [%-15.15t] %30.30logger{16}:%-3line : %m %kvp{NONE}%n%ex{full}</pattern>
+      <charset>UTF-8</charset>
+    </encoder>
+    <file>log/bot-warn.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+      <fileNamePattern>log/kor-bot-warn.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+      <cleanHistoryOnStart>false</cleanHistoryOnStart>
+      <maxFileSize>500MB</maxFileSize>
+      <totalSizeCap>1GB</totalSizeCap>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+  </appender>
+
   <root level="info">
     <appender-ref ref="console"/>
-    <appender-ref ref="SYSLOG"/>
+    <appender-ref ref="file"/>
+    <appender-ref ref="file-warn"/>
   </root>
-
 </configuration>
