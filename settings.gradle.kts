@@ -15,12 +15,12 @@ data class Module(
 
 val modules = mutableListOf<Module>()
 
-fun module(name: String, path: String){
+fun module(name: String, path: String) {
     modules.add(Module(name, "$rootDir/$path"))
 }
 
-module(":common-exception", "/korConverter/common/exception")
-module(":boot", "/korConverter/framework/boot")
+module(":boot", "/korConverter/boot")
+module(":common", "/korConverter/common")
 module(":application", "/korConverter/hexagonal/application")
 module(":domain", "/korConverter/hexagonal/domain")
 module(":adapter-jpa", "/korConverter/hexagonal/adapter/adapter-jpa")
