@@ -61,11 +61,10 @@ configureByLabel("spring") {
 configureByLabel("test") {
     dependencies {
 
-        testImplementation(platform(rootProject.libs.junit.bom))
-
         testRuntimeOnly(rootProject.libs.junit.platform.launcher)
         testRuntimeOnly(rootProject.libs.junit.jupiter.engine)
 
+        testImplementation(platform(rootProject.libs.junit.bom))
         testImplementation(rootProject.libs.junit.jupiter.api)
         testImplementation(rootProject.libs.junit.jupiter.params)
         testImplementation(rootProject.libs.assertj)
