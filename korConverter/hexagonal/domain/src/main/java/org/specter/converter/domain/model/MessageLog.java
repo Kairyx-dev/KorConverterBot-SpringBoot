@@ -13,7 +13,8 @@ public record MessageLog(
     String effectiveName,
     String message,
     Boolean isConverted,
-    String convertedMessage
+    String convertedMessage,
+    Long channelId
 ) {
 
   public MessageLog {
