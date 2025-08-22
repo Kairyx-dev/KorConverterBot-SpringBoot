@@ -55,6 +55,7 @@ public class MessageListener extends ListenerAdapter {
         .nickName(getNickNameOrUserName(event))
         .effectiveName(event.getAuthor().getEffectiveName())
         .message(event.getMessage().getContentRaw())
+        .channelId(event.getChannel().getIdLong())
         .build());
   }
 
@@ -196,6 +197,7 @@ public class MessageListener extends ListenerAdapter {
         .message(event.getMessage().getContentRaw())
         .isConverted(true)
         .convertedMessage(converted)
+        .channelId(event.getChannel().getIdLong())
         .build());
   }
 }
