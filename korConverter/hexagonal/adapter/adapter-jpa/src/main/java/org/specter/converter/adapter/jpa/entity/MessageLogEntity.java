@@ -18,7 +18,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 @Table(name = "message_log")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MessageLogEntity {
+public class MessageLogEntity extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.SEQUENCE)
