@@ -28,14 +28,12 @@ public class MessageLogEntity extends BaseTimeEntity {
   private String nickName;
   private String effectiveName;
   private String message;
-
-  @ColumnDefault(value = "0")
-  private Long channelId;
-
   @Column(nullable = false)
   @ColumnDefault(value = "false")
   private Boolean isConverted;
   private String convertedMessage;
+  @ColumnDefault(value = "0")
+  private Long channelId;
 
   @Builder
   public MessageLogEntity(Long id, String guild, String channel, String nickName, String effectiveName, String message,
