@@ -19,7 +19,7 @@ jobs:
 
       # jdk set up
       - name: JDK 21 set-up
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: 21
           distribution: 'corretto'
@@ -58,4 +58,4 @@ jobs:
           username: ${{ secrets.DEPLOY_USERNAME }}
           password: ${{ secrets.DEPLOY_PASSWORD }}
           script: |
-            python3 ~/docker/korConverter/script/restart.py
+            python3 ~/docker/korConverter/script/update.py
