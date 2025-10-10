@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import lombok.Builder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.specter.converter.domain.core.ConverterCoreV2;
@@ -66,6 +67,18 @@ class ConverterTest {
         TestCase.builder()
             .eng("djEja")
             .kor("어떰")
+            .build(),
+        TestCase.builder()
+            .eng("gufak")
+            .kor("혈마")
+            .build(),
+        TestCase.builder()
+            .eng("gufak?")
+            .kor("혈마?")
+            .build(),
+        TestCase.builder()
+            .eng("gkausgka")
+            .kor("하면함")
             .build()
     );
   }
