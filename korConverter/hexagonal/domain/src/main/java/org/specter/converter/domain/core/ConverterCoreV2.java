@@ -111,7 +111,8 @@ public class ConverterCoreV2 {
     return resultInfo;
   }
 
-  private KrDataIndex insertJongsung(final KrDataIndex indexInfo, StringBuilder resultStringBuilder, int currentChoIndex) {
+  private KrDataIndex insertJongsung(final KrDataIndex indexInfo, StringBuilder resultStringBuilder,
+      int currentChoIndex) {
     if (!indexInfo.jongsungIndexed()) { // 종성이 없는경우 입력된 값은 종성으로 사용
       char kor = KeyboardIndex.CHO_DATA.charAt(currentChoIndex);
       Integer jongsung = KeyboardIndex.JONGSUNG_INDEX_MAP.get(kor);
@@ -175,7 +176,7 @@ public class ConverterCoreV2 {
 
     if (seperated != null) {
       returnIndex = indexInfo.withJongsung(KeyboardIndex.JONGSUNG_INDEX_MAP.get(seperated.charAt(0)));
-      tempCho = KeyboardIndex.JONGSUNG_INDEX_MAP.get(seperated.charAt(1));
+      tempCho = KeyboardIndex.CHOSUNG_INDEX_MAP.get(seperated.charAt(1));
     } else {
       tempCho = KeyboardIndex.CHO_DATA.indexOf(KeyboardIndex.JONG_DATA.charAt(indexInfo.jongsung()));
       returnIndex = indexInfo.clearJongsung();

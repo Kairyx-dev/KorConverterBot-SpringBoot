@@ -11,7 +11,7 @@ plugins {
 
 allprojects {
     group = "org.specter.converter"
-    version = "2.1.2"
+    version = "2.1.3"
 
     tasks.withType<BootJar> {
         enabled = false
