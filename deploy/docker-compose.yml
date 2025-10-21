@@ -2,7 +2,22 @@
 services:
   bot:
     container_name: kor-converter-bot
-    image: devkshull/korconverter-spring-boot:latest
+    image: kor-bot-spring:latest
     volumes:
       - ./cfg:/app/cfg
       - ./log:/app/log
+    restart: always
+    networks:
+      - converter_backend
+    environment:
+      TZ: "Asia/Seoul"
+      DB_HOST: $DB_HOST
+      DB_PORT: $DB_PORT
+      DB_NAME: $DB_NAME
+      DB_USER_NAME: $DB_USER_NAME
+      DB_PASSWORD: $DB_PASSWORD
+      DISCORD_BOT_TOKEN: $DISCORD_BOT_TOKEN
+
+networks:
+  converter_backend:
+    external: true

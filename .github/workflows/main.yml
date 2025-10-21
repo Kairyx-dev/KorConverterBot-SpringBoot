@@ -31,23 +31,23 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew clean build
 
-      # docker login
-      - name: docker login
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_ADDRESS }}
-          password: ${{ secrets.DOCKER_PAT }}
-
       # docker build and push
       - name: deploy jib
         shell: bash
-        env:
-          DOCKER_ID: ${{ secrets.DOCKER_USER }}
-          DOCKER_REPOSITORY: ${{ secrets.DOCKER_REPOSITORY }}
         run: >
-          ./gradlew :boot:jib
-          -DdockerId="$DOCKER_ID"
-          -DdockerRepository="$DOCKER_REPOSITORY"
+          ./gradlew :boot:jibBuildTar
+
+      - name: Copy files SSH
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.DEPLOY_IP }}
+          username: ${{ secrets.DEPLOY_USERNAME }}
+          password: ${{ secrets.DEPLOY_PASSWORD }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          source: "korConverter/boot/build/jib-image.tar"
+          target: "~/docker/korConverter/image"
+          rm: true
+          strip_components: 3
 
       # docker restart
       - name: Container restart
@@ -58,4 +58,5 @@ jobs:
           username: ${{ secrets.DEPLOY_USERNAME }}
           password: ${{ secrets.DEPLOY_PASSWORD }}
           script: |
-            python3 ~/docker/korConverter/script/update.py
+            docker load -i ~/docker/korConverter/image/jib-image.tar
+            python3 ~/docker/korConverter/script/restart.py
