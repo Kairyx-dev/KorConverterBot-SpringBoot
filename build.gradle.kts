@@ -83,10 +83,7 @@ configureByLabel("boot") {
         }
 
         to {
-            val dockerId = System.getProperty("dockerId") ?: "UNKNOWN"
-            val repositoryName = System.getProperty("dockerRepository") ?: "UNKNOWN"
-
-            image = "$dockerId/$repositoryName"
+            image = "kor-bot-spring"
             tags = setOf("${project.version}")
         }
 
