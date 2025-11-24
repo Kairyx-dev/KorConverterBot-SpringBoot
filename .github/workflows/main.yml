@@ -15,7 +15,7 @@ jobs:
     steps:
       # chckout
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       # jdk set up
       - name: JDK 21 set-up
@@ -51,7 +51,7 @@ jobs:
 
       # docker restart
       - name: Container restart
-        uses: appleboy/ssh-action@v1.2.2
+        uses: appleboy/ssh-action@v1.2.3
         with:
           host: ${{ secrets.DEPLOY_IP }}
           port: ${{ secrets.DEPLOY_PORT }}
