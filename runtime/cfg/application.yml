@@ -19,4 +19,3 @@ logging:
 
 bot:
   token: ${DISCORD_BOT_TOKEN}
-  botVersion: 2.1.3

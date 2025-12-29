@@ -13,13 +13,14 @@ import org.specter.converter.adapter.bot.entity.BotCommand;
 import org.specter.converter.adapter.bot.listener.CommandListener;
 import org.specter.converter.adapter.bot.listener.MessageListener;
 import org.specter.converter.adapter.bot.properties.BotProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Slf4j
 @Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties(value = {BotProperties.class})
+@ConfigurationPropertiesScan(basePackages = "org.specter.converter.adapter.bot.properties")
 public class BotConfiguration {
 
 
@@ -27,7 +28,7 @@ public class BotConfiguration {
   public JDA getJda(BotProperties botProperties, MessageListener messageListener, CommandListener commandListener) {
     log.info("build new jda instance");
     JDA jda = JDABuilder
-        .createDefault(botProperties.getToken())
+        .createDefault(botProperties.token())
         .enableIntents(GatewayIntent.DIRECT_MESSAGES)
         .enableIntents(GatewayIntent.MESSAGE_CONTENT)
         .build();

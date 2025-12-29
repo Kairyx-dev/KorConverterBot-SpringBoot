@@ -2,6 +2,7 @@ package org.specter.converter.adapter.jpa.port;
 
 import java.util.List;
 import java.util.Optional;
+import org.jspecify.annotations.NullMarked;
 import org.specter.converter.adapter.jpa.service.IgnoreUserService;
 import org.specter.converter.adapter.jpa.service.MessageLogService;
 import org.specter.converter.aplication.outport.JpaOutPort;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@NullMarked
 public class JpaOutPortImpl implements JpaOutPort {
 
   private final IgnoreUserService ignoreUserService;

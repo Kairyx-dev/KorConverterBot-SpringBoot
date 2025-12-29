@@ -2,9 +2,11 @@ package org.specter.converter.domain.model;
 
 import lombok.Builder;
 import lombok.With;
+import org.jspecify.annotations.NullMarked;
 
 @Builder
 @With
+@NullMarked
 public record KrDataIndex(
     int chosung,
     int jungsung,

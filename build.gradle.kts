@@ -1,4 +1,5 @@
 import com.linecorp.support.project.multi.recipe.configureByLabel
+import net.ltgt.gradle.errorprone.errorprone
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
@@ -7,11 +8,12 @@ plugins {
     alias(libs.plugins.spring.dependency.management)
     alias(libs.plugins.linecorp.build.recipe.plugin)
     alias(libs.plugins.com.google.cloud.tools.jib)
+    alias(libs.plugins.net.ltgt.errorprone)
 }
 
 allprojects {
     group = "org.specter.converter"
-    version = "2.1.3"
+    version = "2.1.4"
 
     tasks.withType<BootJar> {
         enabled = false
@@ -25,13 +27,18 @@ repositories {
 configureByLabel("java") {
     apply(plugin = "idea")
     apply(plugin = "java")
+    apply(plugin = "net.ltgt.errorprone")
 
-    java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+    java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
     dependencies {
         // Library
         implementation(rootProject.libs.projectlombok.lombok)
         annotationProcessor(rootProject.libs.projectlombok.lombok)
+
+        // Static Analysis
+        errorprone(rootProject.libs.com.google.errorprone.core)
+        errorprone(rootProject.libs.com.uber.nullaway)
 
         testImplementation(rootProject.libs.projectlombok.lombok)
         testAnnotationProcessor(rootProject.libs.projectlombok.lombok)
@@ -44,6 +51,13 @@ configureByLabel("java") {
     tasks.withType<Test> {
         useJUnitPlatform()
     }
+
+    tasks.withType<JavaCompile> {
+        options.errorprone.isEnabled.set(true)
+        options.errorprone {
+            option("NullAway:AnnotatedPackages", "com.uber")
+        }
+    }
 }
 
 configureByLabel("spring") {
@@ -52,7 +66,9 @@ configureByLabel("spring") {
 
     dependencies {
         implementation(rootProject.libs.springframework.boot.starter)
+        implementation(rootProject.libs.springframework.boot.starter.validation)
         implementation(rootProject.libs.springframework.boot.starter.actuator)
+        implementation(rootProject.libs.springframework.boot.starter.json)
 
         testImplementation(rootProject.libs.springframework.boot.starter.test)
     }
@@ -77,9 +93,13 @@ configureByLabel("boot") {
         enabled = true
     }
 
+    springBoot {
+        buildInfo()
+    }
+
     jib {
         from {
-            image = "amazoncorretto:21.0.7-alpine"
+            image = "amazoncorretto:25.0.1-alpine"
         }
 
         to {
