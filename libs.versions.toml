@@ -3,7 +3,7 @@
 springframework-boot = "4.0.1"
 spring-dependency-management = "1.1.7"
 linecorp-build-recipe-plugin = "1.1.1"
-com-googel-cloud-tools-jib = "3.4.5"
+com-googel-cloud-tools-jib = "3.5.2"
 net-ltgt-errorprone = "4.3.0"
 
 # libs
