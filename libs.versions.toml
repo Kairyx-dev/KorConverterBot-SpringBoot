@@ -4,6 +4,7 @@ springframework-boot = "4.0.1"
 spring-dependency-management = "1.1.7"
 linecorp-build-recipe-plugin = "1.1.1"
 com-googel-cloud-tools-jib = "3.4.5"
+net-ltgt-errorprone = "4.3.0"
 
 # libs
 projectlombok-lombok = "1.18.42"
@@ -15,6 +16,8 @@ org-postgresql = "42.7.8"
 assertJ = "3.27.6"
 ch-qos-logback = "1.5.22"
 jspecify = "1.0.0"
+com-uber-nullaway = "0.12.15"
+com-google-errorprone-core = "2.45.0"
 
 [libraries]
 springframework-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter" }
@@ -31,6 +34,8 @@ mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", v
 dev8tion-jda = { group = "net.dv8tion", name = "JDA", version.ref = "dev8tion-jda" }
 org-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "org-postgresql" }
 assertj = { group = "org.assertj", name = "assertj-core", version.ref = "assertJ" }
+com-google-errorprone-core = { group = "com.google.errorprone", name = "error_prone_core", version.ref = "com-google-errorprone-core" }
+com-uber-nullaway = { group = "com.uber.nullaway", name = "nullaway", version.ref = "com-uber-nullaway" }
 
 # for domain
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit-bom" }
@@ -49,3 +54,4 @@ springframework-boot = { id = "org.springframework.boot", version.ref = "springf
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
 linecorp-build-recipe-plugin = { id = "com.linecorp.build-recipe-plugin", version.ref = "linecorp-build-recipe-plugin" }
 com-google-cloud-tools-jib = { id = "com.google.cloud.tools.jib", version.ref = "com-googel-cloud-tools-jib" }
+net-ltgt-errorprone = { id = "net.ltgt.errorprone", version.ref = "net-ltgt-errorprone" }

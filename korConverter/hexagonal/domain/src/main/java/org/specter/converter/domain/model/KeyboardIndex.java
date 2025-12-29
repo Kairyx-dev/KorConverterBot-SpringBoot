@@ -2,7 +2,9 @@ package org.specter.converter.domain.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class KeyboardIndex {
 
   private KeyboardIndex() {
@@ -13,24 +15,14 @@ public class KeyboardIndex {
   public static final String CHO_DATA = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ"; // 초성
   public static final String JUNG_DATA = "ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ"; // 중성
   public static final String JONG_DATA = "ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ"; // 종성
+  public static final int KOR_KEY_JUNGSUNG_START_POSITION = 19;
 
-  public static final Map<Character, Integer> ENG_INDEX_MAP;
-  public static final Map<Character, Integer> KOR_INDEX_MAP;
-  public static final Map<Character, Integer> CHOSUNG_INDEX_MAP;
-  public static final Map<Character, Integer> JUNGSUNG_INDEX_MAP;
-  public static final Map<Character, Integer> JONGSUNG_INDEX_MAP;
-  public static final Map<String, Character> COMBINATION_MAP;
-  public static final Map<Character, String> SEPARATED_CONSONANT_MAP;
-
-  static {
-    ENG_INDEX_MAP = Map.copyOf(makeIndexMap(ENG_KEY));
-    KOR_INDEX_MAP = Map.copyOf(makeIndexMap(KOR_KEY));
-    CHOSUNG_INDEX_MAP = Map.copyOf(makeIndexMap(CHO_DATA));
-    JUNGSUNG_INDEX_MAP = Map.copyOf(makeIndexMap(JUNG_DATA));
-    JONGSUNG_INDEX_MAP = Map.copyOf(makeIndexMap(JONG_DATA));
-    COMBINATION_MAP = Map.copyOf(createDoubleCharMap());
-    SEPARATED_CONSONANT_MAP = Map.copyOf(createSepratedConsonantMap());
-  }
+  public static final Map<Character, Integer> ENG_INDEX_MAP = Map.copyOf(makeIndexMap(ENG_KEY));
+  public static final Map<Character, Integer> CHOSUNG_INDEX_MAP = Map.copyOf(makeIndexMap(CHO_DATA));
+  public static final Map<Character, Integer> JUNGSUNG_INDEX_MAP = Map.copyOf(makeIndexMap(JUNG_DATA));
+  public static final Map<Character, Integer> JONGSUNG_INDEX_MAP = Map.copyOf(makeIndexMap(JONG_DATA));
+  public static final Map<String, Character> COMBINATION_MAP = Map.copyOf(createDoubleCharMap());
+  public static final Map<Character, String> SEPARATED_CONSONANT_MAP = Map.copyOf(createSepratedConsonantMap());
 
   private static Map<Character, Integer> makeIndexMap(String original) {
     Map<Character, Integer> indexMap = new HashMap<>();

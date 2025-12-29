@@ -1,4 +1,5 @@
 import com.linecorp.support.project.multi.recipe.configureByLabel
+import net.ltgt.gradle.errorprone.errorprone
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
@@ -7,6 +8,7 @@ plugins {
     alias(libs.plugins.spring.dependency.management)
     alias(libs.plugins.linecorp.build.recipe.plugin)
     alias(libs.plugins.com.google.cloud.tools.jib)
+    alias(libs.plugins.net.ltgt.errorprone)
 }
 
 allprojects {
@@ -25,6 +27,7 @@ repositories {
 configureByLabel("java") {
     apply(plugin = "idea")
     apply(plugin = "java")
+    apply(plugin = "net.ltgt.errorprone")
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
@@ -32,6 +35,10 @@ configureByLabel("java") {
         // Library
         implementation(rootProject.libs.projectlombok.lombok)
         annotationProcessor(rootProject.libs.projectlombok.lombok)
+
+        // Static Analysis
+        errorprone(rootProject.libs.com.google.errorprone.core)
+        errorprone(rootProject.libs.com.uber.nullaway)
 
         testImplementation(rootProject.libs.projectlombok.lombok)
         testAnnotationProcessor(rootProject.libs.projectlombok.lombok)
@@ -43,6 +50,13 @@ configureByLabel("java") {
 
     tasks.withType<Test> {
         useJUnitPlatform()
+    }
+
+    tasks.withType<JavaCompile> {
+        options.errorprone.isEnabled.set(true)
+        options.errorprone {
+            option("NullAway:AnnotatedPackages", "com.uber")
+        }
     }
 }
 
