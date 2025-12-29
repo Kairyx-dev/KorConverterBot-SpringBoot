@@ -11,6 +11,7 @@ import org.specter.converter.adapter.bot.entity.BotCommand;
 import org.specter.converter.adapter.bot.properties.BotProperties;
 import org.specter.converter.aplication.inport.DiscordBotInPort;
 import org.specter.converter.domain.model.IgnoreUser;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,8 +20,8 @@ import org.springframework.stereotype.Component;
 @NullMarked
 public class CommandListener extends ListenerAdapter {
 
-  private final BotProperties botProperties;
   private final DiscordBotInPort discordBotInPort;
+  private final BuildProperties buildProperties;
 
   @Override
   public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
@@ -44,7 +45,7 @@ public class CommandListener extends ListenerAdapter {
   }
 
   private void onEcoVersion(SlashCommandInteractionEvent event) {
-    String content = String.format("현재 bot의 버전은 v%s 입니다.", botProperties.getBotVersion());
+    String content = String.format("현재 bot의 버전은 v%s 입니다.", buildProperties.getVersion());
     event.reply(content).queue();
   }
 

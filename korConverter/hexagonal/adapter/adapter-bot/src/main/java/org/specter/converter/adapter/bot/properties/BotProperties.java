@@ -1,14 +1,15 @@
 package org.specter.converter.adapter.bot.properties;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.validation.annotation.Validated;
 
 @ConfigurationProperties(prefix = "bot")
-@Getter
-@Setter
-public class BotProperties {
+@NullMarked
+@Validated
+public record BotProperties(
+    @NotNull String token
+) {
 
-  private String token;
-  private String botVersion;
 }
