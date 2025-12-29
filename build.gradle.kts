@@ -52,6 +52,7 @@ configureByLabel("spring") {
 
     dependencies {
         implementation(rootProject.libs.springframework.boot.starter)
+        implementation(rootProject.libs.springframework.boot.starter.validation)
         implementation(rootProject.libs.springframework.boot.starter.actuator)
         implementation(rootProject.libs.springframework.boot.starter.json)
 
@@ -76,6 +77,10 @@ configureByLabel("boot") {
     apply(plugin = "com.google.cloud.tools.jib")
     tasks.withType<BootJar> {
         enabled = true
+    }
+
+    springBoot {
+        buildInfo()
     }
 
     jib {

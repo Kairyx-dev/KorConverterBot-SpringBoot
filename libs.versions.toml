@@ -20,6 +20,7 @@ jspecify = "1.0.0"
 springframework-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter" }
 springframework-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test" }
 springframework-boot-starter-actuator = { group = "org.springframework.boot", name = "spring-boot-starter-actuator" }
+springframework-boot-starter-validation = { group = "org.springframework.boot", name = "spring-boot-starter-validation" }
 springframework-boot-starter-json = { group = "org.springframework.boot", name = "spring-boot-starter-json" }
 springframework-boot-starter-data-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j-api" }
