@@ -8,15 +8,21 @@ updates:
       time: "09:00"
       timezone: Asia/Seoul
     open-pull-requests-limit: 5
-    target-branch: main
+    target-branch: develop
 
     groups:
       spring-boot:
         patterns:
-          - "org.springframework.boot:*"
-          - "*spring-boot*"
+          - "org.springframework*"
       testing:
         patterns:
+          - "*junit*"
+          - "*mockito*"
+      etc:
+        patterns:
+          - "*"
+        exclude-patterns:
+          - "org.springframework*"
           - "*junit*"
           - "*mockito*"
 
@@ -41,7 +47,7 @@ updates:
       time: "09:00"
       timezone: Asia/Seoul
     open-pull-requests-limit: 3
-    target-branch: main
+    target-branch: develop
     assignees:
       - Kairyx-dev
     reviewers:
