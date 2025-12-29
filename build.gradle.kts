@@ -53,6 +53,7 @@ configureByLabel("spring") {
     dependencies {
         implementation(rootProject.libs.springframework.boot.starter)
         implementation(rootProject.libs.springframework.boot.starter.actuator)
+        implementation(rootProject.libs.springframework.boot.starter.json)
 
         testImplementation(rootProject.libs.springframework.boot.starter.test)
     }
