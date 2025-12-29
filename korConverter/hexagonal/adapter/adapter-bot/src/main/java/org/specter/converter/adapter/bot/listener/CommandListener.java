@@ -1,28 +1,30 @@
 package org.specter.converter.adapter.bot.listener;
 
-import jakarta.annotation.Nonnull;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import org.jspecify.annotations.NullMarked;
 import org.specter.converter.adapter.bot.entity.BotCommand;
 import org.specter.converter.adapter.bot.properties.BotProperties;
 import org.specter.converter.aplication.inport.DiscordBotInPort;
 import org.specter.converter.domain.model.IgnoreUser;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
 @Slf4j
+@NullMarked
 public class CommandListener extends ListenerAdapter {
 
-  private final BotProperties botProperties;
   private final DiscordBotInPort discordBotInPort;
+  private final BuildProperties buildProperties;
 
   @Override
-  public void onSlashCommandInteraction(@Nonnull SlashCommandInteractionEvent event) {
+  public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
     super.onSlashCommandInteraction(event);
     log.info("Slash command coming {}", event.getName());
     BotCommand command = BotCommand.fromCommand(event.getName());
@@ -36,22 +38,22 @@ public class CommandListener extends ListenerAdapter {
     }
   }
 
-  private void onEcoTest(@Nonnull SlashCommandInteractionEvent event) {
+  private void onEcoTest(SlashCommandInteractionEvent event) {
     String ecoContents = event.getOption("content", OptionMapping::getAsString);
 
     event.reply(Objects.requireNonNullElse(ecoContents, "이 명령어는 메시지가 필요합니다.")).queue();
   }
 
-  private void onEcoVersion(@Nonnull SlashCommandInteractionEvent event) {
-    String content = String.format("현재 bot의 버전은 v%s 입니다.", botProperties.getBotVersion());
+  private void onEcoVersion(SlashCommandInteractionEvent event) {
+    String content = String.format("현재 bot의 버전은 v%s 입니다.", buildProperties.getVersion());
     event.reply(content).queue();
   }
 
-  private void onUnknownCommand(@Nonnull SlashCommandInteractionEvent event) {
+  private void onUnknownCommand(SlashCommandInteractionEvent event) {
     event.reply("알수없는 명령어 입니다.").queue();
   }
 
-  private void onIgnoreMe(@Nonnull SlashCommandInteractionEvent event) {
+  private void onIgnoreMe(SlashCommandInteractionEvent event) {
     IgnoreUser saved = discordBotInPort.addIgnoreUser(IgnoreUser.builder()
         .userId(event.getUser().getIdLong())
         .name(getNickNameOrUserName(event))
@@ -65,7 +67,7 @@ public class CommandListener extends ListenerAdapter {
     event.reply(saved.name() + "님의 메시지가 무시됩니다.").queue();
   }
 
-  private void onUnIgnoreMe(@Nonnull SlashCommandInteractionEvent event) {
+  private void onUnIgnoreMe(SlashCommandInteractionEvent event) {
     discordBotInPort.removeIgnoreUser(event.getUser().getIdLong(), event.getChannelIdLong());
 
     log.atInfo()

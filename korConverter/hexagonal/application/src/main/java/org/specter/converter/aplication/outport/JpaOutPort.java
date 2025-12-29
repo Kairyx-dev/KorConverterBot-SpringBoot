@@ -2,9 +2,11 @@ package org.specter.converter.aplication.outport;
 
 import java.util.List;
 import java.util.Optional;
+import org.jspecify.annotations.NullMarked;
 import org.specter.converter.domain.model.IgnoreUser;
 import org.specter.converter.domain.model.MessageLog;
 
+@NullMarked
 public interface JpaOutPort {
 
   List<IgnoreUser> findAllIgnoreUsers();

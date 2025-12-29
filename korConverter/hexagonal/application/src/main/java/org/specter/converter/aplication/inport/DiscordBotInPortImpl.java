@@ -3,6 +3,7 @@ package org.specter.converter.aplication.inport;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NullMarked;
 import org.specter.converter.aplication.outport.JpaOutPort;
 import org.specter.converter.domain.core.ConverterCoreV2;
 import org.specter.converter.domain.model.IgnoreUser;
@@ -10,6 +11,7 @@ import org.specter.converter.domain.model.MessageLog;
 
 @Slf4j
 @AllArgsConstructor
+@NullMarked
 public class DiscordBotInPortImpl implements DiscordBotInPort {
 
   private final ConverterCoreV2 core;

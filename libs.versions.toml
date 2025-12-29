@@ -1,24 +1,30 @@
 [versions]
 # plugin
-springframework-boot = "3.5.4"
+springframework-boot = "4.0.1"
 spring-dependency-management = "1.1.7"
 linecorp-build-recipe-plugin = "1.1.1"
 com-googel-cloud-tools-jib = "3.4.5"
+net-ltgt-errorprone = "4.3.0"
 
 # libs
-projectlombok-lombok = "1.18.34"
-junit-bom = "5.11.0"
+projectlombok-lombok = "1.18.42"
+junit-bom = "6.0.1"
 slf4j-api = "2.0.17"
-mapstruct = "1.6.2"
-dev8tion-jda = "5.1.2"
-org-postgresql = "42.7.7"
-assertJ = "3.27.4"
-ch-qos-logback = "1.5.18"
+mapstruct = "1.6.3"
+dev8tion-jda = "6.2.0"
+org-postgresql = "42.7.8"
+assertJ = "3.27.6"
+ch-qos-logback = "1.5.22"
+jspecify = "1.0.0"
+com-uber-nullaway = "0.12.15"
+com-google-errorprone-core = "2.45.0"
 
 [libraries]
 springframework-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter" }
 springframework-boot-starter-test = { group = "org.springframework.boot", name = "spring-boot-starter-test" }
 springframework-boot-starter-actuator = { group = "org.springframework.boot", name = "spring-boot-starter-actuator" }
+springframework-boot-starter-validation = { group = "org.springframework.boot", name = "spring-boot-starter-validation" }
+springframework-boot-starter-json = { group = "org.springframework.boot", name = "spring-boot-starter-json" }
 springframework-boot-starter-data-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j-api" }
 projectlombok-lombok = { group = "org.projectlombok", name = "lombok", version.ref = "projectlombok-lombok" }
@@ -27,7 +33,9 @@ mapstruct = { group = "org.mapstruct", name = "mapstruct", version.ref = "mapstr
 mapstruct-processor = { group = "org.mapstruct", name = "mapstruct-processor", version.ref = "mapstruct" }
 dev8tion-jda = { group = "net.dv8tion", name = "JDA", version.ref = "dev8tion-jda" }
 org-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = "org-postgresql" }
-assertj = { group="org.assertj", name="assertj-core", version.ref="assertJ"}
+assertj = { group = "org.assertj", name = "assertj-core", version.ref = "assertJ" }
+com-google-errorprone-core = { group = "com.google.errorprone", name = "error_prone_core", version.ref = "com-google-errorprone-core" }
+com-uber-nullaway = { group = "com.uber.nullaway", name = "nullaway", version.ref = "com-uber-nullaway" }
 
 # for domain
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit-bom" }
@@ -36,6 +44,8 @@ junit-jupiter-api = { group = "org.junit.jupiter", name = "junit-jupiter-api" }
 junit-jupiter-engine = { group = "org.junit.jupiter", name = "junit-jupiter-engine" }
 junit-jupiter-params = { group = "org.junit.jupiter", name = "junit-jupiter-params" }
 
+org-jspecify = { group = "org.jspecify", name = "jspecify", version.ref = "jspecify" }
+
 ch-qos-logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "ch-qos-logback" }
 ch-qos-logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "ch-qos-logback" }
 
@@ -43,4 +53,5 @@ ch-qos-logback-core = { group = "ch.qos.logback", name = "logback-core", version
 springframework-boot = { id = "org.springframework.boot", version.ref = "springframework-boot" }
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
 linecorp-build-recipe-plugin = { id = "com.linecorp.build-recipe-plugin", version.ref = "linecorp-build-recipe-plugin" }
-com-google-cloud-tools-jib= { id = "com.google.cloud.tools.jib", version.ref = "com-googel-cloud-tools-jib" }
+com-google-cloud-tools-jib = { id = "com.google.cloud.tools.jib", version.ref = "com-googel-cloud-tools-jib" }
+net-ltgt-errorprone = { id = "net.ltgt.errorprone", version.ref = "net-ltgt-errorprone" }
