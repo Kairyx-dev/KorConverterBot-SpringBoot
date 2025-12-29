@@ -16,22 +16,22 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NullMarked;
 import org.specter.converter.adapter.bot.entity.UnEditableMessageException;
 import org.specter.converter.aplication.inport.DiscordBotInPort;
 import org.specter.converter.domain.model.MessageLog;
-import org.specter.converter.domain.model.MessageLog.MessageLogBuilder;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 @AllArgsConstructor
+@NullMarked
 public class MessageListener extends ListenerAdapter {
 
   private final DiscordBotInPort discordBotInPort;
 
   @Override
-  public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+  public void onMessageReceived(MessageReceivedEvent event) {
     log.atInfo()
         .addKeyValue("guild", event.getGuild().getName())
         .addKeyValue("channel", event.getChannel().getName())
@@ -47,7 +47,7 @@ public class MessageListener extends ListenerAdapter {
     }
   }
 
-  private void logOnlyMessage(@NotNull MessageReceivedEvent event) {
+  private void logOnlyMessage(MessageReceivedEvent event) {
     // log not convertable message
     discordBotInPort.logMessage(MessageLog.builder()
         .guild(event.getGuild().getName())
@@ -59,7 +59,7 @@ public class MessageListener extends ListenerAdapter {
         .build());
   }
 
-  private boolean checkConvertable(@NotNull MessageReceivedEvent event) {
+  private boolean checkConvertable(MessageReceivedEvent event) {
     if (event.isFromType(ChannelType.PRIVATE)) {
       log.atInfo()
           .addKeyValue("author.nickname", getNickNameOrUserName(event))
@@ -96,7 +96,7 @@ public class MessageListener extends ListenerAdapter {
     return true;
   }
 
-  private void convertAndSend(@NotNull MessageReceivedEvent event) {
+  private void convertAndSend(MessageReceivedEvent event) {
     String before = event.getMessage().getContentRaw();
     String after = discordBotInPort.engToKor(before);
 

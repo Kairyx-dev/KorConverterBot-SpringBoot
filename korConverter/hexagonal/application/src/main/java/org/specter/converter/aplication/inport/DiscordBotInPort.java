@@ -1,8 +1,10 @@
 package org.specter.converter.aplication.inport;
 
+import org.jspecify.annotations.NullMarked;
 import org.specter.converter.domain.model.IgnoreUser;
 import org.specter.converter.domain.model.MessageLog;
 
+@NullMarked
 public interface DiscordBotInPort {
 
   boolean checkAvailableStr(String message);

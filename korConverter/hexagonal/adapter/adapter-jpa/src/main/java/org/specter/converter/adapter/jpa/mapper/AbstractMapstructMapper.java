@@ -1,7 +1,9 @@
 package org.specter.converter.adapter.jpa.mapper;
 
 import java.util.List;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public abstract class AbstractMapstructMapper<E, D> implements MapstructMapper<E, D> {
 
   @Override

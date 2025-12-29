@@ -2,12 +2,14 @@ package org.specter.converter.adapter.jpa.service;
 
 import java.util.List;
 import java.util.Optional;
+import org.jspecify.annotations.NullMarked;
 import org.specter.converter.adapter.jpa.mapper.IgnoreUserMapper;
 import org.specter.converter.adapter.jpa.repository.IgnoreUserRepository;
 import org.specter.converter.domain.model.IgnoreUser;
 import org.springframework.stereotype.Service;
 
 @Service
+@NullMarked
 public class IgnoreUserService {
 
   private final IgnoreUserRepository repository;
