@@ -1,5 +1,7 @@
 package org.specter.converter.domain.core;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.specter.converter.domain.model.KeyboardIndex;
 import org.specter.converter.domain.model.KrDataIndex;
 
@@ -10,6 +12,7 @@ import org.specter.converter.domain.model.KrDataIndex;
  * @see KrDataIndex
  * @see KeyboardIndex
  */
+@NullMarked
 public class ConverterCoreV2 {
 
   public String engToKor(String eng) {
@@ -192,7 +195,7 @@ public class ConverterCoreV2 {
     return returnIndex;
   }
 
-  private Character makeEndOfIndex(KrDataIndex indexInfo) {
+  private @Nullable Character makeEndOfIndex(KrDataIndex indexInfo) {
     if (indexInfo.chosungIndexed() && indexInfo.jungsungIndexed()) { // 초성 + 중성으로 조합이 가능 함
       return composeSyllableFromIndex(indexInfo);
     }
@@ -264,7 +267,7 @@ public class ConverterCoreV2 {
     return ('0' <= c && c <= '9');
   }
 
-  private Character makeDoubleChar(char first, char second) {
+  private @Nullable Character makeDoubleChar(char first, char second) {
     return KeyboardIndex.COMBINATION_MAP.get(String.valueOf(first) + second);
   }
 
