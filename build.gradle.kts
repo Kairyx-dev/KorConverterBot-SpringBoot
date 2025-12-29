@@ -26,7 +26,7 @@ configureByLabel("java") {
     apply(plugin = "idea")
     apply(plugin = "java")
 
-    java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+    java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
     dependencies {
         // Library
@@ -80,7 +80,7 @@ configureByLabel("boot") {
 
     jib {
         from {
-            image = "amazoncorretto:21.0.7-alpine"
+            image = "amazoncorretto:25.0.1-alpine"
         }
 
         to {
