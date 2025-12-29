@@ -18,10 +18,10 @@ jobs:
         uses: actions/checkout@v6
 
       # jdk set up
-      - name: JDK 21 set-up
+      - name: JDK 25 set-up
         uses: actions/setup-java@v5
         with:
-          java-version: 21
+          java-version: 25
           distribution: 'corretto'
 
       # grant gradle script
