@@ -1,6 +1,5 @@
 package org.specter.converter.aplication.inport;
 
-import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NullMarked;
@@ -29,9 +28,7 @@ public class DiscordBotInPortImpl implements DiscordBotInPort {
 
   @Override
   public boolean checkIgnoredUser(long userId, long channelId) {
-    Optional<IgnoreUser> findUser = jpaOutPort.findIgnoreUser(userId, channelId);
-
-    return findUser.isPresent();
+    return jpaOutPort.findIgnoreUser(userId, channelId) != null;
   }
 
   @Override

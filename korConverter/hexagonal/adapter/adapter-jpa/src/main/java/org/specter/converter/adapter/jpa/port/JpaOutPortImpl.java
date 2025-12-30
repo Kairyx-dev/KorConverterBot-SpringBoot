@@ -1,8 +1,8 @@
 package org.specter.converter.adapter.jpa.port;
 
 import java.util.List;
-import java.util.Optional;
 import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.specter.converter.adapter.jpa.service.IgnoreUserService;
 import org.specter.converter.adapter.jpa.service.MessageLogService;
 import org.specter.converter.aplication.outport.JpaOutPort;
@@ -29,7 +29,7 @@ public class JpaOutPortImpl implements JpaOutPort {
   }
 
   @Override
-  public Optional<IgnoreUser> findIgnoreUser(long userId, long channelId) {
+  public @Nullable IgnoreUser findIgnoreUser(long userId, long channelId) {
     return ignoreUserService.findByUserId(userId, channelId);
   }
 
