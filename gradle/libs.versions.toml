@@ -8,7 +8,7 @@ net-ltgt-errorprone = "4.3.0"
 
 # libs
 projectlombok-lombok = "1.18.42"
-junit-bom = "6.0.1"
+junit-bom = "6.0.2"
 slf4j-api = "2.0.17"
 mapstruct = "1.6.3"
 dev8tion-jda = "6.2.0"
