@@ -1,6 +1,6 @@
 [versions]
 # plugin
-springframework-boot = "4.0.1"
+springframework-boot = "4.0.2"
 spring-dependency-management = "1.1.7"
 linecorp-build-recipe-plugin = "1.1.1"
 com-googel-cloud-tools-jib = "3.5.2"
