@@ -4,20 +4,20 @@ springframework-boot = "4.0.1"
 spring-dependency-management = "1.1.7"
 linecorp-build-recipe-plugin = "1.1.1"
 com-googel-cloud-tools-jib = "3.5.2"
-net-ltgt-errorprone = "4.3.0"
+net-ltgt-errorprone = "4.4.0"
 
 # libs
 projectlombok-lombok = "1.18.42"
 junit-bom = "6.0.1"
 slf4j-api = "2.0.17"
 mapstruct = "1.6.3"
-dev8tion-jda = "6.2.0"
-org-postgresql = "42.7.8"
-assertJ = "3.27.6"
-ch-qos-logback = "1.5.22"
+dev8tion-jda = "6.3.0"
+org-postgresql = "42.7.9"
+assertJ = "3.27.7"
+ch-qos-logback = "1.5.26"
 jspecify = "1.0.0"
-com-uber-nullaway = "0.12.15"
-com-google-errorprone-core = "2.45.0"
+com-uber-nullaway = "0.13.0"
+com-google-errorprone-core = "2.46.0"
 
 [libraries]
 springframework-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter" }
