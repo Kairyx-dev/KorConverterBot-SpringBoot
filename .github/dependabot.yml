@@ -13,7 +13,7 @@ updates:
     groups:
       spring-boot:
         patterns:
-          - "org.springframework*"
+          - "*springframework*"
       testing:
         patterns:
           - "*junit*"
@@ -22,7 +22,7 @@ updates:
         patterns:
           - "*"
         exclude-patterns:
-          - "org.springframework*"
+          - "*springframework*"
           - "*junit*"
           - "*mockito*"
 

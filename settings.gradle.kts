@@ -1,13 +1,5 @@
 rootProject.name = "KorConverterBot-SpringBoot"
 
-dependencyResolutionManagement {
-    versionCatalogs {
-        create("libs") {
-            from(files("libs.versions.toml"))
-        }
-    }
-}
-
 data class Module(
     val name: String,
     val path: String
