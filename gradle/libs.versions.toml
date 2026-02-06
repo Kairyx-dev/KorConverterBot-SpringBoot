@@ -3,7 +3,7 @@
 springframework-boot = "4.0.2"
 spring-dependency-management = "1.1.7"
 linecorp-build-recipe-plugin = "1.1.1"
-com-googel-cloud-tools-jib = "3.5.2"
+com-googel-cloud-tools-jib = "3.5.3"
 net-ltgt-errorprone = "5.0.0"
 
 # libs
@@ -17,7 +17,7 @@ assertJ = "3.27.7"
 ch-qos-logback = "1.5.27"
 jspecify = "1.0.0"
 com-uber-nullaway = "0.13.1"
-com-google-errorprone-core = "2.46.0"
+com-google-errorprone-core = "2.47.0"
 
 [libraries]
 springframework-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter" }
