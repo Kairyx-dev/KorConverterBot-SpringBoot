@@ -1,4 +1,4 @@
-name: Build And push
+name: "main Branch CD: deploy"
 
 on:
   push:

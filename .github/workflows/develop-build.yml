@@ -1,9 +1,9 @@
-name: "main Branch CI: Test"
+name: "develop Branch CI: Test"
 
 on:
   pull_request:
     branches:
-      - main
+      - develop
 
 permissions:
   contents: read
