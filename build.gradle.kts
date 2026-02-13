@@ -53,7 +53,6 @@ configureByLabel("java") {
     }
 
     tasks.withType<JavaCompile> {
-        options.errorprone.isEnabled.set(true)
         options.errorprone {
             option("NullAway:AnnotatedPackages", "com.uber")
         }
