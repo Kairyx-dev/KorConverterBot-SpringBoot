@@ -1,6 +1,6 @@
 [versions]
 # plugin
-springframework-boot = "4.0.3"
+springframework-boot = "4.0.4"
 spring-dependency-management = "1.1.7"
 linecorp-build-recipe-plugin = "1.1.1"
 com-googel-cloud-tools-jib = "3.5.3"
@@ -16,8 +16,8 @@ org-postgresql = "42.7.10"
 assertJ = "3.27.7"
 ch-qos-logback = "1.5.32"
 jspecify = "1.0.0"
-com-uber-nullaway = "0.13.1"
-com-google-errorprone-core = "2.48.0"
+com-uber-nullaway = "0.13.2"
+com-google-errorprone-core = "2.49.0"
 
 [libraries]
 springframework-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter" }

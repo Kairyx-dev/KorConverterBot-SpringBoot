@@ -1,5 +1,6 @@
 package org.specter.converter.domain.core;
 
+@SuppressWarnings("all")
 public class ConverterCore {
 
   private final String ENG_KEY = "rRseEfaqQtTdwWczxvgkoiOjpuPhynbml"; // 키보드 영어 한글순
