@@ -7,6 +7,9 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 2
+    baseline-description: "legacy JPA schema snapshot"
 
 logging:
   level:
