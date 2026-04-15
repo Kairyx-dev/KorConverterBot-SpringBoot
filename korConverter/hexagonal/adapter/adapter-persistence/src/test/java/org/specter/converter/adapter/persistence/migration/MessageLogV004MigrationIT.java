@@ -24,8 +24,9 @@ import org.testcontainers.containers.PostgreSQLContainer;
  * <p>Raw JDBC (not jOOQ DSL) is used for pre-V4 writes because jOOQ generated types reflect the
  * final post-V4 schema only.
  *
- * <p>Guards the four V004 changes: (1) {@code message}/{@code converted_message} accept strings
- * longer than 255 chars (TEXT widening), (2) {@code channel_id} no longer gets 0 when unspecified
+ * <p>Guards the four V004 changes: (1) {@code message} accepts strings longer than 255 chars (TEXT
+ * widening — {@code converted_message} receives the identical ALTER so jOOQ codegen would catch an
+ * inconsistent widening at compile time), (2) {@code channel_id} no longer gets 0 when unspecified
  * (DEFAULT drop), (3) existing {@code created_at}/{@code updated_at} values are interpreted as KST
  * wall-clock and converted to correct UTC instants, (4) new INSERTs after V4 still succeed
  * (regression check on unrelated columns).
