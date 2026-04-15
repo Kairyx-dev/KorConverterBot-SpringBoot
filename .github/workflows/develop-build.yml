@@ -1,4 +1,4 @@
-name: "develop Branch CI: Test"
+name: "develop Branch CI: 5-Gate Pipeline"
 
 on:
   pull_request:
@@ -9,24 +9,68 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  gate-1-compile-checkstyle:
+    name: "Gate 1: Compile + Checkstyle"
     runs-on: ubuntu-latest
-
     steps:
-      # chckout
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      # jdk set up
-      - name: JDK 25 set-up
-        uses: actions/setup-java@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
-          java-version: 25
+          java-version: '25'
           distribution: 'corretto'
+      - uses: gradle/actions/setup-gradle@v4
+      - run: ./gradlew checkstyleMain compileJava
 
-      # grant gradle script
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+  gate-2-unit-archunit:
+    name: "Gate 2: Unit + ArchUnit Tests"
+    needs: gate-1-compile-checkstyle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'corretto'
+      - uses: gradle/actions/setup-gradle@v4
+      - run: ./gradlew :domain:test :application:test :boot:test
 
-      - name: Build with Gradle
-        run: ./gradlew clean build
+  gate-3-integration:
+    name: "Gate 3: Integration Tests (Testcontainers)"
+    needs: gate-2-unit-archunit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'corretto'
+      - uses: gradle/actions/setup-gradle@v4
+      - run: ./gradlew :adapter-persistence:test
+
+  gate-4-mutation:
+    name: "Gate 4: Mutation Testing (placeholder)"
+    needs: gate-2-unit-archunit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'corretto'
+      - uses: gradle/actions/setup-gradle@v4
+      # PIT is incompatible with Gradle 9.x; placeholder until plugin is updated
+      - run: echo "PIT mutation testing skipped -- incompatible with Gradle 9.x"
+
+  gate-5-security:
+    name: "Gate 5: Security (placeholder)"
+    needs: gate-1-compile-checkstyle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'corretto'
+      - uses: gradle/actions/setup-gradle@v4
+      # OWASP dependency-check placeholder
+      - run: echo "OWASP dependency-check placeholder -- to be configured"
