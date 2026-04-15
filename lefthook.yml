@@ -1,0 +1,9 @@
+pre-commit:
+  commands:
+    checkstyle:
+      run: ./gradlew checkstyleMain
+
+pre-push:
+  commands:
+    unit-test:
+      run: ./gradlew :domain:test :application:test

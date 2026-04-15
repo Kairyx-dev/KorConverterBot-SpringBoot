@@ -29,6 +29,8 @@ configureByLabel("java") {
     apply(plugin = "idea")
     apply(plugin = "java")
     apply(plugin = "net.ltgt.errorprone")
+    apply(plugin = "jacoco")
+    apply(plugin = "checkstyle")
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
@@ -57,6 +59,31 @@ configureByLabel("java") {
         options.errorprone {
             option("NullAway:AnnotatedPackages", "com.uber")
         }
+    }
+
+    // JaCoCo
+    tasks.withType<JacocoReport> {
+        dependsOn(tasks.named("test"))
+    }
+    tasks.withType<JacocoCoverageVerification> {
+        violationRules {
+            rule {
+                limit {
+                    minimum = 0.80.toBigDecimal()
+                }
+            }
+        }
+    }
+
+    // Checkstyle
+    configure<CheckstyleExtension> {
+        toolVersion = rootProject.libs.versions.checkstyle.get()
+        configFile = rootProject.file("config/checkstyle/checkstyle.xml")
+        isIgnoreFailures = false
+    }
+    tasks.withType<Checkstyle> {
+        // Exclude jOOQ generated sources
+        exclude("**/generated/**")
     }
 }
 
