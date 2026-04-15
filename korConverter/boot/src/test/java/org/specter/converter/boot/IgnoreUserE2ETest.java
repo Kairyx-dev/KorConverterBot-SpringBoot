@@ -70,7 +70,7 @@ class IgnoreUserE2ETest {
   @Autowired RemoveIgnoreUserUseCase removeUseCase;
 
   @Test
-  void full_lifecycle() {
+  void fullLifecycle() {
     // Add
     var result = addUseCase.execute(new AddIgnoreUserCommand(111L, 222L, "e2eUser"));
     assertThat(result.name()).isEqualTo("e2eUser");

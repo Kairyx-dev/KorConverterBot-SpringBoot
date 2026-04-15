@@ -10,7 +10,7 @@ import com.tngtech.archunit.lang.ArchRule;
 class ArchitectureTest {
 
   @ArchTest
-  static final ArchRule domain_must_not_depend_on_spring =
+  static final ArchRule DOMAIN_MUST_NOT_DEPEND_ON_SPRING =
       noClasses()
           .that()
           .resideInAPackage("..domain..")
@@ -19,7 +19,7 @@ class ArchitectureTest {
           .resideInAnyPackage("org.springframework..", "jakarta..");
 
   @ArchTest
-  static final ArchRule domain_must_not_depend_on_jooq =
+  static final ArchRule DOMAIN_MUST_NOT_DEPEND_ON_JOOQ =
       noClasses()
           .that()
           .resideInAPackage("..domain..")
@@ -28,7 +28,7 @@ class ArchitectureTest {
           .resideInAPackage("org.jooq..");
 
   @ArchTest
-  static final ArchRule application_must_not_depend_on_spring =
+  static final ArchRule APPLICATION_MUST_NOT_DEPEND_ON_SPRING =
       noClasses()
           .that()
           .resideInAPackage("..application..")
@@ -37,7 +37,7 @@ class ArchitectureTest {
           .resideInAnyPackage("org.springframework..", "jakarta..");
 
   @ArchTest
-  static final ArchRule adapter_bot_must_not_depend_on_domain =
+  static final ArchRule ADAPTER_BOT_MUST_NOT_DEPEND_ON_DOMAIN =
       noClasses()
           .that()
           .resideInAPackage("..adapter.bot..")
@@ -48,7 +48,7 @@ class ArchitectureTest {
               "..domain.service..", "..domain.exception..");
 
   @ArchTest
-  static final ArchRule adapter_bot_must_not_depend_on_persistence =
+  static final ArchRule ADAPTER_BOT_MUST_NOT_DEPEND_ON_PERSISTENCE =
       noClasses()
           .that()
           .resideInAPackage("..adapter.bot..")
@@ -57,7 +57,7 @@ class ArchitectureTest {
           .resideInAPackage("..adapter.persistence..");
 
   @ArchTest
-  static final ArchRule adapter_persistence_must_not_depend_on_bot =
+  static final ArchRule ADAPTER_PERSISTENCE_MUST_NOT_DEPEND_ON_BOT =
       noClasses()
           .that()
           .resideInAPackage("..adapter.persistence..")
