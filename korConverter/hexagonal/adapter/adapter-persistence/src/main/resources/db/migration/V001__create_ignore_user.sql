@@ -1,3 +1,7 @@
+-- Legacy baseline: replicates the pre-purist-DDD schema created by the old
+-- JPA adapter. No DEFAULT on timestamps is intentional (JPA filled them via
+-- @CreationTimestamp/@UpdateTimestamp); V003 adds DEFAULT now() when
+-- converting to TIMESTAMPTZ.
 CREATE TABLE ignore_user (
     id          BIGINT                         NOT NULL PRIMARY KEY,
     user_id     BIGINT                         NOT NULL,

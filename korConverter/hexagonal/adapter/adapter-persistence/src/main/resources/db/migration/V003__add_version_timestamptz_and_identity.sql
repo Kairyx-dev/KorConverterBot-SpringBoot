@@ -33,6 +33,10 @@ ALTER TABLE ignore_user
         USING updated_at AT TIME ZONE 'Asia/Seoul',
     ALTER COLUMN updated_at SET DEFAULT now();
 --[jooq ignore stop]
+-- jOOQ DDLDatabase hints (Flyway also executes these, but they are no-ops
+-- in PostgreSQL because the USING-form above already performed the
+-- conversion). These TYPE-only ALTERs let jOOQ (H2 simulation) infer the
+-- final column types as TIMESTAMPTZ -> OffsetDateTime.
 ALTER TABLE ignore_user ALTER COLUMN created_at TYPE TIMESTAMPTZ;
 ALTER TABLE ignore_user ALTER COLUMN created_at SET DEFAULT now();
 ALTER TABLE ignore_user ALTER COLUMN updated_at TYPE TIMESTAMPTZ;
