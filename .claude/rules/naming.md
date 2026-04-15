@@ -24,7 +24,7 @@
 | **Adapter (Out)** | Mapper | `{Subject}PersistenceMapper` | `IgnoreUserPersistenceMapper` |
 
 ## 금지 접미사 (D-12)
-`*Handler`, `*Processor`, `*Manager`, `*Helper`, `*Util`, `*VO`, `*Entity` (JPA Entity 제외)
+`*Handler`, `*Processor`, `*Manager`, `*Helper`, `*Util`, `*VO`, `*Entity`
 
 ## 패키지 구조
 
@@ -49,10 +49,10 @@ org.specter.converter.adapter.bot/        # Inbound: Discord JDA
     ├── configuration/  # JDA Bean setup
     └── properties/     # BotProperties
 
-org.specter.converter.adapter.jpa/        # Outbound: JPA Persistence
-    ├── entity/         # JPA @Entity classes
-    ├── repository/     # Spring Data JPA Repository
-    ├── mapper/         # Domain ↔ JPA Entity Mapper
+org.specter.converter.adapter.persistence/  # Outbound: jOOQ + Flyway Persistence
+    ├── configuration/  # PersistenceAutoConfiguration
+    ├── generated/      # jOOQ generated code (do not edit)
+    ├── mapper/         # Domain ↔ jOOQ Record Mapper
     └── port/           # Port 구현체 (PersistenceAdapter, QueryAdapter)
 ```
 
