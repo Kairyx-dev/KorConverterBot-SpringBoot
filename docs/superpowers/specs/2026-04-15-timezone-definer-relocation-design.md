@@ -1,7 +1,7 @@
 # TimeZoneDefiner 복구 및 모듈 재배치 설계
 
 - **날짜**: 2026-04-15
-- **상태**: Approved (사용자 승인 2026-04-15)
+- **상태**: Implemented (`11ca706`)
 - **관련 브랜치**: `feature/purist-ddd-migration`
 - **관련 커밋**: `2f09b53` (common 모듈 삭제 — TimeZoneDefiner 증발 지점)
 
