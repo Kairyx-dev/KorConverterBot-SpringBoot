@@ -33,8 +33,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 class LegacyToTargetV003MigrationIT {
 
   // enables non-static @BeforeAll/@AfterAll tied to the class-scoped container lifecycle
-  private static final PostgreSQLContainer<?> PG =
-      new PostgreSQLContainer<>("postgres:17-alpine");
+  private static final PostgreSQLContainer<?> PG = new PostgreSQLContainer<>("postgres:17-alpine");
 
   @BeforeAll
   void startContainer() {
@@ -59,8 +58,8 @@ class LegacyToTargetV003MigrationIT {
     // --- 2. Insert legacy-shaped rows via raw JDBC ---
     // ignore_user: KST wall-clock 2025-12-31 23:00:00 -> expected UTC 14:00:00
     // message_log: just check auto-id after V3
-    try (Connection conn = DriverManager.getConnection(
-            PG.getJdbcUrl(), PG.getUsername(), PG.getPassword());
+    try (Connection conn =
+            DriverManager.getConnection(PG.getJdbcUrl(), PG.getUsername(), PG.getPassword());
         Statement stmt = conn.createStatement()) {
       stmt.executeUpdate(
           "INSERT INTO ignore_user (id, user_id, channel_id, name, created_at, updated_at) "
@@ -81,16 +80,15 @@ class LegacyToTargetV003MigrationIT {
         .migrate();
 
     // --- 4. Assert migration effects ---
-    try (Connection conn = DriverManager.getConnection(
-            PG.getJdbcUrl(), PG.getUsername(), PG.getPassword());
+    try (Connection conn =
+            DriverManager.getConnection(PG.getJdbcUrl(), PG.getUsername(), PG.getPassword());
         Statement stmt = conn.createStatement()) {
 
       // 4a. ignore_user: version column is 0, timestamps converted to UTC
-      try (ResultSet rs = stmt.executeQuery(
-          "SELECT version, created_at, updated_at FROM ignore_user WHERE id = 100")) {
-        assertThat(rs.next())
-            .as("ignore_user row id=100 must survive V3 migration")
-            .isTrue();
+      try (ResultSet rs =
+          stmt.executeQuery(
+              "SELECT version, created_at, updated_at FROM ignore_user WHERE id = 100")) {
+        assertThat(rs.next()).as("ignore_user row id=100 must survive V3 migration").isTrue();
         assertThat(rs.getLong("version")).isZero();
         Instant createdAt = rs.getTimestamp("created_at").toInstant();
         Instant updatedAt = rs.getTimestamp("updated_at").toInstant();
@@ -103,8 +101,7 @@ class LegacyToTargetV003MigrationIT {
       stmt.executeUpdate(
           "INSERT INTO ignore_user (user_id, channel_id, name, created_at, updated_at) "
               + "VALUES (999, 888, 'auto', now(), now())");
-      try (ResultSet rs = stmt.executeQuery(
-          "SELECT id FROM ignore_user WHERE user_id = 999")) {
+      try (ResultSet rs = stmt.executeQuery("SELECT id FROM ignore_user WHERE user_id = 999")) {
         assertThat(rs.next())
             .as("new ignore_user INSERT without id must succeed after V003 IDENTITY")
             .isTrue();
@@ -117,8 +114,7 @@ class LegacyToTargetV003MigrationIT {
           "INSERT INTO message_log (guild, channel, nick_name, effective_name, message, "
               + "is_converted, converted_message, channel_id) "
               + "VALUES ('g2', 'c2', 'nk2', 'ef2', 'hi', false, null, 444)");
-      try (ResultSet rs = stmt.executeQuery(
-          "SELECT id FROM message_log WHERE channel_id = 444")) {
+      try (ResultSet rs = stmt.executeQuery("SELECT id FROM message_log WHERE channel_id = 444")) {
         assertThat(rs.next())
             .as("new message_log INSERT without id must succeed after V003 IDENTITY")
             .isTrue();
