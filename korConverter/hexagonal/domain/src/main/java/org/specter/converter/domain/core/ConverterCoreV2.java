@@ -1,8 +1,5 @@
 package org.specter.converter.domain.core;
 
-import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.NullMarked;
-import org.jspecify.annotations.Nullable;
 import org.specter.converter.domain.model.KeyboardIndex;
 import org.specter.converter.domain.model.KrDataIndex;
 
@@ -13,8 +10,6 @@ import org.specter.converter.domain.model.KrDataIndex;
  * @see KrDataIndex
  * @see KeyboardIndex
  */
-@NullMarked
-@Slf4j
 public class ConverterCoreV2 {
 
   public String engToKor(String eng) {
@@ -45,7 +40,7 @@ public class ConverterCoreV2 {
     return indexInfo;
   }
 
-  private KrDataIndex handleKeyboardChar(StringBuilder res, @Nullable Integer engPosition, KrDataIndex indexInfo,
+  private KrDataIndex handleKeyboardChar(StringBuilder res, Integer engPosition, KrDataIndex indexInfo,
       char engCh) {
     if (engPosition == null) { // 영어키가 아닌경우 (특수문자 혹은 띄어쓰기)
       indexInfo = handleSpecialChar(engCh, res, indexInfo);
@@ -204,7 +199,7 @@ public class ConverterCoreV2 {
     return returnIndex;
   }
 
-  private @Nullable Character makeEndOfIndex(KrDataIndex indexInfo) {
+  private Character makeEndOfIndex(KrDataIndex indexInfo) {
     if (indexInfo.chosungIndexed() && indexInfo.jungsungIndexed()) { // 초성 + 중성으로 조합이 가능 함
       return composeSyllableFromIndex(indexInfo);
     }
@@ -326,7 +321,7 @@ public class ConverterCoreV2 {
    * 두개의 자음을 하나의 이중자음으로 변환
    *
    */
-  private @Nullable Character makeDoubleChar(char first, char second) {
+  private Character makeDoubleChar(char first, char second) {
     return KeyboardIndex.COMBINATION_MAP.get(String.valueOf(first) + second);
   }
 

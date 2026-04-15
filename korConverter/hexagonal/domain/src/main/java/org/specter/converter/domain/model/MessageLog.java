@@ -1,10 +1,5 @@
 package org.specter.converter.domain.model;
 
-import lombok.Builder;
-import lombok.With;
-
-@Builder
-@With
 public record MessageLog(
     Long id,
     String guild,

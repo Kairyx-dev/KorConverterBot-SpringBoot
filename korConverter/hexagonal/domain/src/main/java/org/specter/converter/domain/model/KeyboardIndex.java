@@ -2,9 +2,7 @@ package org.specter.converter.domain.model;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.jspecify.annotations.NullMarked;
 
-@NullMarked
 public class KeyboardIndex {
 
   private KeyboardIndex() {
