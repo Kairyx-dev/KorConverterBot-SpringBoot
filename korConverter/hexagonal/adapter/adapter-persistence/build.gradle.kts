@@ -20,10 +20,12 @@ dependencies {
     testImplementation(libs.testcontainers.junit)
 }
 
+val jooqGeneratedDir = layout.buildDirectory.dir("generated/sources/jooq/main")
+
 sourceSets {
     main {
         java {
-            srcDir("src/main/generated")
+            srcDir(jooqGeneratedDir)
         }
     }
 }
@@ -50,7 +52,7 @@ jooq {
             }
             target {
                 packageName = "org.specter.converter.adapter.persistence.generated"
-                directory = "src/main/generated"
+                directory = jooqGeneratedDir.get().asFile.absolutePath
             }
         }
     }
