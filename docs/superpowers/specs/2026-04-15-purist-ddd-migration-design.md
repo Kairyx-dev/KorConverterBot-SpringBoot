@@ -84,10 +84,12 @@ module(":korConverter:hexagonal:adapter:adapter-persistence",   "korConverter/he
 |------|-------------|
 | domain | 없음 (D-1) |
 | application | domain |
-| configuration | application, domain, spring-tx |
 | adapter-bot | application, JDA |
 | adapter-persistence | application, domain, spring-boot-starter-jooq, flyway, postgresql, mapstruct |
+| configuration | application, domain, adapter-bot, adapter-persistence, spring-tx |
 | boot | configuration, adapter-bot, adapter-persistence |
+
+> configuration은 조립(assembly) 모듈이므로 adapter 구체 클래스를 참조하여 UseCase TX 프록시를 생성한다.
 
 ### AutoConfiguration 등록
 
@@ -151,9 +153,11 @@ public final class IgnoreUser {
 
     public static IgnoreUser create(UserId userId, ChannelId channelId,
                                      String name, Instant now) {
-        var user = new IgnoreUser(IgnoreUserId.generate(), userId, channelId,
+        var user = new IgnoreUser(IgnoreUserId.UNSAVED, userId, channelId,
                                    name, now, now, 0L);
-        user.registerEvent(new IgnoreUserAddedEvent(...));
+        user.registerEvent(new IgnoreUserAddedEvent(
+            UUID.randomUUID(), "IGNORE_USER_ADDED",
+            user.id.value(), now, user.version));
         return user;
     }
 
@@ -178,10 +182,21 @@ public final class IgnoreUser {
 
 ### Value Objects
 
+ID 생성 전략: **DB BIGSERIAL** 유지.
+
+playbook은 UUIDv7을 권장하지만, 이 프로젝트는:
+- Discord ID가 long 기반 (Snowflake)
+- 기존 스키마가 BIGSERIAL
+- 단일 BC + 단일 DB에서 UUID의 이점이 적음
+
+따라서 IgnoreUserId는 DB가 생성한 값을 받는 방식으로 운영.
+create() 시에는 임시 ID(0L)를 사용하고, save() 후 DB 반환값으로 교체.
+이 결정은 ADR로 문서화한다.
+
 ```java
 public record IgnoreUserId(long value) {
-    public IgnoreUserId { if (value <= 0) throw new IllegalArgumentException(); }
-    public static IgnoreUserId generate() { /* UUIDv7 또는 snowflake */ }
+    public static final IgnoreUserId UNSAVED = new IgnoreUserId(0L);
+    public IgnoreUserId { if (value < 0) throw new IllegalArgumentException(); }
 }
 public record UserId(long value) {
     public UserId { if (value <= 0) throw new IllegalArgumentException(); }
@@ -216,8 +231,18 @@ public sealed class IgnoreUserException extends RuntimeException
     permits IgnoreUserNotFoundException, IgnoreUserAlreadyExistsException {
     protected IgnoreUserException(String message) { super(message); }
 }
-public final class IgnoreUserNotFoundException extends IgnoreUserException { ... }
-public final class IgnoreUserAlreadyExistsException extends IgnoreUserException { ... }
+public final class IgnoreUserNotFoundException extends IgnoreUserException {
+    public IgnoreUserNotFoundException(UserId userId, ChannelId channelId) {
+        super("IgnoreUser not found: userId=%d, channelId=%d"
+              .formatted(userId.value(), channelId.value()));
+    }
+}
+public final class IgnoreUserAlreadyExistsException extends IgnoreUserException {
+    public IgnoreUserAlreadyExistsException(UserId userId, ChannelId channelId) {
+        super("IgnoreUser already exists: userId=%d, channelId=%d"
+              .formatted(userId.value(), channelId.value()));
+    }
+}
 ```
 
 ### 규칙 준수 검증
@@ -538,15 +563,17 @@ public class ConverterBeanAutoConfiguration {
 
 ```toml
 [versions]
-jooq = "3.20.x"
-flyway = "11.x"
-testcontainers = "1.20.x"
-archunit = "1.4.x"
-pit = "1.17.x"
-spotless = "7.x"
-checkstyle = "10.x"
-jqwik = "1.9.x"
+jooq = "3.20.4"
+flyway = "11.8.2"
+testcontainers = "1.21.1"
+archunit = "1.4.0"
+pit = "1.17.4"
+spotless = "7.0.4"
+checkstyle = "10.25.0"
+jqwik = "1.9.3"
 ```
+
+> 실제 구현 시점에 최신 안정 버전을 확인하여 조정한다.
 
 ### 5단계 품질 방어선
 
