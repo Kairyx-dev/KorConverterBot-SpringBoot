@@ -9,6 +9,7 @@ plugins {
     alias(libs.plugins.linecorp.build.recipe.plugin)
     alias(libs.plugins.com.google.cloud.tools.jib)
     alias(libs.plugins.net.ltgt.errorprone)
+    alias(libs.plugins.spotless)
 }
 
 allprojects {
@@ -114,5 +115,13 @@ configureByLabel("boot") {
             )
             workingDirectory = "/app"
         }
+    }
+}
+
+spotless {
+    java {
+        target("**/*.java")
+        targetExclude("**/build/**", "**/generated/**")
+        googleJavaFormat()
     }
 }

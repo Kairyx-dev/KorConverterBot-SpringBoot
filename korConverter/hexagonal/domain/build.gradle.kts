@@ -1,8 +1,11 @@
+// D-1: ZERO external dependencies
 dependencies {
-    implementation(libs.ch.qos.logback.core)
-    implementation(libs.ch.qos.logback.classic)
-    implementation(libs.org.jspecify)
+    testRuntimeOnly(libs.junit.platform.launcher)
+    testRuntimeOnly(libs.junit.jupiter.engine)
 
-    implementation(libs.slf4j.api)
-    annotationProcessor(libs.slf4j.api)
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    testImplementation(libs.assertj)
+    testImplementation(libs.jqwik)
 }
