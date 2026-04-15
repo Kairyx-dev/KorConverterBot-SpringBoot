@@ -18,12 +18,12 @@ import org.specter.converter.application.port.input.CheckIgnoreUserUseCase;
 import org.specter.converter.application.port.input.ConvertMessageUseCase;
 import org.specter.converter.application.port.input.RemoveIgnoreUserUseCase;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.context.annotation.Bean;
 
 @AutoConfiguration
-@ConfigurationPropertiesScan(basePackages = "org.specter.converter.adapter.bot.properties")
+@EnableConfigurationProperties(BotProperties.class)
 public class BotAutoConfiguration {
 
   private static final Logger log = LoggerFactory.getLogger(BotAutoConfiguration.class);
