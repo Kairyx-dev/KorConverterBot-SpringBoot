@@ -1,16 +1,16 @@
-package org.specter.converter.domain.core;
-
-import org.specter.converter.domain.model.KeyboardIndex;
-import org.specter.converter.domain.model.KrDataIndex;
+package org.specter.converter.domain.model;
 
 /**
- * Core v1 과의 차이점 <br/> - 최대한 하드코딩 되지 않도록 KrDataIndex 레코드 사용 <br/> - 키보드 인덱스 분리 및 raw 인덱스 사용 대신 Map 사용 <br/> - 메소드 크기
- * 조정
+ * Domain Service for English-to-Korean keyboard conversion.
+ *
+ * <p>Converts English keystrokes typed on a QWERTY keyboard into the corresponding
+ * Korean characters, handling chosung/jungsung/jongsung composition rules including
+ * double consonants, compound vowels, and special character passthrough.</p>
  *
  * @see KrDataIndex
  * @see KeyboardIndex
  */
-public class ConverterCoreV2 {
+public class ConversionDomainService {
 
   public String engToKor(String eng) {
     if (eng.isEmpty()) {
@@ -172,7 +172,6 @@ public class ConverterCoreV2 {
 
   /**
    * 중성 입력을 위해 이전에 존재 하던 종성을 분리하여 초성으로 사용하도록 합니다.
-   *
    */
   private KrDataIndex useJongsungToChosungForJungsung(final KrDataIndex indexInfo, StringBuilder res) {
     // 이중자음 다시 분해
@@ -223,7 +222,6 @@ public class ConverterCoreV2 {
    * 초성 Map 으로 부터 INDEX 추출
    *
    * @throws IllegalStateException 초성에 해당하지 않는 char 를 입력시 exception을 발생시킴
-   *
    */
   private int getChosungIndex(char kor) {
     final var currentChoIndex = KeyboardIndex.CHOSUNG_INDEX_MAP.get(kor);
@@ -238,7 +236,6 @@ public class ConverterCoreV2 {
    * 중성 Map 으로 부터 INDEX 추출
    *
    * @throws IllegalStateException 중성에 해당하지 않는 char 를 입력시 exception을 발생시킴
-   *
    */
   private int getJungsungIndex(char kor) {
     final var index = KeyboardIndex.JUNGSUNG_INDEX_MAP.get(kor);
@@ -253,7 +250,6 @@ public class ConverterCoreV2 {
    * 종성 Map 으로 부터 INDEX 추출
    *
    * @throws IllegalStateException 종성에 해당하지 않는 char 를 입력시 exception을 발생시킴
-   *
    */
   private int getJongsungIndex(char kor) {
     var jongsung = KeyboardIndex.JONGSUNG_INDEX_MAP.get(kor);
@@ -266,7 +262,7 @@ public class ConverterCoreV2 {
   /**
    * 초성 중성 종성의 위치로 한글을 조합합니다.
    *
-   * @return 조합된 한글 string
+   * @return 조합된 한글 char
    */
   private char composeSyllableFromIndex(KrDataIndex indexInfo) {
     return (char) (0xac00 + indexInfo.chosung() * 21 * 28 + indexInfo.jungsung() * 28 + indexInfo.jongsung() + 1);
@@ -319,7 +315,6 @@ public class ConverterCoreV2 {
 
   /**
    * 두개의 자음을 하나의 이중자음으로 변환
-   *
    */
   private Character makeDoubleChar(char first, char second) {
     return KeyboardIndex.COMBINATION_MAP.get(String.valueOf(first) + second);

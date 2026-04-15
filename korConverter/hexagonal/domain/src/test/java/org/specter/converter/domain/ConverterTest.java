@@ -7,15 +7,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.specter.converter.domain.core.ConverterCoreV2;
+import org.specter.converter.domain.model.ConversionDomainService;
 
 class ConverterTest {
 
-  private ConverterCoreV2 converterCore;
+  private ConversionDomainService converterCore;
 
   @BeforeEach
   void setUp() {
-    converterCore = new ConverterCoreV2();
+    converterCore = new ConversionDomainService();
   }
 
   @ParameterizedTest
