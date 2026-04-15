@@ -29,6 +29,15 @@ Stage 1과 Stage 2가 완료되면서 `ignore_user`/`message_log` 스키마는 �
 
 모든 변경은 **"무참조 제거"** 또는 **"카탈로그 메타데이터 수정"**이다.
 
+### 1.3 `ignore_user.updated_at`은 제거 대상이 아님 (설계 의도)
+
+본 스펙은 `message_log.updated_at`만 제거한다. `ignore_user.updated_at`은 아래 이유로 **유지**된다:
+
+- `message_log`는 **append-only 로그** — INSERT만 발생하며 row가 수정되지 않음. 따라서 `updated_at`이 항상 `created_at`과 같아 무의미
+- `ignore_user`는 **mutable Aggregate Root** — 이름 변경 등 UPDATE가 발생하며 `version` + `updated_at`이 optimistic lock과 수정 시각 추적에 활용됨. `IgnoreUserPersistenceAdapter.save()`의 UPDATE 경로가 `updated_at`을 실제로 set
+
+두 테이블이 동일한 JPA `BaseTimeEntity`를 상속했던 결과로 `updated_at`을 공통 보유했으나, 도메인 의미가 다르므로 Stage 3에서 `message_log`만 제거하고 `ignore_user`는 그대로 둔다.
+
 ## 2. 목표
 
 - `message_log.updated_at` 컬럼 제거 (append-only 로그 정리)
