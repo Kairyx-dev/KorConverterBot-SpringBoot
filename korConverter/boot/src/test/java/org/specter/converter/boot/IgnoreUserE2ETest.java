@@ -23,69 +23,67 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @SpringBootTest(
     classes = IgnoreUserE2ETest.E2ETestConfig.class,
     properties = {
-        "spring.autoconfigure.exclude="
-            + "org.specter.converter.adapter.bot.configuration.BotAutoConfiguration"
+      "spring.autoconfigure.exclude="
+          + "org.specter.converter.adapter.bot.configuration.BotAutoConfiguration"
     })
 class IgnoreUserE2ETest {
 
-    static final PostgreSQLContainer<?> PG =
-            new PostgreSQLContainer<>("postgres:17-alpine").withReuse(true);
+  static final PostgreSQLContainer<?> PG =
+      new PostgreSQLContainer<>("postgres:17-alpine").withReuse(true);
 
-    static {
-        PG.start();
+  static {
+    PG.start();
+  }
+
+  @DynamicPropertySource
+  static void dbProps(DynamicPropertyRegistry registry) {
+    registry.add("spring.datasource.url", PG::getJdbcUrl);
+    registry.add("spring.datasource.username", PG::getUsername);
+    registry.add("spring.datasource.password", PG::getPassword);
+  }
+
+  @EnableAutoConfiguration
+  @Import({
+    org.specter.converter.adapter.persistence.configuration.PersistenceAutoConfiguration.class,
+    org.specter.converter.configuration.ConverterBeanAutoConfiguration.class
+  })
+  static class E2ETestConfig {
+
+    @Bean
+    Flyway flyway(DataSource dataSource) {
+      Flyway flyway =
+          Flyway.configure()
+              .dataSource(dataSource)
+              .locations("classpath:db/migration")
+              .cleanDisabled(false)
+              .load();
+      flyway.clean();
+      flyway.migrate();
+      return flyway;
     }
+  }
 
-    @DynamicPropertySource
-    static void dbProps(DynamicPropertyRegistry registry) {
-        registry.add("spring.datasource.url", PG::getJdbcUrl);
-        registry.add("spring.datasource.username", PG::getUsername);
-        registry.add("spring.datasource.password", PG::getPassword);
-    }
+  @Autowired AddIgnoreUserUseCase addUseCase;
 
-    @EnableAutoConfiguration
-    @Import({
-        org.specter.converter.adapter.persistence.configuration.PersistenceAutoConfiguration.class,
-        org.specter.converter.configuration.ConverterBeanAutoConfiguration.class
-    })
-    static class E2ETestConfig {
+  @Autowired CheckIgnoreUserUseCase checkUseCase;
 
-        @Bean
-        Flyway flyway(DataSource dataSource) {
-            Flyway flyway = Flyway.configure()
-                    .dataSource(dataSource)
-                    .locations("classpath:db/migration")
-                    .cleanDisabled(false)
-                    .load();
-            flyway.clean();
-            flyway.migrate();
-            return flyway;
-        }
-    }
+  @Autowired RemoveIgnoreUserUseCase removeUseCase;
 
-    @Autowired
-    AddIgnoreUserUseCase addUseCase;
+  @Test
+  void full_lifecycle() {
+    // Add
+    var result = addUseCase.execute(new AddIgnoreUserCommand(111L, 222L, "e2eUser"));
+    assertThat(result.name()).isEqualTo("e2eUser");
+    assertThat(result.userId()).isEqualTo(111L);
+    assertThat(result.channelId()).isEqualTo(222L);
 
-    @Autowired
-    CheckIgnoreUserUseCase checkUseCase;
+    // Check exists
+    assertThat(checkUseCase.execute(new CheckIgnoreUserQuery(111L, 222L))).isTrue();
 
-    @Autowired
-    RemoveIgnoreUserUseCase removeUseCase;
+    // Remove
+    removeUseCase.execute(new RemoveIgnoreUserCommand(111L, 222L));
 
-    @Test
-    void full_lifecycle() {
-        // Add
-        var result = addUseCase.execute(new AddIgnoreUserCommand(111L, 222L, "e2eUser"));
-        assertThat(result.name()).isEqualTo("e2eUser");
-        assertThat(result.userId()).isEqualTo(111L);
-        assertThat(result.channelId()).isEqualTo(222L);
-
-        // Check exists
-        assertThat(checkUseCase.execute(new CheckIgnoreUserQuery(111L, 222L))).isTrue();
-
-        // Remove
-        removeUseCase.execute(new RemoveIgnoreUserCommand(111L, 222L));
-
-        // Check removed
-        assertThat(checkUseCase.execute(new CheckIgnoreUserQuery(111L, 222L))).isFalse();
-    }
+    // Check removed
+    assertThat(checkUseCase.execute(new CheckIgnoreUserQuery(111L, 222L))).isFalse();
+  }
 }

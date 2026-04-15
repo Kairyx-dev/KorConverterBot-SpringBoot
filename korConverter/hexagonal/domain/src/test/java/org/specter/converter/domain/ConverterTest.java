@@ -34,17 +34,16 @@ class ConverterTest {
         new TestCase("kijuhynmlop", "ㅏㅑㅓㅕㅗㅛㅜㅡㅣㅐㅔ"),
         new TestCase("dlwndwkdma rkqtwkfggkrt", "이중자음 값잟핛"),
         new TestCase("dlwndahdma dhkwlsWhk dhodnpdml", "이중모음 와진쫘 왜웨의"),
-        new TestCase("wjscp zlqhem q w e r t y u i o p a s d f g h j k l z x c v b n m",
+        new TestCase(
+            "wjscp zlqhem q w e r t y u i o p a s d f g h j k l z x c v b n m",
             "전체 키보드 ㅂ ㅈ ㄷ ㄱ ㅅ ㅛ ㅕ ㅑ ㅐ ㅔ ㅁ ㄴ ㅇ ㄹ ㅎ ㅗ ㅓ ㅏ ㅣ ㅋ ㅌ ㅊ ㅍ ㅠ ㅜ ㅡ"),
         new TestCase("rt sw sg fr fa fq ft fx fv fg qt ghj", "ㄳ ㄵ ㄶ ㄺ ㄻ ㄼ ㄽ ㄾ ㄿ ㅀ ㅄ 호ㅓ"),
         new TestCase("whdqt", "종ㅄ"),
         new TestCase("djEja", "어떰"),
         new TestCase("gufak", "혈마"),
         new TestCase("gufak?", "혈마?"),
-        new TestCase("gkausgka", "하면함")
-    );
+        new TestCase("gkausgka", "하면함"));
   }
 
-  protected record TestCase(String eng, String kor) {
-  }
+  protected record TestCase(String eng, String kor) {}
 }

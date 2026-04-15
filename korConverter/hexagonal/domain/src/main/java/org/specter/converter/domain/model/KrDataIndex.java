@@ -1,10 +1,6 @@
 package org.specter.converter.domain.model;
 
-public record KrDataIndex(
-    int chosung,
-    int jungsung,
-    int jongsung
-) {
+public record KrDataIndex(int chosung, int jungsung, int jongsung) {
 
   public static final int NONE_INDEX = -1;
 

@@ -5,8 +5,7 @@ import java.util.Map;
 
 public class KeyboardIndex {
 
-  private KeyboardIndex() {
-  }
+  private KeyboardIndex() {}
 
   private static final String ENG_KEY = "rRseEfaqQtTdwWczxvgkoiOjpuPhynbml"; // 키보드 영어 한글순
   public static final String KOR_KEY = "ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎㅏㅐㅑㅒㅓㅔㅕㅖㅗㅛㅜㅠㅡㅣ";
@@ -16,11 +15,15 @@ public class KeyboardIndex {
   public static final int KOR_KEY_JUNGSUNG_START_POSITION = 19;
 
   public static final Map<Character, Integer> ENG_INDEX_MAP = Map.copyOf(makeIndexMap(ENG_KEY));
-  public static final Map<Character, Integer> CHOSUNG_INDEX_MAP = Map.copyOf(makeIndexMap(CHO_DATA));
-  public static final Map<Character, Integer> JUNGSUNG_INDEX_MAP = Map.copyOf(makeIndexMap(JUNG_DATA));
-  public static final Map<Character, Integer> JONGSUNG_INDEX_MAP = Map.copyOf(makeIndexMap(JONG_DATA));
+  public static final Map<Character, Integer> CHOSUNG_INDEX_MAP =
+      Map.copyOf(makeIndexMap(CHO_DATA));
+  public static final Map<Character, Integer> JUNGSUNG_INDEX_MAP =
+      Map.copyOf(makeIndexMap(JUNG_DATA));
+  public static final Map<Character, Integer> JONGSUNG_INDEX_MAP =
+      Map.copyOf(makeIndexMap(JONG_DATA));
   public static final Map<String, Character> COMBINATION_MAP = Map.copyOf(createDoubleCharMap());
-  public static final Map<Character, String> SEPARATED_CONSONANT_MAP = Map.copyOf(createSepratedConsonantMap());
+  public static final Map<Character, String> SEPARATED_CONSONANT_MAP =
+      Map.copyOf(createSepratedConsonantMap());
 
   private static Map<Character, Integer> makeIndexMap(String original) {
     Map<Character, Integer> indexMap = new HashMap<>();

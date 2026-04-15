@@ -29,27 +29,30 @@ public class BotAutoConfiguration {
   private static final Logger log = LoggerFactory.getLogger(BotAutoConfiguration.class);
 
   @Bean
-  public MessageListener messageListener(ConvertMessageUseCase convertMessageUseCase,
-      CheckIgnoreUserUseCase checkIgnoreUserUseCase) {
+  public MessageListener messageListener(
+      ConvertMessageUseCase convertMessageUseCase, CheckIgnoreUserUseCase checkIgnoreUserUseCase) {
     return new MessageListener(convertMessageUseCase, checkIgnoreUserUseCase);
   }
 
   @Bean
-  public CommandListener commandListener(AddIgnoreUserUseCase addIgnoreUserUseCase,
+  public CommandListener commandListener(
+      AddIgnoreUserUseCase addIgnoreUserUseCase,
       RemoveIgnoreUserUseCase removeIgnoreUserUseCase,
       BuildProperties buildProperties) {
     return new CommandListener(addIgnoreUserUseCase, removeIgnoreUserUseCase, buildProperties);
   }
 
   @Bean
-  public JDA jda(BotProperties botProperties, MessageListener messageListener,
+  public JDA jda(
+      BotProperties botProperties,
+      MessageListener messageListener,
       CommandListener commandListener) {
     log.info("build new jda instance");
-    JDA jda = JDABuilder
-        .createDefault(botProperties.token())
-        .enableIntents(GatewayIntent.DIRECT_MESSAGES)
-        .enableIntents(GatewayIntent.MESSAGE_CONTENT)
-        .build();
+    JDA jda =
+        JDABuilder.createDefault(botProperties.token())
+            .enableIntents(GatewayIntent.DIRECT_MESSAGES)
+            .enableIntents(GatewayIntent.MESSAGE_CONTENT)
+            .build();
 
     jda.getPresence().setStatus(OnlineStatus.ONLINE);
     jda.addEventListener(messageListener);
@@ -57,13 +60,17 @@ public class BotAutoConfiguration {
 
     CommandListUpdateAction commandUpdateAction = jda.updateCommands();
 
-    commandUpdateAction.addCommands(
-        Commands.slash(BotCommand.ECO_TEST.getCommand(), BotCommand.ECO_TEST.getDescription())
-            .addOption(OptionType.STRING, "content", "봇이 따라할 대사입니다."),
-        Commands.slash(BotCommand.ECO_VERSION.getCommand(), BotCommand.ECO_VERSION.getDescription()),
-        Commands.slash(BotCommand.IGNORE_ME.getCommand(), BotCommand.IGNORE_ME.getDescription()),
-        Commands.slash(BotCommand.UN_IGNORE_ME.getCommand(), BotCommand.UN_IGNORE_ME.getDescription())
-    ).queue();
+    commandUpdateAction
+        .addCommands(
+            Commands.slash(BotCommand.ECO_TEST.getCommand(), BotCommand.ECO_TEST.getDescription())
+                .addOption(OptionType.STRING, "content", "봇이 따라할 대사입니다."),
+            Commands.slash(
+                BotCommand.ECO_VERSION.getCommand(), BotCommand.ECO_VERSION.getDescription()),
+            Commands.slash(
+                BotCommand.IGNORE_ME.getCommand(), BotCommand.IGNORE_ME.getDescription()),
+            Commands.slash(
+                BotCommand.UN_IGNORE_ME.getCommand(), BotCommand.UN_IGNORE_ME.getDescription()))
+        .queue();
 
     return jda;
   }

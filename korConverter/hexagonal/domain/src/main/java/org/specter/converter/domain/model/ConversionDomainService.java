@@ -3,9 +3,9 @@ package org.specter.converter.domain.model;
 /**
  * Domain Service for English-to-Korean keyboard conversion.
  *
- * <p>Converts English keystrokes typed on a QWERTY keyboard into the corresponding
- * Korean characters, handling chosung/jungsung/jongsung composition rules including
- * double consonants, compound vowels, and special character passthrough.</p>
+ * <p>Converts English keystrokes typed on a QWERTY keyboard into the corresponding Korean
+ * characters, handling chosung/jungsung/jongsung composition rules including double consonants,
+ * compound vowels, and special character passthrough.
  *
  * @see KrDataIndex
  * @see KeyboardIndex
@@ -40,8 +40,8 @@ public class ConversionDomainService {
     return indexInfo;
   }
 
-  private KrDataIndex handleKeyboardChar(StringBuilder res, Integer engPosition, KrDataIndex indexInfo,
-      char engCh) {
+  private KrDataIndex handleKeyboardChar(
+      StringBuilder res, Integer engPosition, KrDataIndex indexInfo, char engCh) {
     if (engPosition == null) { // 영어키가 아닌경우 (특수문자 혹은 띄어쓰기)
       indexInfo = handleSpecialChar(engCh, res, indexInfo);
     } else if (engPosition < KeyboardIndex.KOR_KEY_JUNGSUNG_START_POSITION) { // 자음
@@ -52,7 +52,8 @@ public class ConversionDomainService {
     return indexInfo;
   }
 
-  private KrDataIndex handleSpecialChar(char engCh, StringBuilder resultStringBuilder, KrDataIndex indexInfo) {
+  private KrDataIndex handleSpecialChar(
+      char engCh, StringBuilder resultStringBuilder, KrDataIndex indexInfo) {
     // 특수문자 입력으로 인해 지정 초기화 및 입력된 특수문자 그대로 삽입
     var end = makeEndOfIndex(indexInfo);
     if (end != null) {
@@ -64,9 +65,10 @@ public class ConversionDomainService {
     return indexInfo;
   }
 
-  private KrDataIndex handleVowels(KrDataIndex indexInfo, StringBuilder resultStringBuilder, int engPosition) {
+  private KrDataIndex handleVowels(
+      KrDataIndex indexInfo, StringBuilder resultStringBuilder, int engPosition) {
     var info = indexInfo;
-    if (info.jongsungIndexed()) { //종성이 있는경우 앞의 종성을 초성 으로 사용
+    if (info.jongsungIndexed()) { // 종성이 있는경우 앞의 종성을 초성 으로 사용
       info = useJongsungToChosungForJungsung(indexInfo, resultStringBuilder);
     }
 
@@ -74,7 +76,8 @@ public class ConversionDomainService {
     return info;
   }
 
-  private KrDataIndex handleConsonant(KrDataIndex indexInfo, StringBuilder resultStringBuilder, int engPosition) {
+  private KrDataIndex handleConsonant(
+      KrDataIndex indexInfo, StringBuilder resultStringBuilder, int engPosition) {
     final char currentKor = KeyboardIndex.KOR_KEY.charAt(engPosition);
     // 현재 입력된 자음(초성) 위치
     final var currentChoIndex = getChosungIndex(currentKor);
@@ -87,15 +90,15 @@ public class ConversionDomainService {
 
     if (indexInfo.jungsungIndexed()) {
       indexInfo = insertJongsung(indexInfo, resultStringBuilder, currentChoIndex);
-    } else {// 이전 중성입력이 없음
+    } else { // 이전 중성입력이 없음
       indexInfo = insertChosung(indexInfo, resultStringBuilder, currentChoIndex);
     }
 
     return indexInfo;
   }
 
-  private KrDataIndex insertChosung(final KrDataIndex indexInfo, StringBuilder resultStringBuilder,
-      int currentChoIndex) {
+  private KrDataIndex insertChosung(
+      final KrDataIndex indexInfo, StringBuilder resultStringBuilder, int currentChoIndex) {
     var resultInfo = indexInfo;
 
     if (!resultInfo.chosungIndexed() && resultInfo.jungsungIndexed()) { // 초성없이 종성있음, 종성 처리
@@ -120,8 +123,8 @@ public class ConversionDomainService {
     return resultInfo;
   }
 
-  private KrDataIndex insertJongsung(final KrDataIndex indexInfo, StringBuilder resultStringBuilder,
-      int currentChoIndex) {
+  private KrDataIndex insertJongsung(
+      final KrDataIndex indexInfo, StringBuilder resultStringBuilder, int currentChoIndex) {
     if (!indexInfo.jongsungIndexed()) { // 종성이 없는경우 입력된 값은 종성으로 사용
       char kor = KeyboardIndex.CHO_DATA.charAt(currentChoIndex);
       Integer jongsung = KeyboardIndex.JONGSUNG_INDEX_MAP.get(kor);
@@ -133,8 +136,10 @@ public class ConversionDomainService {
         return indexInfo.withJongsung(jongsung);
       }
     } else { // 기존 종성이 있는경우 이중종성 조합 시도
-      var doubleChar = makeDoubleChar(KeyboardIndex.JONG_DATA.charAt(indexInfo.jongsung()),
-          KeyboardIndex.CHO_DATA.charAt(currentChoIndex));
+      var doubleChar =
+          makeDoubleChar(
+              KeyboardIndex.JONG_DATA.charAt(indexInfo.jongsung()),
+              KeyboardIndex.CHO_DATA.charAt(currentChoIndex));
 
       if (doubleChar != null) { // 이중종성이 가능한경우 종성삽입
         return indexInfo.withJongsung(getJongsungIndex(doubleChar));
@@ -145,7 +150,8 @@ public class ConversionDomainService {
     }
   }
 
-  private KrDataIndex insertJungsung(final KrDataIndex indexInfo, int engPosition, StringBuilder res) {
+  private KrDataIndex insertJungsung(
+      final KrDataIndex indexInfo, int engPosition, StringBuilder res) {
     if (!indexInfo.jungsungIndexed()) { // 중성 입력 중
       return indexInfo.withJungsung(getJungsungIndex(KeyboardIndex.KOR_KEY.charAt(engPosition)));
     } else {
@@ -157,10 +163,10 @@ public class ConversionDomainService {
         return indexInfo.withJungsung(getJungsungIndex(doubleChar));
       } else { // 조합 안되는 모음 입력
         KrDataIndex returnIndex = indexInfo;
-        if (indexInfo.chosungIndexed()) {            // 초성+중성 후 중성
+        if (indexInfo.chosungIndexed()) { // 초성+중성 후 중성
           res.append(composeSyllableFromIndex(indexInfo));
           returnIndex = indexInfo.clearChosung();
-        } else {                        // 중성 후 중성
+        } else { // 중성 후 중성
           res.append(KeyboardIndex.JUNG_DATA.charAt(indexInfo.jungsung()));
         }
         returnIndex = returnIndex.clearJungsung();
@@ -170,21 +176,23 @@ public class ConversionDomainService {
     }
   }
 
-  /**
-   * 중성 입력을 위해 이전에 존재 하던 종성을 분리하여 초성으로 사용하도록 합니다.
-   */
-  private KrDataIndex useJongsungToChosungForJungsung(final KrDataIndex indexInfo, StringBuilder res) {
+  /** 중성 입력을 위해 이전에 존재 하던 종성을 분리하여 초성으로 사용하도록 합니다. */
+  private KrDataIndex useJongsungToChosungForJungsung(
+      final KrDataIndex indexInfo, StringBuilder res) {
     // 이중자음 다시 분해
-    int tempCho;            // (임시용) 초성
+    int tempCho; // (임시용) 초성
     KrDataIndex returnIndex;
 
-    String separated = KeyboardIndex.SEPARATED_CONSONANT_MAP.get(KeyboardIndex.JONG_DATA.charAt(indexInfo.jongsung()));
+    String separated =
+        KeyboardIndex.SEPARATED_CONSONANT_MAP.get(
+            KeyboardIndex.JONG_DATA.charAt(indexInfo.jongsung()));
 
     if (separated != null) {
       returnIndex = indexInfo.withJongsung(getJongsungIndex(separated.charAt(0)));
       tempCho = getChosungIndex(separated.charAt(1));
     } else {
-      tempCho = KeyboardIndex.CHO_DATA.indexOf(KeyboardIndex.JONG_DATA.charAt(indexInfo.jongsung()));
+      tempCho =
+          KeyboardIndex.CHO_DATA.indexOf(KeyboardIndex.JONG_DATA.charAt(indexInfo.jongsung()));
       returnIndex = indexInfo.clearJongsung();
     }
 
@@ -265,7 +273,12 @@ public class ConversionDomainService {
    * @return 조합된 한글 char
    */
   private char composeSyllableFromIndex(KrDataIndex indexInfo) {
-    return (char) (0xac00 + indexInfo.chosung() * 21 * 28 + indexInfo.jungsung() * 28 + indexInfo.jongsung() + 1);
+    return (char)
+        (0xac00
+            + indexInfo.chosung() * 21 * 28
+            + indexInfo.jungsung() * 28
+            + indexInfo.jongsung()
+            + 1);
   }
 
   /**
@@ -306,18 +319,18 @@ public class ConversionDomainService {
   }
 
   private boolean isSpecificCode(char c) {
-    return ('!' <= c && c <= '/') || (':' <= c && c <= '@') || ('[' < c && c < '`') || ('{' < c && c < '~');
+    return ('!' <= c && c <= '/')
+        || (':' <= c && c <= '@')
+        || ('[' < c && c < '`')
+        || ('{' < c && c < '~');
   }
 
   private boolean isNumber(char c) {
     return ('0' <= c && c <= '9');
   }
 
-  /**
-   * 두개의 자음을 하나의 이중자음으로 변환
-   */
+  /** 두개의 자음을 하나의 이중자음으로 변환 */
   private Character makeDoubleChar(char first, char second) {
     return KeyboardIndex.COMBINATION_MAP.get(String.valueOf(first) + second);
   }
-
 }

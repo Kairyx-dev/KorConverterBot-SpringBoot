@@ -20,17 +20,13 @@ public class IgnoreUserQueryAdapter implements IgnoreUserQueryPort {
   public boolean existsByUserIdAndChannelId(long userId, long channelId) {
     return dsl.fetchExists(
         dsl.selectFrom(IGNORE_USER)
-            .where(
-                IGNORE_USER.USER_ID.eq(userId).and(IGNORE_USER.CHANNEL_ID.eq(channelId))));
+            .where(IGNORE_USER.USER_ID.eq(userId).and(IGNORE_USER.CHANNEL_ID.eq(channelId))));
   }
 
   @Override
   public List<IgnoreUserResult> findAllByChannelId(long channelId) {
     return dsl.selectFrom(IGNORE_USER)
         .where(IGNORE_USER.CHANNEL_ID.eq(channelId))
-        .fetch(
-            r ->
-                new IgnoreUserResult(
-                    r.getId(), r.getUserId(), r.getChannelId(), r.getName()));
+        .fetch(r -> new IgnoreUserResult(r.getId(), r.getUserId(), r.getChannelId(), r.getName()));
   }
 }

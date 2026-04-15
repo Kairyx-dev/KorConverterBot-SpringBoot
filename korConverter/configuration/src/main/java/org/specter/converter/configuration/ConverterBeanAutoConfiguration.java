@@ -23,71 +23,71 @@ import org.springframework.util.ReflectionUtils;
 @AutoConfiguration
 public class ConverterBeanAutoConfiguration {
 
-    @Bean
-    public Clock clock() {
-        return Clock.systemUTC();
-    }
+  @Bean
+  public Clock clock() {
+    return Clock.systemUTC();
+  }
 
-    @Bean
-    public ConversionDomainService conversionDomainService() {
-        return new ConversionDomainService();
-    }
+  @Bean
+  public ConversionDomainService conversionDomainService() {
+    return new ConversionDomainService();
+  }
 
-    @Bean
-    public AddIgnoreUserUseCase addIgnoreUserUseCase(
-            IgnoreUserPersistenceAdapter adapter, Clock clock,
-            PlatformTransactionManager txManager) {
-        return createTxProxy(
-                new AddIgnoreUserService(adapter, adapter, clock),
-                AddIgnoreUserUseCase.class, txManager);
-    }
+  @Bean
+  public AddIgnoreUserUseCase addIgnoreUserUseCase(
+      IgnoreUserPersistenceAdapter adapter, Clock clock, PlatformTransactionManager txManager) {
+    return createTxProxy(
+        new AddIgnoreUserService(adapter, adapter, clock), AddIgnoreUserUseCase.class, txManager);
+  }
 
-    @Bean
-    public RemoveIgnoreUserUseCase removeIgnoreUserUseCase(
-            IgnoreUserPersistenceAdapter adapter, Clock clock,
-            PlatformTransactionManager txManager) {
-        return createTxProxy(
-                new RemoveIgnoreUserService(adapter, adapter, clock),
-                RemoveIgnoreUserUseCase.class, txManager);
-    }
+  @Bean
+  public RemoveIgnoreUserUseCase removeIgnoreUserUseCase(
+      IgnoreUserPersistenceAdapter adapter, Clock clock, PlatformTransactionManager txManager) {
+    return createTxProxy(
+        new RemoveIgnoreUserService(adapter, adapter, clock),
+        RemoveIgnoreUserUseCase.class,
+        txManager);
+  }
 
-    @Bean
-    public ConvertMessageUseCase convertMessageUseCase(
-            ConversionDomainService conversionService,
-            MessageLogRecordAdapter messageLogAdapter,
-            PlatformTransactionManager txManager) {
-        return createTxProxy(
-                new ConvertMessageService(conversionService, messageLogAdapter),
-                ConvertMessageUseCase.class, txManager);
-    }
+  @Bean
+  public ConvertMessageUseCase convertMessageUseCase(
+      ConversionDomainService conversionService,
+      MessageLogRecordAdapter messageLogAdapter,
+      PlatformTransactionManager txManager) {
+    return createTxProxy(
+        new ConvertMessageService(conversionService, messageLogAdapter),
+        ConvertMessageUseCase.class,
+        txManager);
+  }
 
-    @Bean
-    public CheckIgnoreUserUseCase checkIgnoreUserUseCase(
-            IgnoreUserQueryAdapter queryAdapter,
-            PlatformTransactionManager txManager) {
-        return createReadOnlyTxProxy(
-                new CheckIgnoreUserService(queryAdapter),
-                CheckIgnoreUserUseCase.class, txManager);
-    }
+  @Bean
+  public CheckIgnoreUserUseCase checkIgnoreUserUseCase(
+      IgnoreUserQueryAdapter queryAdapter, PlatformTransactionManager txManager) {
+    return createReadOnlyTxProxy(
+        new CheckIgnoreUserService(queryAdapter), CheckIgnoreUserUseCase.class, txManager);
+  }
 
-    @SuppressWarnings("unchecked")
-    private <T> T createTxProxy(T target, Class<T> iface,
-                                 PlatformTransactionManager txManager) {
-        var template = new TransactionTemplate(txManager);
-        return (T) Proxy.newProxyInstance(
-                iface.getClassLoader(), new Class<?>[]{iface},
-                (proxy, method, args) -> template.execute(
-                        status -> ReflectionUtils.invokeMethod(method, target, args)));
-    }
+  @SuppressWarnings("unchecked")
+  private <T> T createTxProxy(T target, Class<T> iface, PlatformTransactionManager txManager) {
+    var template = new TransactionTemplate(txManager);
+    return (T)
+        Proxy.newProxyInstance(
+            iface.getClassLoader(),
+            new Class<?>[] {iface},
+            (proxy, method, args) ->
+                template.execute(status -> ReflectionUtils.invokeMethod(method, target, args)));
+  }
 
-    @SuppressWarnings("unchecked")
-    private <T> T createReadOnlyTxProxy(T target, Class<T> iface,
-                                         PlatformTransactionManager txManager) {
-        var template = new TransactionTemplate(txManager);
-        template.setReadOnly(true);
-        return (T) Proxy.newProxyInstance(
-                iface.getClassLoader(), new Class<?>[]{iface},
-                (proxy, method, args) -> template.execute(
-                        status -> ReflectionUtils.invokeMethod(method, target, args)));
-    }
+  @SuppressWarnings("unchecked")
+  private <T> T createReadOnlyTxProxy(
+      T target, Class<T> iface, PlatformTransactionManager txManager) {
+    var template = new TransactionTemplate(txManager);
+    template.setReadOnly(true);
+    return (T)
+        Proxy.newProxyInstance(
+            iface.getClassLoader(),
+            new Class<?>[] {iface},
+            (proxy, method, args) ->
+                template.execute(status -> ReflectionUtils.invokeMethod(method, target, args)));
+  }
 }

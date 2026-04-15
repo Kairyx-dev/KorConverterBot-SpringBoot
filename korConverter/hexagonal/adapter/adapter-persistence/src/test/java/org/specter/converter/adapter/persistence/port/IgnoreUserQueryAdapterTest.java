@@ -17,51 +17,45 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(classes = AdapterTestBase.AdapterTestConfig.class)
 class IgnoreUserQueryAdapterTest extends AdapterTestBase {
 
-    @Autowired
-    DSLContext dsl;
+  @Autowired DSLContext dsl;
 
-    @Autowired
-    IgnoreUserQueryAdapter queryAdapter;
+  @Autowired IgnoreUserQueryAdapter queryAdapter;
 
-    @Autowired
-    IgnoreUserPersistenceAdapter persistenceAdapter;
+  @Autowired IgnoreUserPersistenceAdapter persistenceAdapter;
 
-    private static final Instant NOW = Instant.parse("2026-01-01T00:00:00Z");
+  private static final Instant NOW = Instant.parse("2026-01-01T00:00:00Z");
 
-    @BeforeEach
-    void cleanup() {
-        dsl.deleteFrom(IGNORE_USER).execute();
-    }
+  @BeforeEach
+  void cleanup() {
+    dsl.deleteFrom(IGNORE_USER).execute();
+  }
 
-    @Test
-    void existsByUserIdAndChannelId_returns_true_when_exists() {
-        var user = IgnoreUser.create(new UserId(100L), new ChannelId(200L), "tester", NOW);
-        persistenceAdapter.save(user);
+  @Test
+  void existsByUserIdAndChannelId_returns_true_when_exists() {
+    var user = IgnoreUser.create(new UserId(100L), new ChannelId(200L), "tester", NOW);
+    persistenceAdapter.save(user);
 
-        assertThat(queryAdapter.existsByUserIdAndChannelId(100L, 200L)).isTrue();
-    }
+    assertThat(queryAdapter.existsByUserIdAndChannelId(100L, 200L)).isTrue();
+  }
 
-    @Test
-    void existsByUserIdAndChannelId_returns_false_when_not_exists() {
-        assertThat(queryAdapter.existsByUserIdAndChannelId(999L, 999L)).isFalse();
-    }
+  @Test
+  void existsByUserIdAndChannelId_returns_false_when_not_exists() {
+    assertThat(queryAdapter.existsByUserIdAndChannelId(999L, 999L)).isFalse();
+  }
 
-    @Test
-    void findAllByChannelId_returns_matching_users() {
-        persistenceAdapter.save(
-                IgnoreUser.create(new UserId(1L), new ChannelId(300L), "alice", NOW));
-        persistenceAdapter.save(
-                IgnoreUser.create(new UserId(2L), new ChannelId(300L), "bob", NOW));
-        persistenceAdapter.save(
-                IgnoreUser.create(new UserId(3L), new ChannelId(999L), "other", NOW));
+  @Test
+  void findAllByChannelId_returns_matching_users() {
+    persistenceAdapter.save(IgnoreUser.create(new UserId(1L), new ChannelId(300L), "alice", NOW));
+    persistenceAdapter.save(IgnoreUser.create(new UserId(2L), new ChannelId(300L), "bob", NOW));
+    persistenceAdapter.save(IgnoreUser.create(new UserId(3L), new ChannelId(999L), "other", NOW));
 
-        var results = queryAdapter.findAllByChannelId(300L);
-        assertThat(results).hasSize(2);
-        assertThat(results).extracting("name").containsExactlyInAnyOrder("alice", "bob");
-    }
+    var results = queryAdapter.findAllByChannelId(300L);
+    assertThat(results).hasSize(2);
+    assertThat(results).extracting("name").containsExactlyInAnyOrder("alice", "bob");
+  }
 
-    @Test
-    void findAllByChannelId_returns_empty_when_no_match() {
-        assertThat(queryAdapter.findAllByChannelId(888L)).isEmpty();
-    }
+  @Test
+  void findAllByChannelId_returns_empty_when_no_match() {
+    assertThat(queryAdapter.findAllByChannelId(888L)).isEmpty();
+  }
 }

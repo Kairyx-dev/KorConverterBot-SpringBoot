@@ -4,5 +4,5 @@ import org.specter.converter.application.dto.command.ConvertMessageCommand;
 import org.specter.converter.application.dto.result.ConvertMessageResult;
 
 public interface ConvertMessageUseCase {
-    ConvertMessageResult execute(ConvertMessageCommand command);
+  ConvertMessageResult execute(ConvertMessageCommand command);
 }

@@ -21,8 +21,8 @@ AutoConfiguration per module (not @ComponentScan).
 - ErrorProne + NullAway (정적 분석), JSpecify (Adapter/Configuration에서만)
 - Testcontainers, ArchUnit, jqwik (PBT)
 - JaCoCo, Checkstyle, Lefthook
-- PIT mutation testing (commented out -- incompatible with Gradle 9.x)
-- Spotless (commented out in CI/Lefthook -- incompatible with Java 25)
+- PIT mutation testing (domain 65% threshold)
+- Spotless (google-java-format 1.35.0)
 
 ## 규칙
 `.claude/rules/index.md` 참조.
@@ -50,6 +50,9 @@ AutoConfiguration per module (not @ComponentScan).
 - `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER_NAME`, `DB_PASSWORD`
 - `DISCORD_BOT_TOKEN`
 
-## 알려진 이슈
-- Spotless (google-java-format): Java 25에서 NoSuchMethodError. CI/Lefthook에서 제외.
-- PIT (pitest-gradle): Gradle 9.x에서 baseDir 속성 제거로 인해 호환 불가. 주석 처리.
+## 빌드 추가 명령어
+```bash
+./gradlew spotlessApply   # 코드 포맷팅 적용
+./gradlew spotlessCheck   # 코드 포맷팅 검증
+./gradlew :domain:pitest  # PIT 뮤테이션 테스트
+```

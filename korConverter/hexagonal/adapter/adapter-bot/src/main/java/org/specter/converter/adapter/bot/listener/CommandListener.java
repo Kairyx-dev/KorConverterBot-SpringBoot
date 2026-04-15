@@ -24,11 +24,14 @@ public class CommandListener extends ListenerAdapter {
   private final RemoveIgnoreUserUseCase removeIgnoreUserUseCase;
   private final BuildProperties buildProperties;
 
-  public CommandListener(AddIgnoreUserUseCase addIgnoreUserUseCase,
+  public CommandListener(
+      AddIgnoreUserUseCase addIgnoreUserUseCase,
       RemoveIgnoreUserUseCase removeIgnoreUserUseCase,
       BuildProperties buildProperties) {
-    this.addIgnoreUserUseCase = Objects.requireNonNull(addIgnoreUserUseCase, "addIgnoreUserUseCase");
-    this.removeIgnoreUserUseCase = Objects.requireNonNull(removeIgnoreUserUseCase, "removeIgnoreUserUseCase");
+    this.addIgnoreUserUseCase =
+        Objects.requireNonNull(addIgnoreUserUseCase, "addIgnoreUserUseCase");
+    this.removeIgnoreUserUseCase =
+        Objects.requireNonNull(removeIgnoreUserUseCase, "removeIgnoreUserUseCase");
     this.buildProperties = Objects.requireNonNull(buildProperties, "buildProperties");
   }
 
@@ -64,14 +67,14 @@ public class CommandListener extends ListenerAdapter {
 
   private void onIgnoreMe(SlashCommandInteractionEvent event) {
     try {
-      IgnoreUserResult result = addIgnoreUserUseCase.execute(new AddIgnoreUserCommand(
-          event.getUser().getIdLong(),
-          event.getChannelIdLong(),
-          getNickNameOrUserName(event)));
+      IgnoreUserResult result =
+          addIgnoreUserUseCase.execute(
+              new AddIgnoreUserCommand(
+                  event.getUser().getIdLong(),
+                  event.getChannelIdLong(),
+                  getNickNameOrUserName(event)));
 
-      log.atInfo()
-          .addKeyValue("ignored", result)
-          .log("User ignored");
+      log.atInfo().addKeyValue("ignored", result).log("User ignored");
 
       event.reply(result.name() + "님의 메시지가 무시됩니다.").queue();
     } catch (RuntimeException e) {
@@ -86,9 +89,8 @@ public class CommandListener extends ListenerAdapter {
 
   private void onUnIgnoreMe(SlashCommandInteractionEvent event) {
     try {
-      removeIgnoreUserUseCase.execute(new RemoveIgnoreUserCommand(
-          event.getUser().getIdLong(),
-          event.getChannelIdLong()));
+      removeIgnoreUserUseCase.execute(
+          new RemoveIgnoreUserCommand(event.getUser().getIdLong(), event.getChannelIdLong()));
 
       log.atInfo()
           .addKeyValue("userId", event.getUser().getIdLong())
@@ -107,6 +109,8 @@ public class CommandListener extends ListenerAdapter {
   }
 
   private String getNickNameOrUserName(SlashCommandInteractionEvent event) {
-    return event.getMember() != null ? event.getMember().getEffectiveName() : event.getUser().getEffectiveName();
+    return event.getMember() != null
+        ? event.getMember().getEffectiveName()
+        : event.getUser().getEffectiveName();
   }
 }

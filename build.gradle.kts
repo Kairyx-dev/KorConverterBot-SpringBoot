@@ -149,6 +149,6 @@ spotless {
     java {
         target("**/*.java")
         targetExclude("**/build/**", "**/generated/**")
-        googleJavaFormat()
+        googleJavaFormat("1.35.0")
     }
 }

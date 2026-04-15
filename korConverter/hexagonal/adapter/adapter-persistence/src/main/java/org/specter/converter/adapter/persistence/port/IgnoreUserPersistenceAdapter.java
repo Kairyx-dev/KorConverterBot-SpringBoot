@@ -20,8 +20,7 @@ public class IgnoreUserPersistenceAdapter implements LoadIgnoreUserPort, SaveIgn
   private final DSLContext dsl;
   private final ApplicationEventPublisher eventPublisher;
 
-  public IgnoreUserPersistenceAdapter(
-      DSLContext dsl, ApplicationEventPublisher eventPublisher) {
+  public IgnoreUserPersistenceAdapter(DSLContext dsl, ApplicationEventPublisher eventPublisher) {
     this.dsl = Objects.requireNonNull(dsl, "dsl");
     this.eventPublisher = Objects.requireNonNull(eventPublisher, "eventPublisher");
   }
@@ -30,7 +29,9 @@ public class IgnoreUserPersistenceAdapter implements LoadIgnoreUserPort, SaveIgn
   public Optional<IgnoreUser> loadByUserIdAndChannelId(UserId userId, ChannelId channelId) {
     return dsl.selectFrom(IGNORE_USER)
         .where(
-            IGNORE_USER.USER_ID.eq(userId.value())
+            IGNORE_USER
+                .USER_ID
+                .eq(userId.value())
                 .and(IGNORE_USER.CHANNEL_ID.eq(channelId.value())))
         .fetchOptional()
         .map(
@@ -73,7 +74,9 @@ public class IgnoreUserPersistenceAdapter implements LoadIgnoreUserPort, SaveIgn
                     IGNORE_USER.UPDATED_AT,
                     OffsetDateTime.ofInstant(ignoreUser.updatedAt(), ZoneOffset.UTC))
                 .where(
-                    IGNORE_USER.ID.eq(ignoreUser.id().value())
+                    IGNORE_USER
+                        .ID
+                        .eq(ignoreUser.id().value())
                         .and(IGNORE_USER.VERSION.eq(ignoreUser.version())))
                 .execute();
         if (affected == 0) {
@@ -92,7 +95,9 @@ public class IgnoreUserPersistenceAdapter implements LoadIgnoreUserPort, SaveIgn
     int affected =
         dsl.deleteFrom(IGNORE_USER)
             .where(
-                IGNORE_USER.ID.eq(ignoreUser.id().value())
+                IGNORE_USER
+                    .ID
+                    .eq(ignoreUser.id().value())
                     .and(IGNORE_USER.VERSION.eq(ignoreUser.version())))
             .execute();
     if (affected == 0) {

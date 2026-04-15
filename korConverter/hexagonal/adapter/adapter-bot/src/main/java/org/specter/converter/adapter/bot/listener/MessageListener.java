@@ -33,10 +33,12 @@ public class MessageListener extends ListenerAdapter {
   private final ConvertMessageUseCase convertMessageUseCase;
   private final CheckIgnoreUserUseCase checkIgnoreUserUseCase;
 
-  public MessageListener(ConvertMessageUseCase convertMessageUseCase,
-      CheckIgnoreUserUseCase checkIgnoreUserUseCase) {
-    this.convertMessageUseCase = Objects.requireNonNull(convertMessageUseCase, "convertMessageUseCase");
-    this.checkIgnoreUserUseCase = Objects.requireNonNull(checkIgnoreUserUseCase, "checkIgnoreUserUseCase");
+  public MessageListener(
+      ConvertMessageUseCase convertMessageUseCase, CheckIgnoreUserUseCase checkIgnoreUserUseCase) {
+    this.convertMessageUseCase =
+        Objects.requireNonNull(convertMessageUseCase, "convertMessageUseCase");
+    this.checkIgnoreUserUseCase =
+        Objects.requireNonNull(checkIgnoreUserUseCase, "checkIgnoreUserUseCase");
   }
 
   @Override
@@ -87,12 +89,14 @@ public class MessageListener extends ListenerAdapter {
   private void convertAndSend(MessageReceivedEvent event) {
     String before = event.getMessage().getContentRaw();
 
-    ConvertMessageResult result = convertMessageUseCase.execute(new ConvertMessageCommand(
-        before,
-        event.getGuild().getIdLong(),
-        event.getChannel().getIdLong(),
-        getNickNameOrUserName(event),
-        event.getAuthor().getEffectiveName()));
+    ConvertMessageResult result =
+        convertMessageUseCase.execute(
+            new ConvertMessageCommand(
+                before,
+                event.getGuild().getIdLong(),
+                event.getChannel().getIdLong(),
+                getNickNameOrUserName(event),
+                event.getAuthor().getEffectiveName()));
 
     if (!result.converted()) {
       return;
@@ -100,45 +104,49 @@ public class MessageListener extends ListenerAdapter {
 
     String after = result.convertedMessage();
     User author = event.getMessage().getAuthor();
-    String avatarUrl = Optional.ofNullable(author.getAvatarUrl()).orElse(author.getDefaultAvatarUrl());
-    String authorName = "%s (%s)".formatted(getNickNameOrUserName(event), author.getEffectiveName());
+    String avatarUrl =
+        Optional.ofNullable(author.getAvatarUrl()).orElse(author.getDefaultAvatarUrl());
+    String authorName =
+        "%s (%s)".formatted(getNickNameOrUserName(event), author.getEffectiveName());
 
-    log.atInfo()
-        .addKeyValue("before", before)
-        .addKeyValue("after", after)
-        .log("Parsing");
+    log.atInfo().addKeyValue("before", before).addKeyValue("after", after).log("Parsing");
     try {
       event.getMessage().delete().complete();
       editEmbed(authorName, before, after, event);
     } catch (UnEditableMessageException e) {
-      log.atInfo()
-          .addKeyValue("cause.message", e.getMessage())
-          .log("Can not edit past message");
+      log.atInfo().addKeyValue("cause.message", e.getMessage()).log("Can not edit past message");
       sendEmbed(authorName, avatarUrl, before, after, event);
     }
   }
 
-  private void sendEmbed(String authorName, String avatarUrl, String before, String after,
+  private void sendEmbed(
+      String authorName,
+      String avatarUrl,
+      String before,
+      String after,
       MessageReceivedEvent event) {
-    MessageEmbed embed = new EmbedBuilder()
-        .setAuthor(authorName, null, avatarUrl)
-        .addField(before, after, false)
-        .setColor(new Color(255, 216, 228))
-        .build();
-    MessageCreateData data = new MessageCreateBuilder()
-        .setEmbeds(embed)
-        .build();
+    MessageEmbed embed =
+        new EmbedBuilder()
+            .setAuthor(authorName, null, avatarUrl)
+            .addField(before, after, false)
+            .setColor(new Color(255, 216, 228))
+            .build();
+    MessageCreateData data = new MessageCreateBuilder().setEmbeds(embed).build();
 
-    event.getChannel().sendMessage(data).onErrorMap(throwable -> {
-
-      log.atError()
-          .setCause(throwable)
-          .addKeyValue("after", after)
-          .addKeyValue("authorName", authorName)
-          .addKeyValue("avatarUrl", avatarUrl)
-          .log("Error when send message");
-      return null;
-    }).queue();
+    event
+        .getChannel()
+        .sendMessage(data)
+        .onErrorMap(
+            throwable -> {
+              log.atError()
+                  .setCause(throwable)
+                  .addKeyValue("after", after)
+                  .addKeyValue("authorName", authorName)
+                  .addKeyValue("avatarUrl", avatarUrl)
+                  .log("Error when send message");
+              return null;
+            })
+        .queue();
   }
 
   private void editEmbed(String authorName, String before, String after, MessageReceivedEvent event)
@@ -164,25 +172,26 @@ public class MessageListener extends ListenerAdapter {
       throw UnEditableMessageException.diffName();
     }
 
-    MessageEmbed embed = new EmbedBuilder(existEmbed)
-        .addField(before, after, false)
-        .build();
-    MessageEditData data = new MessageEditBuilder()
-        .setEmbeds(embed)
-        .build();
+    MessageEmbed embed = new EmbedBuilder(existEmbed).addField(before, after, false).build();
+    MessageEditData data = new MessageEditBuilder().setEmbeds(embed).build();
 
-    message.editMessage(data).onErrorMap(throwable -> {
-
-      log.atError()
-          .setCause(throwable)
-          .addKeyValue("after", after)
-          .addKeyValue("authorName", authorName)
-          .log("Error when send message");
-      return null;
-    }).queue();
+    message
+        .editMessage(data)
+        .onErrorMap(
+            throwable -> {
+              log.atError()
+                  .setCause(throwable)
+                  .addKeyValue("after", after)
+                  .addKeyValue("authorName", authorName)
+                  .log("Error when send message");
+              return null;
+            })
+        .queue();
   }
 
   private String getNickNameOrUserName(MessageReceivedEvent event) {
-    return event.getMember() != null ? event.getMember().getEffectiveName() : event.getAuthor().getEffectiveName();
+    return event.getMember() != null
+        ? event.getMember().getEffectiveName()
+        : event.getAuthor().getEffectiveName();
   }
 }

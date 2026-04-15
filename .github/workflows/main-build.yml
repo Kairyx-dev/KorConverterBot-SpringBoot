@@ -19,7 +19,7 @@ jobs:
           java-version: '25'
           distribution: 'corretto'
       - uses: gradle/actions/setup-gradle@v4
-      - run: ./gradlew checkstyleMain compileJava
+      - run: ./gradlew spotlessCheck checkstyleMain compileJava
 
   gate-2-unit-archunit:
     name: "Gate 2: Unit + ArchUnit Tests"
@@ -48,7 +48,7 @@ jobs:
       - run: ./gradlew :adapter-persistence:test
 
   gate-4-mutation:
-    name: "Gate 4: Mutation Testing (placeholder)"
+    name: "Gate 4: Mutation Testing (PIT)"
     needs: gate-2-unit-archunit
     runs-on: ubuntu-latest
     steps:
@@ -58,8 +58,7 @@ jobs:
           java-version: '25'
           distribution: 'corretto'
       - uses: gradle/actions/setup-gradle@v4
-      # PIT is incompatible with Gradle 9.x; placeholder until plugin is updated
-      - run: echo "PIT mutation testing skipped -- incompatible with Gradle 9.x"
+      - run: ./gradlew :domain:pitest
 
   gate-5-security:
     name: "Gate 5: Security (placeholder)"
