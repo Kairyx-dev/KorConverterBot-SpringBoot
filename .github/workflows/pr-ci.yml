@@ -1,9 +1,10 @@
-name: "main Branch CI: 5-Gate Pipeline"
+name: "CI: 5-Gate Pipeline"
 
 on:
   pull_request:
     branches:
       - main
+      - develop
 
 permissions:
   contents: read
@@ -13,12 +14,12 @@ jobs:
     name: "Gate 1: Compile + Checkstyle"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
           java-version: '25'
           distribution: 'corretto'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - run: ./gradlew spotlessCheck checkstyleMain compileJava
 
   gate-2-unit-archunit:
@@ -26,12 +27,12 @@ jobs:
     needs: gate-1-compile-checkstyle
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
           java-version: '25'
           distribution: 'corretto'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - run: ./gradlew :domain:test :application:test :boot:test
 
   gate-3-integration:
@@ -39,12 +40,12 @@ jobs:
     needs: gate-2-unit-archunit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
           java-version: '25'
           distribution: 'corretto'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - run: ./gradlew :adapter-persistence:test
 
   gate-4-mutation:
@@ -52,12 +53,12 @@ jobs:
     needs: gate-2-unit-archunit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
           java-version: '25'
           distribution: 'corretto'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       - run: ./gradlew :domain:pitest
 
   gate-5-security:
@@ -65,11 +66,11 @@ jobs:
     needs: gate-1-compile-checkstyle
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
         with:
           java-version: '25'
           distribution: 'corretto'
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v6
       # OWASP dependency-check placeholder
       - run: echo "OWASP dependency-check placeholder -- to be configured"
