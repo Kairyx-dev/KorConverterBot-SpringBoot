@@ -1,4 +1,7 @@
-package org.specter.converter.domain.model;
+package org.specter.converter.domain.service;
+
+import org.specter.converter.domain.model.KeyboardIndex;
+import org.specter.converter.domain.model.KrDataIndex;
 
 /**
  * Domain Service for English-to-Korean keyboard conversion.

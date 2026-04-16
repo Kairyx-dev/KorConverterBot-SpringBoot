@@ -13,7 +13,7 @@ import org.specter.converter.application.service.AddIgnoreUserService;
 import org.specter.converter.application.service.CheckIgnoreUserService;
 import org.specter.converter.application.service.ConvertMessageService;
 import org.specter.converter.application.service.RemoveIgnoreUserService;
-import org.specter.converter.domain.model.ConversionDomainService;
+import org.specter.converter.domain.service.ConversionDomainService;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.PlatformTransactionManager;

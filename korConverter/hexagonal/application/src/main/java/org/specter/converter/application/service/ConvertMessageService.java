@@ -6,7 +6,7 @@ import org.specter.converter.application.dto.command.RecordMessageLogCommand;
 import org.specter.converter.application.dto.result.ConvertMessageResult;
 import org.specter.converter.application.port.input.ConvertMessageUseCase;
 import org.specter.converter.application.port.output.RecordMessageLogPort;
-import org.specter.converter.domain.model.ConversionDomainService;
+import org.specter.converter.domain.service.ConversionDomainService;
 
 public class ConvertMessageService implements ConvertMessageUseCase {
 

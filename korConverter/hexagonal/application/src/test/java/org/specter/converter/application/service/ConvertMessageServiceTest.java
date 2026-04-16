@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.specter.converter.application.dto.command.ConvertMessageCommand;
 import org.specter.converter.application.dto.command.RecordMessageLogCommand;
 import org.specter.converter.application.port.output.RecordMessageLogPort;
-import org.specter.converter.domain.model.ConversionDomainService;
+import org.specter.converter.domain.service.ConversionDomainService;
 
 @ExtendWith(MockitoExtension.class)
 class ConvertMessageServiceTest {
