@@ -239,16 +239,18 @@ jooq {
             }
             target {
                 packageName = "org.specter.converter.adapter.persistence.generated"
-                directory = "src/main/generated"
+                directory = jooqGeneratedDir.get().asFile.absolutePath
             }
         }
     }
 }
 
+val jooqGeneratedDir = layout.buildDirectory.dir("generated/sources/jooq/main")
+
 sourceSets {
     main {
         java {
-            srcDir("src/main/generated")
+            srcDir(jooqGeneratedDir)
         }
     }
 }
@@ -1652,12 +1654,12 @@ CREATE TABLE message_log (
 ./gradlew :adapter-persistence:jooqCodegen
 ```
 
-Expected: BUILD SUCCESSFUL. Generated classes appear in `korConverter/hexagonal/adapter/adapter-persistence/src/main/generated/`.
+Expected: BUILD SUCCESSFUL. Generated classes appear in `korConverter/hexagonal/adapter/adapter-persistence/build/generated/sources/jooq/main/`.
 
 - [ ] **Step 6: Verify generated code exists**
 
 ```bash
-ls korConverter/hexagonal/adapter/adapter-persistence/src/main/generated/org/specter/converter/adapter/persistence/generated/
+ls korConverter/hexagonal/adapter/adapter-persistence/build/generated/sources/jooq/main/org/specter/converter/adapter/persistence/generated/
 ```
 
 Expected: Tables, Keys, records for `ignore_user` and `message_log`.

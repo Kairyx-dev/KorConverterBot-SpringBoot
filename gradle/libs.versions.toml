@@ -5,6 +5,11 @@ spring-dependency-management = "1.1.7"
 linecorp-build-recipe-plugin = "1.1.1"
 com-googel-cloud-tools-jib = "3.5.3"
 net-ltgt-errorprone = "5.1.0"
+spotless = "8.4.0"
+pitest-gradle = "1.19.0"
+pitest-core = "1.23.0"
+jooq = "3.19.30"
+flyway = "11.8.2"
 
 # libs
 projectlombok-lombok = "1.18.44"
@@ -18,6 +23,11 @@ ch-qos-logback = "1.5.32"
 jspecify = "1.0.0"
 com-uber-nullaway = "0.13.2"
 com-google-errorprone-core = "2.49.0"
+testcontainers = "1.21.1"
+archunit = "1.4.1"
+checkstyle = "10.25.0"
+jqwik = "1.9.3"
+mockito = "5.18.0"
 
 [libraries]
 springframework-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter" }
@@ -26,6 +36,10 @@ springframework-boot-starter-actuator = { group = "org.springframework.boot", na
 springframework-boot-starter-validation = { group = "org.springframework.boot", name = "spring-boot-starter-validation" }
 springframework-boot-starter-json = { group = "org.springframework.boot", name = "spring-boot-starter-json" }
 springframework-boot-starter-data-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
+springframework-boot-starter-jooq = { group = "org.springframework.boot", name = "spring-boot-starter-jooq" }
+springframework-boot-flyway = { group = "org.springframework.boot", name = "spring-boot-flyway" }
+springframework-boot-autoconfigure = { group = "org.springframework.boot", name = "spring-boot-autoconfigure" }
+springframework-tx = { group = "org.springframework", name = "spring-tx" }
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j-api" }
 projectlombok-lombok = { group = "org.projectlombok", name = "lombok", version.ref = "projectlombok-lombok" }
 h2database = { group = "com.h2database", name = "h2" }
@@ -49,9 +63,36 @@ org-jspecify = { group = "org.jspecify", name = "jspecify", version.ref = "jspec
 ch-qos-logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "ch-qos-logback" }
 ch-qos-logback-core = { group = "ch.qos.logback", name = "logback-core", version.ref = "ch-qos-logback" }
 
+# jOOQ
+jooq-core = { group = "org.jooq", name = "jooq", version.ref = "jooq" }
+jooq-codegen = { group = "org.jooq", name = "jooq-codegen", version.ref = "jooq" }
+
+# Flyway
+flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
+flyway-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
+
+# Testcontainers
+testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }
+testcontainers-postgresql = { group = "org.testcontainers", name = "postgresql", version.ref = "testcontainers" }
+testcontainers-junit = { group = "org.testcontainers", name = "junit-jupiter", version.ref = "testcontainers" }
+
+# ArchUnit
+archunit-junit5 = { group = "com.tngtech.archunit", name = "archunit-junit5", version.ref = "archunit" }
+
+# jqwik
+jqwik = { group = "net.jqwik", name = "jqwik", version.ref = "jqwik" }
+
+# Mockito
+mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockito" }
+mockito-junit = { group = "org.mockito", name = "mockito-junit-jupiter", version.ref = "mockito" }
+
 [plugins]
 springframework-boot = { id = "org.springframework.boot", version.ref = "springframework-boot" }
 spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency-management" }
 linecorp-build-recipe-plugin = { id = "com.linecorp.build-recipe-plugin", version.ref = "linecorp-build-recipe-plugin" }
 com-google-cloud-tools-jib = { id = "com.google.cloud.tools.jib", version.ref = "com-googel-cloud-tools-jib" }
 net-ltgt-errorprone = { id = "net.ltgt.errorprone", version.ref = "net-ltgt-errorprone" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+pitest = { id = "info.solidsoft.pitest", version.ref = "pitest-gradle" }
+jooq-codegen = { id = "org.jooq.jooq-codegen-gradle", version.ref = "jooq" }
+flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }

@@ -1,27 +1,39 @@
 package org.specter.converter.adapter.bot.listener;
 
 import java.util.Objects;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import org.jspecify.annotations.NullMarked;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.specter.converter.adapter.bot.entity.BotCommand;
-import org.specter.converter.adapter.bot.properties.BotProperties;
-import org.specter.converter.aplication.inport.DiscordBotInPort;
-import org.specter.converter.domain.model.IgnoreUser;
+import org.specter.converter.application.dto.command.AddIgnoreUserCommand;
+import org.specter.converter.application.dto.command.RemoveIgnoreUserCommand;
+import org.specter.converter.application.dto.result.IgnoreUserResult;
+import org.specter.converter.application.port.input.AddIgnoreUserUseCase;
+import org.specter.converter.application.port.input.RemoveIgnoreUserUseCase;
 import org.springframework.boot.info.BuildProperties;
-import org.springframework.stereotype.Component;
 
-@Component
-@AllArgsConstructor
-@Slf4j
 @NullMarked
 public class CommandListener extends ListenerAdapter {
 
-  private final DiscordBotInPort discordBotInPort;
+  private static final Logger log = LoggerFactory.getLogger(CommandListener.class);
+
+  private final AddIgnoreUserUseCase addIgnoreUserUseCase;
+  private final RemoveIgnoreUserUseCase removeIgnoreUserUseCase;
   private final BuildProperties buildProperties;
+
+  public CommandListener(
+      AddIgnoreUserUseCase addIgnoreUserUseCase,
+      RemoveIgnoreUserUseCase removeIgnoreUserUseCase,
+      BuildProperties buildProperties) {
+    this.addIgnoreUserUseCase =
+        Objects.requireNonNull(addIgnoreUserUseCase, "addIgnoreUserUseCase");
+    this.removeIgnoreUserUseCase =
+        Objects.requireNonNull(removeIgnoreUserUseCase, "removeIgnoreUserUseCase");
+    this.buildProperties = Objects.requireNonNull(buildProperties, "buildProperties");
+  }
 
   @Override
   public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
@@ -54,31 +66,51 @@ public class CommandListener extends ListenerAdapter {
   }
 
   private void onIgnoreMe(SlashCommandInteractionEvent event) {
-    IgnoreUser saved = discordBotInPort.addIgnoreUser(IgnoreUser.builder()
-        .userId(event.getUser().getIdLong())
-        .name(getNickNameOrUserName(event))
-        .channelId(event.getChannelIdLong())
-        .build());
+    try {
+      IgnoreUserResult result =
+          addIgnoreUserUseCase.execute(
+              new AddIgnoreUserCommand(
+                  event.getUser().getIdLong(),
+                  event.getChannelIdLong(),
+                  getNickNameOrUserName(event)));
 
-    log.atInfo()
-        .addKeyValue("ignored", saved)
-        .log("User ignored");
+      log.atInfo().addKeyValue("ignored", result).log("User ignored");
 
-    event.reply(saved.name() + "님의 메시지가 무시됩니다.").queue();
+      event.reply(result.name() + "님의 메시지가 무시됩니다.").queue();
+    } catch (RuntimeException e) {
+      log.atWarn()
+          .setCause(e)
+          .addKeyValue("userId", event.getUser().getIdLong())
+          .addKeyValue("channelId", event.getChannelIdLong())
+          .log("Failed to add ignore user");
+      event.reply("이미 무시 목록에 등록되어 있습니다.").setEphemeral(true).queue();
+    }
   }
 
   private void onUnIgnoreMe(SlashCommandInteractionEvent event) {
-    discordBotInPort.removeIgnoreUser(event.getUser().getIdLong(), event.getChannelIdLong());
+    try {
+      removeIgnoreUserUseCase.execute(
+          new RemoveIgnoreUserCommand(event.getUser().getIdLong(), event.getChannelIdLong()));
 
-    log.atInfo()
-        .addKeyValue("userId", event.getUser().getIdLong())
-        .addKeyValue("channelId", event.getChannelIdLong())
-        .log("remove ignore user");
+      log.atInfo()
+          .addKeyValue("userId", event.getUser().getIdLong())
+          .addKeyValue("channelId", event.getChannelIdLong())
+          .log("remove ignore user");
 
-    event.reply(getNickNameOrUserName(event) + "님의 메시지 무시가 취소되었습니다.").queue();
+      event.reply(getNickNameOrUserName(event) + "님의 메시지 무시가 취소되었습니다.").queue();
+    } catch (RuntimeException e) {
+      log.atWarn()
+          .setCause(e)
+          .addKeyValue("userId", event.getUser().getIdLong())
+          .addKeyValue("channelId", event.getChannelIdLong())
+          .log("Failed to remove ignore user");
+      event.reply("무시 목록에 등록되어 있지 않습니다.").setEphemeral(true).queue();
+    }
   }
 
   private String getNickNameOrUserName(SlashCommandInteractionEvent event) {
-    return event.getMember() != null ? event.getMember().getEffectiveName() : event.getUser().getEffectiveName();
+    return event.getMember() != null
+        ? event.getMember().getEffectiveName()
+        : event.getUser().getEffectiveName();
   }
 }

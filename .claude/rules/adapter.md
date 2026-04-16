@@ -8,7 +8,7 @@ Controller/Listener는 Application의 Input Port(UseCase)에만 의존.
 - MUST NOT: `*.domain.model.*`, `*.domain.event.*`, `*.domain.service.*`, `*.domain.exception.*`
 
 ## AD-2: Adapter 간 직접 참조 금지
-`adapter-bot` ↔ `adapter-jpa` 순환 의존 방지.
+`adapter-bot` ↔ `adapter-persistence` 순환 의존 방지.
 
 ## AD-3: SavePort = 이벤트 수거자
 SavePort 구현체가 `pullDomainEvents()` 호출 → Outbox/publish, 같은 TX.
@@ -24,7 +24,7 @@ public void save({Subject} entity) {
 
 ## AD-4: 명시적 매핑
 Domain ↔ Technology 구조 간 Mapper 클래스 사용. 직접 변환 금지.
-- Domain Entity ↔ JPA Entity: `{Subject}PersistenceMapper`
+- Domain Entity ↔ jOOQ Record: `{Subject}PersistenceMapper`
 - Domain Entity ↔ Request/Response DTO: Application Command/Result 경유
 
 ## AD-5: reconstitute() 사용
@@ -43,11 +43,13 @@ Domain, Application 모듈에서 금지.
 - Discord API 관련 로직(Embed 생성, 메시지 편집 등)은 Adapter 내부에만
 - 요청 DTO → Command 변환 후 UseCase 호출
 
-## JPA Outbound Adapter (adapter-jpa) 규칙
-- Spring Data JPA Repository는 Adapter 내부 구현 상세
-- Domain Entity ↔ JPA Entity 매핑은 Mapper 클래스가 담당
-- JPA Entity에는 `@Entity`, `@Table` 등 JPA 어노테이션 허용 (Adapter 영역)
-- Adapter Service 계층은 Repository 위임만 담당, 비즈니스 로직 금지
+## jOOQ Outbound Adapter (adapter-persistence) 규칙
+- jOOQ DSLContext is the Adapter's internal implementation detail
+- Domain Entity ↔ jOOQ Record 매핑은 Mapper 클래스가 담당
+- No JPA imports (`@Entity`, `@Table`, Spring Data Repository) anywhere
+- No `jakarta.persistence.*` imports anywhere
+- Flyway manages DDL migrations (`db/migration/*.sql`)
+- Adapter 계층은 DSL 위임만 담당, 비즈니스 로직 금지
 
 ## T-1: UseCase = TX 경계
 Configuration 모듈의 TX 프록시가 UseCase 메서드 실행을 감싼다.

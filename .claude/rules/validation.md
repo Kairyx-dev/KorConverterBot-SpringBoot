@@ -76,12 +76,14 @@ MUST: Optional 반환 — null 반환 금지
 MUST: 원시 타입 필드만 (A-7)
 MUST: record (A-10)
 
-[SavePort 구현체]
-MUST: UPDATE WHERE version = ? (AD-7)
+[SavePort 구현체 (jOOQ)]
+MUST: UPDATE WHERE version = ? (AD-7) — jOOQ DSL .where(VERSION.eq(version))
 MUST: affected == 0 → OptimisticLockException (AD-7)
 MUST: pullDomainEvents() → 발행 (AD-3)
 MUST: reconstitute() 사용 (AD-5)
 MUST: 명시적 Mapper (AD-4)
+MUST_NOT: JPA imports (@Entity, @Table, Spring Data JPA Repository)
+MUST_NOT: jakarta.persistence.* imports
 
 [Adapter]
 MUST: UseCase(Input Port)에만 의존 (AD-1)

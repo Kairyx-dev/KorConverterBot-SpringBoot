@@ -1,26 +1,11 @@
 package org.specter.converter.domain.model;
 
-import lombok.Builder;
-import lombok.With;
-import org.jspecify.annotations.NullMarked;
-
-@Builder
-@With
-@NullMarked
-public record KrDataIndex(
-    int chosung,
-    int jungsung,
-    int jongsung
-) {
+public record KrDataIndex(int chosung, int jungsung, int jongsung) {
 
   public static final int NONE_INDEX = -1;
 
   public static KrDataIndex create() {
-    return KrDataIndex.builder()
-        .chosung(NONE_INDEX)
-        .jungsung(NONE_INDEX)
-        .jongsung(NONE_INDEX)
-        .build();
+    return new KrDataIndex(NONE_INDEX, NONE_INDEX, NONE_INDEX);
   }
 
   public boolean chosungIndexed() {
@@ -35,15 +20,27 @@ public record KrDataIndex(
     return jongsung != NONE_INDEX;
   }
 
+  public KrDataIndex withChosung(int chosung) {
+    return new KrDataIndex(chosung, this.jungsung, this.jongsung);
+  }
+
+  public KrDataIndex withJungsung(int jungsung) {
+    return new KrDataIndex(this.chosung, jungsung, this.jongsung);
+  }
+
+  public KrDataIndex withJongsung(int jongsung) {
+    return new KrDataIndex(this.chosung, this.jungsung, jongsung);
+  }
+
   public KrDataIndex clearChosung() {
-    return this.withChosung(NONE_INDEX);
+    return withChosung(NONE_INDEX);
   }
 
   public KrDataIndex clearJungsung() {
-    return this.withJungsung(NONE_INDEX);
+    return withJungsung(NONE_INDEX);
   }
 
   public KrDataIndex clearJongsung() {
-    return this.withJongsung(NONE_INDEX);
+    return withJongsung(NONE_INDEX);
   }
 }

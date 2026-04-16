@@ -1,11 +1,13 @@
 dependencies {
     implementation(project(":domain"))
 
-    implementation(libs.ch.qos.logback.core)
-    implementation(libs.ch.qos.logback.classic)
+    testRuntimeOnly(libs.junit.platform.launcher)
+    testRuntimeOnly(libs.junit.jupiter.engine)
 
-    implementation(libs.org.jspecify)
-
-    implementation(libs.slf4j.api)
-    annotationProcessor(libs.slf4j.api)
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter.api)
+    testImplementation(libs.junit.jupiter.params)
+    testImplementation(libs.assertj)
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.junit)
 }

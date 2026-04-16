@@ -8,8 +8,4 @@ import org.springframework.validation.annotation.Validated;
 @ConfigurationProperties(prefix = "bot")
 @NullMarked
 @Validated
-public record BotProperties(
-    @NotNull String token
-) {
-
-}
+public record BotProperties(@NotNull String token) {}
