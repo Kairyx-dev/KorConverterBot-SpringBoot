@@ -1,9 +1,8 @@
 package org.specter.converter.adapter.bot.listener;
 
 import java.awt.Color;
+import java.util.Objects;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -17,18 +16,30 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
 import org.jspecify.annotations.NullMarked;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.specter.converter.adapter.bot.entity.UnEditableMessageException;
-import org.specter.converter.aplication.inport.DiscordBotInPort;
-import org.specter.converter.domain.model.MessageLog;
-import org.springframework.stereotype.Component;
+import org.specter.converter.application.dto.command.ConvertMessageCommand;
+import org.specter.converter.application.dto.query.CheckIgnoreUserQuery;
+import org.specter.converter.application.dto.result.ConvertMessageResult;
+import org.specter.converter.application.port.input.CheckIgnoreUserUseCase;
+import org.specter.converter.application.port.input.ConvertMessageUseCase;
 
-@Component
-@Slf4j
-@AllArgsConstructor
 @NullMarked
 public class MessageListener extends ListenerAdapter {
 
-  private final DiscordBotInPort discordBotInPort;
+  private static final Logger log = LoggerFactory.getLogger(MessageListener.class);
+
+  private final ConvertMessageUseCase convertMessageUseCase;
+  private final CheckIgnoreUserUseCase checkIgnoreUserUseCase;
+
+  public MessageListener(
+      ConvertMessageUseCase convertMessageUseCase, CheckIgnoreUserUseCase checkIgnoreUserUseCase) {
+    this.convertMessageUseCase =
+        Objects.requireNonNull(convertMessageUseCase, "convertMessageUseCase");
+    this.checkIgnoreUserUseCase =
+        Objects.requireNonNull(checkIgnoreUserUseCase, "checkIgnoreUserUseCase");
+  }
 
   @Override
   public void onMessageReceived(MessageReceivedEvent event) {
@@ -40,26 +51,14 @@ public class MessageListener extends ListenerAdapter {
         .addKeyValue("content", event.getMessage().getContentRaw())
         .log("Original Message");
 
-    if (checkConvertable(event)) {
-      convertAndSend(event);
-    } else if (!event.getAuthor().isBot()) {
-      logOnlyMessage(event);
+    if (!isConvertableEvent(event)) {
+      return;
     }
+
+    convertAndSend(event);
   }
 
-  private void logOnlyMessage(MessageReceivedEvent event) {
-    // log not convertable message
-    discordBotInPort.logMessage(MessageLog.builder()
-        .guild(event.getGuild().getName())
-        .channel(event.getChannel().getName())
-        .nickName(getNickNameOrUserName(event))
-        .effectiveName(event.getAuthor().getEffectiveName())
-        .message(event.getMessage().getContentRaw())
-        .channelId(event.getChannel().getIdLong())
-        .build());
-  }
-
-  private boolean checkConvertable(MessageReceivedEvent event) {
+  private boolean isConvertableEvent(MessageReceivedEvent event) {
     if (event.isFromType(ChannelType.PRIVATE)) {
       log.atInfo()
           .addKeyValue("author.nickname", getNickNameOrUserName(event))
@@ -76,20 +75,11 @@ public class MessageListener extends ListenerAdapter {
     long userId = event.getAuthor().getIdLong();
     long channelId = event.getChannel().getIdLong();
 
-    if (discordBotInPort.checkIgnoredUser(userId, channelId)) {
+    if (checkIgnoreUserUseCase.execute(new CheckIgnoreUserQuery(userId, channelId))) {
       log.atInfo()
           .addKeyValue("userId", userId)
           .addKeyValue("channelId", channelId)
           .log("this is ignored user");
-      return false;
-    }
-
-    String before = event.getMessage().getContentRaw();
-
-    if (!discordBotInPort.checkAvailableStr(before)) {
-      log.atInfo()
-          .addKeyValue("before", before)
-          .log("UnParseable String");
       return false;
     }
 
@@ -98,49 +88,65 @@ public class MessageListener extends ListenerAdapter {
 
   private void convertAndSend(MessageReceivedEvent event) {
     String before = event.getMessage().getContentRaw();
-    String after = discordBotInPort.engToKor(before);
 
+    ConvertMessageResult result =
+        convertMessageUseCase.execute(
+            new ConvertMessageCommand(
+                before,
+                event.getGuild().getIdLong(),
+                event.getChannel().getIdLong(),
+                getNickNameOrUserName(event),
+                event.getAuthor().getEffectiveName()));
+
+    if (!result.converted()) {
+      return;
+    }
+
+    String after = result.convertedMessage();
     User author = event.getMessage().getAuthor();
-    String avatarUrl = Optional.ofNullable(author.getAvatarUrl()).orElse(author.getDefaultAvatarUrl());
-    String authorName = "%s (%s)".formatted(getNickNameOrUserName(event), author.getEffectiveName());
+    String avatarUrl =
+        Optional.ofNullable(author.getAvatarUrl()).orElse(author.getDefaultAvatarUrl());
+    String authorName =
+        "%s (%s)".formatted(getNickNameOrUserName(event), author.getEffectiveName());
 
-    log.atInfo()
-        .addKeyValue("before", before)
-        .addKeyValue("after", after)
-        .log("Parsing");
+    log.atInfo().addKeyValue("before", before).addKeyValue("after", after).log("Parsing");
     try {
       event.getMessage().delete().complete();
       editEmbed(authorName, before, after, event);
     } catch (UnEditableMessageException e) {
-      log.atInfo()
-          .addKeyValue("cause.message", e.getMessage())
-          .log("Can not edit past message");
+      log.atInfo().addKeyValue("cause.message", e.getMessage()).log("Can not edit past message");
       sendEmbed(authorName, avatarUrl, before, after, event);
     }
-    logConvertedMessage(event, after);
   }
 
-  private void sendEmbed(String authorName, String avatarUrl, String before, String after,
+  private void sendEmbed(
+      String authorName,
+      String avatarUrl,
+      String before,
+      String after,
       MessageReceivedEvent event) {
-    MessageEmbed embed = new EmbedBuilder()
-        .setAuthor(authorName, null, avatarUrl)
-        .addField(before, after, false)
-        .setColor(new Color(255, 216, 228))
-        .build();
-    MessageCreateData data = new MessageCreateBuilder()
-        .setEmbeds(embed)
-        .build();
+    MessageEmbed embed =
+        new EmbedBuilder()
+            .setAuthor(authorName, null, avatarUrl)
+            .addField(before, after, false)
+            .setColor(new Color(255, 216, 228))
+            .build();
+    MessageCreateData data = new MessageCreateBuilder().setEmbeds(embed).build();
 
-    event.getChannel().sendMessage(data).onErrorMap(throwable -> {
-
-      log.atError()
-          .setCause(throwable)
-          .addKeyValue("after", after)
-          .addKeyValue("authorName", authorName)
-          .addKeyValue("avatarUrl", avatarUrl)
-          .log("Error when send message");
-      return null;
-    }).queue();
+    event
+        .getChannel()
+        .sendMessage(data)
+        .onErrorMap(
+            throwable -> {
+              log.atError()
+                  .setCause(throwable)
+                  .addKeyValue("after", after)
+                  .addKeyValue("authorName", authorName)
+                  .addKeyValue("avatarUrl", avatarUrl)
+                  .log("Error when send message");
+              return null;
+            })
+        .queue();
   }
 
   private void editEmbed(String authorName, String before, String after, MessageReceivedEvent event)
@@ -166,38 +172,26 @@ public class MessageListener extends ListenerAdapter {
       throw UnEditableMessageException.diffName();
     }
 
-    MessageEmbed embed = new EmbedBuilder(existEmbed)
-        .addField(before, after, false)
-        .build();
-    MessageEditData data = new MessageEditBuilder()
-        .setEmbeds(embed)
-        .build();
+    MessageEmbed embed = new EmbedBuilder(existEmbed).addField(before, after, false).build();
+    MessageEditData data = new MessageEditBuilder().setEmbeds(embed).build();
 
-    message.editMessage(data).onErrorMap(throwable -> {
-
-      log.atError()
-          .setCause(throwable)
-          .addKeyValue("after", after)
-          .addKeyValue("authorName", authorName)
-          .log("Error when send message");
-      return null;
-    }).queue();
+    message
+        .editMessage(data)
+        .onErrorMap(
+            throwable -> {
+              log.atError()
+                  .setCause(throwable)
+                  .addKeyValue("after", after)
+                  .addKeyValue("authorName", authorName)
+                  .log("Error when send message");
+              return null;
+            })
+        .queue();
   }
 
   private String getNickNameOrUserName(MessageReceivedEvent event) {
-    return event.getMember() != null ? event.getMember().getEffectiveName() : event.getAuthor().getEffectiveName();
-  }
-
-  private void logConvertedMessage(MessageReceivedEvent event, String converted) {
-    discordBotInPort.logMessage(MessageLog.builder()
-        .guild(event.getGuild().getName())
-        .channel(event.getChannel().getName())
-        .nickName(getNickNameOrUserName(event))
-        .effectiveName(event.getAuthor().getEffectiveName())
-        .message(event.getMessage().getContentRaw())
-        .isConverted(true)
-        .convertedMessage(converted)
-        .channelId(event.getChannel().getIdLong())
-        .build());
+    return event.getMember() != null
+        ? event.getMember().getEffectiveName()
+        : event.getAuthor().getEffectiveName();
   }
 }

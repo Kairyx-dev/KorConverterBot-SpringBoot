@@ -12,10 +12,10 @@ fun module(name: String, path: String) {
 }
 
 module(":boot", "/korConverter/boot")
-module(":common", "/korConverter/common")
+module(":configuration", "/korConverter/configuration")
 module(":application", "/korConverter/hexagonal/application")
 module(":domain", "/korConverter/hexagonal/domain")
-module(":adapter-jpa", "/korConverter/hexagonal/adapter/adapter-jpa")
+module(":adapter-persistence", "/korConverter/hexagonal/adapter/adapter-persistence")
 module(":adapter-bot", "/korConverter/hexagonal/adapter/adapter-bot")
 
 modules.forEach {

@@ -1,0 +1,76 @@
+name: "CI: 5-Gate Pipeline"
+
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+
+jobs:
+  gate-1-compile-checkstyle:
+    name: "Gate 1: Compile + Checkstyle"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'corretto'
+      - uses: gradle/actions/setup-gradle@v6
+      - run: ./gradlew spotlessCheck checkstyleMain compileJava
+
+  gate-2-unit-archunit:
+    name: "Gate 2: Unit + ArchUnit Tests"
+    needs: gate-1-compile-checkstyle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'corretto'
+      - uses: gradle/actions/setup-gradle@v6
+      - run: ./gradlew :domain:test :application:test :boot:test
+
+  gate-3-integration:
+    name: "Gate 3: Integration Tests (Testcontainers)"
+    needs: gate-2-unit-archunit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'corretto'
+      - uses: gradle/actions/setup-gradle@v6
+      - run: ./gradlew :adapter-persistence:test
+
+  gate-4-mutation:
+    name: "Gate 4: Mutation Testing (PIT)"
+    needs: gate-2-unit-archunit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'corretto'
+      - uses: gradle/actions/setup-gradle@v6
+      - run: ./gradlew :domain:pitest
+
+  gate-5-security:
+    name: "Gate 5: Security (placeholder)"
+    needs: gate-1-compile-checkstyle
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'corretto'
+      - uses: gradle/actions/setup-gradle@v6
+      # OWASP dependency-check placeholder
+      - run: echo "OWASP dependency-check placeholder -- to be configured"

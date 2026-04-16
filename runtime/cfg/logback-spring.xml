@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration scan="true" scanPeriod="30 seconds">
-  <define class="org.specter.converter.common.utils.TimeZoneDefiner" name="TIMEZONE"/>
+  <define class="org.specter.converter.configuration.logging.TimeZoneDefiner" name="TIMEZONE"/>
 
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
