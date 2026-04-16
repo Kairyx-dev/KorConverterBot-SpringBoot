@@ -3,9 +3,8 @@
   <define class="org.specter.converter.configuration.logging.TimeZoneDefiner" name="TIMEZONE"/>
 
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder>
-      <Pattern>%date{ISO8601} ${TIMEZONE:-UNDEFINED} %highlight(%-6level) --- [%20.20t] %cyan(%20.20logger{16}:%-3line) : %msg %kvp{NONE}%n
-      </Pattern>
+    <encoder class="org.springframework.boot.logging.logback.StructuredLogEncoder">
+      <format>ecs</format>
     </encoder>
   </appender>
 
