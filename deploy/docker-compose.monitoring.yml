@@ -1,0 +1,33 @@
+# Grafana LGTM — 개발 환경 전용 관측성 스택 (purist-ddd-playbook Part 10 §3-4)
+# 사용: docker compose -f docker-compose.yml -f docker-compose.monitoring.yml up
+#
+# Grafana UI:   http://localhost:3000 (admin / admin)
+# OTLP HTTP:    http://localhost:4318
+# OTLP gRPC:    http://localhost:4317
+#
+# bot의 OTEL_EXPORTER_OTLP_ENDPOINT를 lgtm:4318로 오버라이드하여
+# 메트릭/트레이스/로그가 LGTM 컨테이너로 전송됩니다.
+# 운영 시에는 docker-compose.yml만 사용 (LGTM 미포함, OTel graceful fail).
+
+services:
+  lgtm:
+    image: grafana/otel-lgtm:latest
+    container_name: kor-converter-lgtm
+    ports:
+      - "3000:3000"
+      - "4317:4317"
+      - "4318:4318"
+    networks:
+      - converter_backend
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+
+  bot:
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
+    depends_on:
+      - lgtm
+
+networks:
+  converter_backend:
+    external: true
