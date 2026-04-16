@@ -8,6 +8,11 @@ dependencies {
 
     implementation(libs.springframework.boot.starter.jooq)
     implementation(libs.springframework.boot.autoconfigure)
+    // Spring Boot 4 split the Flyway autoconfig out of spring-boot-autoconfigure
+    // into a dedicated module. Without it, FlywayAutoConfiguration is absent
+    // from the classpath and Spring Boot silently skips Flyway initialization
+    // even when flyway-core is present.
+    implementation(libs.springframework.boot.flyway)
     implementation(libs.flyway.core)
     implementation(libs.flyway.postgresql)
     runtimeOnly(libs.org.postgresql)

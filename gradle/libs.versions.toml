@@ -37,6 +37,7 @@ springframework-boot-starter-validation = { group = "org.springframework.boot", 
 springframework-boot-starter-json = { group = "org.springframework.boot", name = "spring-boot-starter-json" }
 springframework-boot-starter-data-jpa = { group = "org.springframework.boot", name = "spring-boot-starter-data-jpa" }
 springframework-boot-starter-jooq = { group = "org.springframework.boot", name = "spring-boot-starter-jooq" }
+springframework-boot-flyway = { group = "org.springframework.boot", name = "spring-boot-flyway" }
 springframework-boot-autoconfigure = { group = "org.springframework.boot", name = "spring-boot-autoconfigure" }
 springframework-tx = { group = "org.springframework", name = "spring-tx" }
 slf4j-api = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j-api" }
