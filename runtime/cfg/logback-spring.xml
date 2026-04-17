@@ -2,13 +2,10 @@
 <configuration scan="true" scanPeriod="30 seconds">
   <define class="org.specter.converter.configuration.logging.TimeZoneDefiner" name="TIMEZONE"/>
 
-  <!-- Console: human-readable text pattern for docker logs / local dev.
-       LGTM receives logs via OTLP push (management.otlp.logging.export.url),
-       independent of the console format. traceId/spanId are auto-injected
-       into MDC by OpenTelemetry and included in the pattern below. -->
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
-      <pattern>%date{ISO8601} ${TIMEZONE:-UNDEFINED} %highlight(%-6level) [%X{traceId:-},%X{spanId:-}] --- [%20.20t] %cyan(%20.20logger{16}:%-3line) : %msg %kvp{NONE}%n</pattern>
+      <Pattern>%date{ISO8601} ${TIMEZONE:-UNDEFINED} %highlight(%-6level) --- [%20.20t] %cyan(%20.20logger{16}:%-3line) : %msg %kvp{NONE}%n
+      </Pattern>
     </encoder>
   </appender>
 
@@ -52,9 +49,18 @@
     </rollingPolicy>
   </appender>
 
+  <!-- OTel Logback appender: bridges Logback events to OpenTelemetry LogRecord.
+       Spring Boot 4's OtlpLoggingAutoConfiguration provides the OTLP LogRecordExporter,
+       but the log records themselves must be fed in via this appender. -->
+  <appender name="otel" class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
+    <captureExperimentalAttributes>true</captureExperimentalAttributes>
+    <captureMdcAttributes>*</captureMdcAttributes>
+  </appender>
+
   <root level="info">
     <appender-ref ref="console"/>
     <appender-ref ref="file"/>
     <appender-ref ref="file-warn"/>
+    <appender-ref ref="otel"/>
   </root>
 </configuration>
