@@ -10,6 +10,17 @@ updates:
     open-pull-requests-limit: 5
     target-branch: main
 
+    # jOOQ runtime/codegen 버전은 Spring Boot BOM(jooq.version)과 일치해야 한다.
+    # Spring Boot 4.0.x 라인은 jOOQ 3.19.x로 고정이므로, minor/major 업그레이드를 차단하고
+    # patch 업그레이드만 허용한다. Spring Boot 4.1+가 jOOQ 3.20/3.21을 채택하면 이 규칙을 푼다.
+    ignore:
+      - dependency-name: "org.jooq:jooq"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "org.jooq:jooq-codegen"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "org.jooq.jooq-codegen-gradle"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+
     groups:
       spring-boot:
         patterns:
