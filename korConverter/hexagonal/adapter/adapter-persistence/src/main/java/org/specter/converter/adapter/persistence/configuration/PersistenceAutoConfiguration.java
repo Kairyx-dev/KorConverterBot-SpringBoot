@@ -1,6 +1,7 @@
 package org.specter.converter.adapter.persistence.configuration;
 
 import org.jooq.DSLContext;
+import org.specter.converter.adapter.persistence.health.DatabaseHealthIndicator;
 import org.specter.converter.adapter.persistence.port.IgnoreUserPersistenceAdapter;
 import org.specter.converter.adapter.persistence.port.IgnoreUserQueryAdapter;
 import org.specter.converter.adapter.persistence.port.MessageLogRecordAdapter;
@@ -25,5 +26,10 @@ public class PersistenceAutoConfiguration {
   @Bean
   public MessageLogRecordAdapter messageLogRecordAdapter(DSLContext dsl) {
     return new MessageLogRecordAdapter(dsl);
+  }
+
+  @Bean
+  public DatabaseHealthIndicator databaseHealthIndicator(DSLContext dsl) {
+    return new DatabaseHealthIndicator(dsl);
   }
 }
