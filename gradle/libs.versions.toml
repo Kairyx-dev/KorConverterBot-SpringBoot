@@ -23,11 +23,11 @@ ch-qos-logback = "1.5.32"
 jspecify = "1.0.0"
 com-uber-nullaway = "0.13.2"
 com-google-errorprone-core = "2.49.0"
-testcontainers = "1.21.1"
+testcontainers = "1.21.4"
 archunit = "1.4.1"
 checkstyle = "10.25.0"
 jqwik = "1.9.3"
-mockito = "5.18.0"
+mockito = "5.23.0"
 
 [libraries]
 springframework-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter" }
