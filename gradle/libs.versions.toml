@@ -28,6 +28,7 @@ archunit = "1.4.1"
 checkstyle = "10.25.0"
 jqwik = "1.9.3"
 mockito = "5.23.0"
+opentelemetry-instrumentation = "2.21.0-alpha"
 
 [libraries]
 springframework-boot-starter = { group = "org.springframework.boot", name = "spring-boot-starter" }
@@ -72,6 +73,9 @@ jooq-codegen = { group = "org.jooq", name = "jooq-codegen", version.ref = "jooq"
 # Flyway
 flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
 flyway-postgresql = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
+
+# OpenTelemetry Logback appender (bridges Logback log events to OTel LogRecord → OTLP → Loki)
+opentelemetry-logback-appender = { group = "io.opentelemetry.instrumentation", name = "opentelemetry-logback-appender-1.0", version.ref = "opentelemetry-instrumentation" }
 
 # Testcontainers
 testcontainers-bom = { group = "org.testcontainers", name = "testcontainers-bom", version.ref = "testcontainers" }

@@ -52,9 +52,18 @@
     </rollingPolicy>
   </appender>
 
+  <!-- OTel Logback appender: bridges Logback events to OpenTelemetry LogRecord.
+       Spring Boot 4's OtlpLoggingAutoConfiguration provides the OTLP LogRecordExporter,
+       but the log records themselves must be fed in via this appender. -->
+  <appender name="otel" class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
+    <captureExperimentalAttributes>true</captureExperimentalAttributes>
+    <captureMdcAttributes>*</captureMdcAttributes>
+  </appender>
+
   <root level="info">
     <appender-ref ref="console"/>
     <appender-ref ref="file"/>
     <appender-ref ref="file-warn"/>
+    <appender-ref ref="otel"/>
   </root>
 </configuration>
