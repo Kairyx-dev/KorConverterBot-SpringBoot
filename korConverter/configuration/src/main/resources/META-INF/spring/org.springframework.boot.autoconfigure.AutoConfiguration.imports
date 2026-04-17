@@ -1,1 +1,2 @@
 org.specter.converter.configuration.ConverterBeanAutoConfiguration
+org.specter.converter.configuration.logging.OpenTelemetryAppenderInstaller
