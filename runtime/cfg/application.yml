@@ -26,14 +26,22 @@ management:
   endpoint:
     health:
       show-details: when-authorized
+  # Metrics go through Micrometer's OtlpMeterRegistry (management.otlp.metrics.*)
   otlp:
     metrics:
       export:
         url: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/metrics
+  # Traces and logs go through OpenTelemetry SDK exporters, which in Spring Boot 4
+  # live under management.opentelemetry.{tracing,logging}.export.otlp.*
+  opentelemetry:
     tracing:
-      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/traces
+      export:
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/traces
     logging:
-      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/logs
+      export:
+        otlp:
+          endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/logs
   tracing:
     sampling:
       probability: ${OTEL_SAMPLING_PROBABILITY:1.0}
