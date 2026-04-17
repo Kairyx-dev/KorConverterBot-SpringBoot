@@ -2,9 +2,13 @@
 <configuration scan="true" scanPeriod="30 seconds">
   <define class="org.specter.converter.configuration.logging.TimeZoneDefiner" name="TIMEZONE"/>
 
+  <!-- Console: human-readable text pattern for docker logs / local dev.
+       LGTM receives logs via OTLP push (management.otlp.logging.export.url),
+       independent of the console format. traceId/spanId are auto-injected
+       into MDC by OpenTelemetry and included in the pattern below. -->
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-    <encoder class="org.springframework.boot.logging.logback.StructuredLogEncoder">
-      <format>ecs</format>
+    <encoder>
+      <pattern>%date{ISO8601} ${TIMEZONE:-UNDEFINED} %highlight(%-6level) [%X{traceId:-},%X{spanId:-}] --- [%20.20t] %cyan(%20.20logger{16}:%-3line) : %msg %kvp{NONE}%n</pattern>
     </encoder>
   </appender>
 
