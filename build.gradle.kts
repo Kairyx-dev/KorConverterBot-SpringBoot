@@ -151,6 +151,6 @@ spotless {
     java {
         target("**/*.java")
         targetExclude("**/build/**", "**/generated/**")
-        googleJavaFormat("1.35.0")
+        palantirJavaFormat(libs.versions.palantir.java.format.get())
     }
 }
