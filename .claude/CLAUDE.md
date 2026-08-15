@@ -56,3 +56,14 @@ AutoConfiguration per module (not @ComponentScan).
 ./gradlew spotlessCheck   # 코드 포맷팅 검증
 ./gradlew :domain:pitest  # PIT 뮤테이션 테스트
 ```
+
+## Agent skills
+
+### Issue tracker
+GitHub Issues (`Kairyx-dev/KorConverterBot-SpringBoot`), `gh` CLI 사용. `docs/agents/issue-tracker.md` 참조.
+
+### Triage labels
+canonical 5종 라벨(`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`)을 그대로 사용. `docs/agents/triage-labels.md` 참조.
+
+### Domain docs
+Single-context. ADR은 `docs/adr/`가 아니라 `docs/decisions/`. `docs/agents/domain.md` 참조.
