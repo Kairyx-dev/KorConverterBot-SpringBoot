@@ -22,7 +22,7 @@ AutoConfiguration per module (not @ComponentScan).
 - Testcontainers, ArchUnit, jqwik (PBT)
 - JaCoCo, Checkstyle, Lefthook
 - PIT mutation testing (domain 65% threshold)
-- Spotless (google-java-format 1.35.0)
+- Spotless (palantir-java-format 2.97.0 — 4-space indent, 120 column. ADR-0003)
 
 ## 규칙
 `.claude/rules/index.md` 참조.

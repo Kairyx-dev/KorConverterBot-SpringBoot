@@ -24,6 +24,29 @@ port 와 adapter 로 구성된 Hexagonal 아키텍처
     - domain
         - 키보드 인덱스 변환을 담당하는 핵심로직
 
+## 개발 환경 설정
+
+clone 직후 1회 실행 (선택이지만 권장):
+
+```bash
+# 재포맷 커밋을 git blame 에서 건너뛴다
+git config blame.ignoreRevsFile .git-blame-ignore-revs
+```
+
+### 코드 포맷팅
+
+Spotless + [palantir-java-format](https://github.com/palantir/palantir-java-format)
+(4-space 들여쓰기, 120 column). 근거는 `docs/decisions/0003-palantir-java-format.md` 참조.
+
+```bash
+./gradlew spotlessApply   # 포맷 적용
+./gradlew spotlessCheck   # 검증 (lefthook pre-commit 이 자동 실행)
+```
+
+IntelliJ 에서 Cmd+Opt+L 을 쓰려면 **Palantir Java Format** 플러그인을 설치하고
+`Settings > palantir-java-format` 에서 활성화한다. 미설치 시 IDE 포맷이 Spotless 결과와
+어긋나 커밋 훅에서 되돌려진다. 최종 판정은 언제나 `./gradlew spotlessApply` 다.
+
 ## 프로젝트 실행
 
 IDE 실행 방법

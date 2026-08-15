@@ -1,0 +1,11 @@
+# 대규모 재포맷 커밋 목록. git blame 이 이 커밋들을 건너뛰게 한다.
+#
+# 로컬에서 한 번만 활성화:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# 여기에는 "포맷 변경만 있고 의미 변경이 전혀 없는" 커밋만 추가한다.
+# 반드시 full 40자 SHA 를 쓴다 (git 이 축약형을 거부한다).
+
+# style: apply palantir-java-format to all java sources
+# google-java-format 1.35.0 -> palantir-java-format 2.97.0 (2-space -> 4-space)
+33fd08f7719eec0f570ded7fd185d7300adb61b3
