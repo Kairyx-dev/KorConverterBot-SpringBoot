@@ -4,13 +4,13 @@ import java.time.Instant;
 import java.util.UUID;
 
 public sealed interface IgnoreUserEvent permits IgnoreUserAddedEvent, IgnoreUserRemovedEvent {
-  UUID eventId();
+    UUID eventId();
 
-  String eventType();
+    String eventType();
 
-  long aggregateId();
+    long aggregateId();
 
-  Instant occurredAt();
+    Instant occurredAt();
 
-  long aggregateVersion();
+    long aggregateVersion();
 }

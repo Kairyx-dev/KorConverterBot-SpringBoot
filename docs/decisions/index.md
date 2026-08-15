@@ -4,5 +4,6 @@
 |-----|------|------|------|
 | 0001 | BIGSERIAL ID Strategy | Accepted | 2026-04-15 |
 | 0002 | jOOQ Generated Code Location | Accepted | 2026-04-15 |
+| 0003 | palantir-java-format 채택 | Accepted | 2026-08-15 |
 
 > ADR이 추가/변경될 때마다 이 인덱스를 갱신한다.

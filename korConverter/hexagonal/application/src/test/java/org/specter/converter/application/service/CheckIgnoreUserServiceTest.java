@@ -15,44 +15,44 @@ import org.specter.converter.application.port.output.IgnoreUserQueryPort;
 @ExtendWith(MockitoExtension.class)
 class CheckIgnoreUserServiceTest {
 
-  @Mock private IgnoreUserQueryPort queryPort;
+    @Mock
+    private IgnoreUserQueryPort queryPort;
 
-  private CheckIgnoreUserService sut;
+    private CheckIgnoreUserService sut;
 
-  @BeforeEach
-  void setUp() {
-    sut = new CheckIgnoreUserService(queryPort);
-  }
+    @BeforeEach
+    void setUp() {
+        sut = new CheckIgnoreUserService(queryPort);
+    }
 
-  @Test
-  void execute_whenUserExists_returnsTrue() {
-    // given
-    var query = new CheckIgnoreUserQuery(100L, 200L);
-    given(queryPort.existsByUserIdAndChannelId(100L, 200L)).willReturn(true);
+    @Test
+    void execute_whenUserExists_returnsTrue() {
+        // given
+        var query = new CheckIgnoreUserQuery(100L, 200L);
+        given(queryPort.existsByUserIdAndChannelId(100L, 200L)).willReturn(true);
 
-    // when
-    var result = sut.execute(query);
+        // when
+        var result = sut.execute(query);
 
-    // then
-    assertThat(result).isTrue();
-  }
+        // then
+        assertThat(result).isTrue();
+    }
 
-  @Test
-  void execute_whenUserDoesNotExist_returnsFalse() {
-    // given
-    var query = new CheckIgnoreUserQuery(100L, 200L);
-    given(queryPort.existsByUserIdAndChannelId(100L, 200L)).willReturn(false);
+    @Test
+    void execute_whenUserDoesNotExist_returnsFalse() {
+        // given
+        var query = new CheckIgnoreUserQuery(100L, 200L);
+        given(queryPort.existsByUserIdAndChannelId(100L, 200L)).willReturn(false);
 
-    // when
-    var result = sut.execute(query);
+        // when
+        var result = sut.execute(query);
 
-    // then
-    assertThat(result).isFalse();
-  }
+        // then
+        assertThat(result).isFalse();
+    }
 
-  @Test
-  void constructor_rejectsNullQueryPort() {
-    assertThatThrownBy(() -> new CheckIgnoreUserService(null))
-        .isInstanceOf(NullPointerException.class);
-  }
+    @Test
+    void constructor_rejectsNullQueryPort() {
+        assertThatThrownBy(() -> new CheckIgnoreUserService(null)).isInstanceOf(NullPointerException.class);
+    }
 }

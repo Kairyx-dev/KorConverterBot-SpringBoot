@@ -6,5 +6,5 @@ import org.specter.converter.domain.model.IgnoreUser;
 import org.specter.converter.domain.model.UserId;
 
 public interface LoadIgnoreUserPort {
-  Optional<IgnoreUser> loadByUserIdAndChannelId(UserId userId, ChannelId channelId);
+    Optional<IgnoreUser> loadByUserIdAndChannelId(UserId userId, ChannelId channelId);
 }

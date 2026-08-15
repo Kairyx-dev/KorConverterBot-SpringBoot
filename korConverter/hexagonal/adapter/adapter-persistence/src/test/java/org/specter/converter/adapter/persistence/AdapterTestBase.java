@@ -12,35 +12,33 @@ import org.testcontainers.containers.PostgreSQLContainer;
 
 public abstract class AdapterTestBase {
 
-  static final PostgreSQLContainer<?> PG =
-      new PostgreSQLContainer<>("postgres:17-alpine").withReuse(true);
+    static final PostgreSQLContainer<?> PG = new PostgreSQLContainer<>("postgres:17-alpine").withReuse(true);
 
-  static {
-    PG.start();
-  }
-
-  @DynamicPropertySource
-  static void dbProps(DynamicPropertyRegistry registry) {
-    registry.add("spring.datasource.url", PG::getJdbcUrl);
-    registry.add("spring.datasource.username", PG::getUsername);
-    registry.add("spring.datasource.password", PG::getPassword);
-  }
-
-  @EnableAutoConfiguration
-  @Import(PersistenceAutoConfiguration.class)
-  public static class AdapterTestConfig {
-
-    @Bean
-    Flyway flyway(DataSource dataSource) {
-      Flyway flyway =
-          Flyway.configure()
-              .dataSource(dataSource)
-              .locations("classpath:db/migration")
-              .cleanDisabled(false)
-              .load();
-      flyway.clean();
-      flyway.migrate();
-      return flyway;
+    static {
+        PG.start();
     }
-  }
+
+    @DynamicPropertySource
+    static void dbProps(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", PG::getJdbcUrl);
+        registry.add("spring.datasource.username", PG::getUsername);
+        registry.add("spring.datasource.password", PG::getPassword);
+    }
+
+    @EnableAutoConfiguration
+    @Import(PersistenceAutoConfiguration.class)
+    public static class AdapterTestConfig {
+
+        @Bean
+        Flyway flyway(DataSource dataSource) {
+            Flyway flyway = Flyway.configure()
+                    .dataSource(dataSource)
+                    .locations("classpath:db/migration")
+                    .cleanDisabled(false)
+                    .load();
+            flyway.clean();
+            flyway.migrate();
+            return flyway;
+        }
+    }
 }

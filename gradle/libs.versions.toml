@@ -26,6 +26,7 @@ com-google-errorprone-core = "2.50.0"
 testcontainers = "1.21.4"
 archunit = "1.5.0"
 checkstyle = "10.25.0"
+palantir-java-format = "2.97.0"
 jqwik = "1.10.1"
 mockito = "5.23.0"
 opentelemetry-instrumentation = "2.29.0-alpha"
@@ -53,6 +54,11 @@ org-postgresql = { group = "org.postgresql", name = "postgresql", version.ref = 
 assertj = { group = "org.assertj", name = "assertj-core", version.ref = "assertJ" }
 com-google-errorprone-core = { group = "com.google.errorprone", name = "error_prone_core", version.ref = "com-google-errorprone-core" }
 com-uber-nullaway = { group = "com.uber.nullaway", name = "nullaway", version.ref = "com-uber-nullaway" }
+
+# Spotless 의 java 포맷터. 어느 모듈에도 의존성으로 추가하지 않으며, 루트 build.gradle.kts 의
+# spotless 블록이 versions.palantir-java-format 만 문자열로 읽는다.
+# 이 [libraries] 항목은 Dependabot 이 bump 대상 artifact 를 인식하게 하려고 존재한다.
+palantir-java-format = { group = "com.palantir.javaformat", name = "palantir-java-format", version.ref = "palantir-java-format" }
 
 # for domain
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit-bom" }

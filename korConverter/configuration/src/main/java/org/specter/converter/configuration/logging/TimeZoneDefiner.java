@@ -6,8 +6,8 @@ import java.util.TimeZone;
 
 public class TimeZoneDefiner extends ContextAwareBase implements PropertyDefiner {
 
-  @Override
-  public String getPropertyValue() {
-    return TimeZone.getDefault().getID();
-  }
+    @Override
+    public String getPropertyValue() {
+        return TimeZone.getDefault().getID();
+    }
 }

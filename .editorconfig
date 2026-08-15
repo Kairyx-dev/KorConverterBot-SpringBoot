@@ -1,0 +1,31 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# palantir-java-format: 4-space indent, 120 column limit
+# 최종 판정은 항상 `./gradlew spotlessApply` 이며, 아래 값은 IDE 가 그 결과에 근접하게
+# 타이핑하도록 맞춘 것이다.
+[*.java]
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+[*.{kt,kts}]
+indent_style = space
+indent_size = 4
+
+[*.{yml,yaml,json,xml,toml,sql}]
+indent_style = space
+indent_size = 2
+
+# Windows 런처는 CRLF 를 유지해야 한다
+[*.bat]
+end_of_line = crlf
+
+# Markdown 은 줄 끝 공백 2개가 강제 개행 문법이다
+[*.md]
+trim_trailing_whitespace = false

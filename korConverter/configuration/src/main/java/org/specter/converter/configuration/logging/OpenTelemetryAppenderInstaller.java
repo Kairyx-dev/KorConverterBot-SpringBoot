@@ -22,8 +22,8 @@ import org.springframework.context.annotation.Bean;
 @AutoConfiguration
 public class OpenTelemetryAppenderInstaller {
 
-  @Bean
-  public InitializingBean openTelemetryAppenderInstaller(OpenTelemetry openTelemetry) {
-    return () -> OpenTelemetryAppender.install(openTelemetry);
-  }
+    @Bean
+    public InitializingBean openTelemetryAppenderInstaller(OpenTelemetry openTelemetry) {
+        return () -> OpenTelemetryAppender.install(openTelemetry);
+    }
 }

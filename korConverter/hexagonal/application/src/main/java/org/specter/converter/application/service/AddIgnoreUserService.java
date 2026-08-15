@@ -14,35 +14,30 @@ import org.specter.converter.domain.model.UserId;
 
 public class AddIgnoreUserService implements AddIgnoreUserUseCase {
 
-  private final LoadIgnoreUserPort loadPort;
-  private final SaveIgnoreUserPort savePort;
-  private final Clock clock;
+    private final LoadIgnoreUserPort loadPort;
+    private final SaveIgnoreUserPort savePort;
+    private final Clock clock;
 
-  public AddIgnoreUserService(
-      LoadIgnoreUserPort loadPort, SaveIgnoreUserPort savePort, Clock clock) {
-    this.loadPort = Objects.requireNonNull(loadPort, "loadPort");
-    this.savePort = Objects.requireNonNull(savePort, "savePort");
-    this.clock = Objects.requireNonNull(clock, "clock");
-  }
+    public AddIgnoreUserService(LoadIgnoreUserPort loadPort, SaveIgnoreUserPort savePort, Clock clock) {
+        this.loadPort = Objects.requireNonNull(loadPort, "loadPort");
+        this.savePort = Objects.requireNonNull(savePort, "savePort");
+        this.clock = Objects.requireNonNull(clock, "clock");
+    }
 
-  @Override
-  public IgnoreUserResult execute(AddIgnoreUserCommand command) {
-    Objects.requireNonNull(command, "command");
+    @Override
+    public IgnoreUserResult execute(AddIgnoreUserCommand command) {
+        Objects.requireNonNull(command, "command");
 
-    var userId = new UserId(command.userId());
-    var channelId = new ChannelId(command.channelId());
+        var userId = new UserId(command.userId());
+        var channelId = new ChannelId(command.channelId());
 
-    loadPort
-        .loadByUserIdAndChannelId(userId, channelId)
-        .ifPresent(
-            existing -> {
-              throw new IgnoreUserAlreadyExistsException(userId.value(), channelId.value());
-            });
+        loadPort.loadByUserIdAndChannelId(userId, channelId).ifPresent(existing -> {
+            throw new IgnoreUserAlreadyExistsException(userId.value(), channelId.value());
+        });
 
-    var ignoreUser = IgnoreUser.create(userId, channelId, command.name(), clock.instant());
-    savePort.save(ignoreUser);
+        var ignoreUser = IgnoreUser.create(userId, channelId, command.name(), clock.instant());
+        savePort.save(ignoreUser);
 
-    return new IgnoreUserResult(
-        ignoreUser.id().value(), command.userId(), command.channelId(), command.name());
-  }
+        return new IgnoreUserResult(ignoreUser.id().value(), command.userId(), command.channelId(), command.name());
+    }
 }

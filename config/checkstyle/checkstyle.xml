@@ -4,8 +4,11 @@
     "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <!--
-    Checkstyle configuration based on Google Java Style with relaxations
-    for purist DDD + hexagonal architecture.
+    포맷팅(들여쓰기, 줄바꿈, 줄 길이)은 Spotless + palantir-java-format 이 결정론적으로
+    보장하므로 여기서 중복 검사하지 않는다. 이 설정은 포맷터가 다루지 않는 영역
+    — naming, imports, braces, coding 관례 — 만 담당하며,
+    purist DDD + hexagonal 구조에 맞춰 완화되어 있다.
+    참고: docs/decisions/0003-palantir-java-format.md
 -->
 <module name="Checker">
     <property name="charset" value="UTF-8"/>

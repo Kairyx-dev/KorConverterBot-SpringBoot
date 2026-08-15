@@ -4,5 +4,5 @@ import java.time.Instant;
 import java.util.UUID;
 
 public record IgnoreUserAddedEvent(
-    UUID eventId, String eventType, long aggregateId, Instant occurredAt, long aggregateVersion)
-    implements IgnoreUserEvent {}
+        UUID eventId, String eventType, long aggregateId, Instant occurredAt, long aggregateVersion)
+        implements IgnoreUserEvent {}
