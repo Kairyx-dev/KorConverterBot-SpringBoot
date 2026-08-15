@@ -27,62 +27,57 @@ import org.specter.converter.domain.model.UserId;
 @ExtendWith(MockitoExtension.class)
 class RemoveIgnoreUserServiceTest {
 
-  private static final Instant FIXED_NOW = Instant.parse("2026-01-15T12:00:00Z");
-  private static final Clock FIXED_CLOCK = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
+    private static final Instant FIXED_NOW = Instant.parse("2026-01-15T12:00:00Z");
+    private static final Clock FIXED_CLOCK = Clock.fixed(FIXED_NOW, ZoneOffset.UTC);
 
-  @Mock private LoadIgnoreUserPort loadPort;
+    @Mock
+    private LoadIgnoreUserPort loadPort;
 
-  @Mock private SaveIgnoreUserPort savePort;
+    @Mock
+    private SaveIgnoreUserPort savePort;
 
-  private RemoveIgnoreUserService sut;
+    private RemoveIgnoreUserService sut;
 
-  @BeforeEach
-  void setUp() {
-    sut = new RemoveIgnoreUserService(loadPort, savePort, FIXED_CLOCK);
-  }
+    @BeforeEach
+    void setUp() {
+        sut = new RemoveIgnoreUserService(loadPort, savePort, FIXED_CLOCK);
+    }
 
-  @Test
-  void execute_whenUserExists_marksForRemovalAndDeletes() {
-    // given
-    var command = new RemoveIgnoreUserCommand(100L, 200L);
-    var existing =
-        IgnoreUser.reconstitute(
-            new IgnoreUserId(1L),
-            new UserId(100L),
-            new ChannelId(200L),
-            "testUser",
-            FIXED_NOW,
-            FIXED_NOW,
-            0L);
-    given(loadPort.loadByUserIdAndChannelId(new UserId(100L), new ChannelId(200L)))
-        .willReturn(Optional.of(existing));
+    @Test
+    void execute_whenUserExists_marksForRemovalAndDeletes() {
+        // given
+        var command = new RemoveIgnoreUserCommand(100L, 200L);
+        var existing = IgnoreUser.reconstitute(
+                new IgnoreUserId(1L), new UserId(100L), new ChannelId(200L), "testUser", FIXED_NOW, FIXED_NOW, 0L);
+        given(loadPort.loadByUserIdAndChannelId(new UserId(100L), new ChannelId(200L)))
+                .willReturn(Optional.of(existing));
 
-    // when
-    sut.execute(command);
+        // when
+        sut.execute(command);
 
-    // then
-    verify(savePort).delete(existing);
-  }
+        // then
+        verify(savePort).delete(existing);
+    }
 
-  @Test
-  void execute_whenUserNotFound_throwsException() {
-    // given
-    var command = new RemoveIgnoreUserCommand(100L, 200L);
-    given(loadPort.loadByUserIdAndChannelId(new UserId(100L), new ChannelId(200L)))
-        .willReturn(Optional.empty());
+    @Test
+    void execute_whenUserNotFound_throwsException() {
+        // given
+        var command = new RemoveIgnoreUserCommand(100L, 200L);
+        given(loadPort.loadByUserIdAndChannelId(new UserId(100L), new ChannelId(200L)))
+                .willReturn(Optional.empty());
 
-    // when / then
-    assertThatThrownBy(() -> sut.execute(command)).isInstanceOf(IgnoreUserNotFoundException.class);
-    verify(savePort, never()).delete(any());
-  }
+        // when / then
+        assertThatThrownBy(() -> sut.execute(command)).isInstanceOf(IgnoreUserNotFoundException.class);
+        verify(savePort, never()).delete(any());
+    }
 
-  @Test
-  void constructor_rejectsNullArguments() {
-    assertThatThrownBy(() -> new RemoveIgnoreUserService(null, savePort, FIXED_CLOCK))
-        .isInstanceOf(NullPointerException.class);
-    assertThatThrownBy(() -> new RemoveIgnoreUserService(loadPort, null, FIXED_CLOCK))
-        .isInstanceOf(NullPointerException.class);
-    assertThatThrownBy(() -> new RemoveIgnoreUserService(loadPort, savePort, null))
-        .isInstanceOf(NullPointerException.class);
-  }
+    @Test
+    void constructor_rejectsNullArguments() {
+        assertThatThrownBy(() -> new RemoveIgnoreUserService(null, savePort, FIXED_CLOCK))
+                .isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> new RemoveIgnoreUserService(loadPort, null, FIXED_CLOCK))
+                .isInstanceOf(NullPointerException.class);
+        assertThatThrownBy(() -> new RemoveIgnoreUserService(loadPort, savePort, null))
+                .isInstanceOf(NullPointerException.class);
+    }
 }

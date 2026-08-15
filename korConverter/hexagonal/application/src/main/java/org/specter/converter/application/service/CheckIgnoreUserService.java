@@ -7,15 +7,15 @@ import org.specter.converter.application.port.output.IgnoreUserQueryPort;
 
 public class CheckIgnoreUserService implements CheckIgnoreUserUseCase {
 
-  private final IgnoreUserQueryPort queryPort;
+    private final IgnoreUserQueryPort queryPort;
 
-  public CheckIgnoreUserService(IgnoreUserQueryPort queryPort) {
-    this.queryPort = Objects.requireNonNull(queryPort, "queryPort");
-  }
+    public CheckIgnoreUserService(IgnoreUserQueryPort queryPort) {
+        this.queryPort = Objects.requireNonNull(queryPort, "queryPort");
+    }
 
-  @Override
-  public boolean execute(CheckIgnoreUserQuery query) {
-    Objects.requireNonNull(query, "query");
-    return queryPort.existsByUserIdAndChannelId(query.userId(), query.channelId());
-  }
+    @Override
+    public boolean execute(CheckIgnoreUserQuery query) {
+        Objects.requireNonNull(query, "query");
+        return queryPort.existsByUserIdAndChannelId(query.userId(), query.channelId());
+    }
 }

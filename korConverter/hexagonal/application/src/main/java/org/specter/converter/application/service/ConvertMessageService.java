@@ -10,42 +10,39 @@ import org.specter.converter.domain.service.ConversionDomainService;
 
 public class ConvertMessageService implements ConvertMessageUseCase {
 
-  private final ConversionDomainService conversionDomainService;
-  private final RecordMessageLogPort recordMessageLogPort;
+    private final ConversionDomainService conversionDomainService;
+    private final RecordMessageLogPort recordMessageLogPort;
 
-  public ConvertMessageService(
-      ConversionDomainService conversionDomainService, RecordMessageLogPort recordMessageLogPort) {
-    this.conversionDomainService =
-        Objects.requireNonNull(conversionDomainService, "conversionDomainService");
-    this.recordMessageLogPort =
-        Objects.requireNonNull(recordMessageLogPort, "recordMessageLogPort");
-  }
-
-  @Override
-  public ConvertMessageResult execute(ConvertMessageCommand command) {
-    Objects.requireNonNull(command, "command");
-
-    var message = command.message();
-    var available = conversionDomainService.checkAvailableStr(message);
-
-    String convertedMessage;
-    if (available) {
-      convertedMessage = conversionDomainService.engToKor(message);
-    } else {
-      convertedMessage = "";
+    public ConvertMessageService(
+            ConversionDomainService conversionDomainService, RecordMessageLogPort recordMessageLogPort) {
+        this.conversionDomainService = Objects.requireNonNull(conversionDomainService, "conversionDomainService");
+        this.recordMessageLogPort = Objects.requireNonNull(recordMessageLogPort, "recordMessageLogPort");
     }
 
-    recordMessageLogPort.record(
-        new RecordMessageLogCommand(
-            command.guildId(),
-            String.valueOf(command.channelId()),
-            command.nickName(),
-            command.effectiveName(),
-            message,
-            available,
-            convertedMessage,
-            command.channelId()));
+    @Override
+    public ConvertMessageResult execute(ConvertMessageCommand command) {
+        Objects.requireNonNull(command, "command");
 
-    return new ConvertMessageResult(message, convertedMessage, available);
-  }
+        var message = command.message();
+        var available = conversionDomainService.checkAvailableStr(message);
+
+        String convertedMessage;
+        if (available) {
+            convertedMessage = conversionDomainService.engToKor(message);
+        } else {
+            convertedMessage = "";
+        }
+
+        recordMessageLogPort.record(new RecordMessageLogCommand(
+                command.guildId(),
+                String.valueOf(command.channelId()),
+                command.nickName(),
+                command.effectiveName(),
+                message,
+                available,
+                convertedMessage,
+                command.channelId()));
+
+        return new ConvertMessageResult(message, convertedMessage, available);
+    }
 }

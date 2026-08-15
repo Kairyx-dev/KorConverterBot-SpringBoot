@@ -12,24 +12,24 @@ import org.springframework.context.annotation.Bean;
 @AutoConfiguration
 public class PersistenceAutoConfiguration {
 
-  @Bean
-  public IgnoreUserPersistenceAdapter ignoreUserPersistenceAdapter(
-      DSLContext dsl, ApplicationEventPublisher eventPublisher) {
-    return new IgnoreUserPersistenceAdapter(dsl, eventPublisher);
-  }
+    @Bean
+    public IgnoreUserPersistenceAdapter ignoreUserPersistenceAdapter(
+            DSLContext dsl, ApplicationEventPublisher eventPublisher) {
+        return new IgnoreUserPersistenceAdapter(dsl, eventPublisher);
+    }
 
-  @Bean
-  public IgnoreUserQueryAdapter ignoreUserQueryAdapter(DSLContext dsl) {
-    return new IgnoreUserQueryAdapter(dsl);
-  }
+    @Bean
+    public IgnoreUserQueryAdapter ignoreUserQueryAdapter(DSLContext dsl) {
+        return new IgnoreUserQueryAdapter(dsl);
+    }
 
-  @Bean
-  public MessageLogRecordAdapter messageLogRecordAdapter(DSLContext dsl) {
-    return new MessageLogRecordAdapter(dsl);
-  }
+    @Bean
+    public MessageLogRecordAdapter messageLogRecordAdapter(DSLContext dsl) {
+        return new MessageLogRecordAdapter(dsl);
+    }
 
-  @Bean
-  public DatabaseHealthIndicator databaseHealthIndicator(DSLContext dsl) {
-    return new DatabaseHealthIndicator(dsl);
-  }
+    @Bean
+    public DatabaseHealthIndicator databaseHealthIndicator(DSLContext dsl) {
+        return new DatabaseHealthIndicator(dsl);
+    }
 }

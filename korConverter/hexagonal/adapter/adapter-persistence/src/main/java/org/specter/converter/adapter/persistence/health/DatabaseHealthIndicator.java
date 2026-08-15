@@ -18,19 +18,19 @@ import org.springframework.boot.health.contributor.HealthIndicator;
  */
 public class DatabaseHealthIndicator implements HealthIndicator {
 
-  private final DSLContext dsl;
+    private final DSLContext dsl;
 
-  public DatabaseHealthIndicator(DSLContext dsl) {
-    this.dsl = Objects.requireNonNull(dsl, "dsl");
-  }
-
-  @Override
-  public Health health() {
-    try {
-      dsl.selectOne().fetch();
-      return Health.up().build();
-    } catch (Exception e) {
-      return Health.down(e).build();
+    public DatabaseHealthIndicator(DSLContext dsl) {
+        this.dsl = Objects.requireNonNull(dsl, "dsl");
     }
-  }
+
+    @Override
+    public Health health() {
+        try {
+            dsl.selectOne().fetch();
+            return Health.up().build();
+        } catch (Exception e) {
+            return Health.down(e).build();
+        }
+    }
 }
