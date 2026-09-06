@@ -46,7 +46,11 @@ class ConverterTest {
                 new TestCase("kt", "ㅏㅅ"),
                 new TestCase("dkssudGktpdy", "안녕Gㅏ세요"),
                 new TestCase("gkArk", "하A가"),
-                new TestCase("gh ZZ dhk", "호 ZZ 와"));
+                new TestCase("gh ZZ dhk", "호 ZZ 와"),
+                new TestCase("frt", "ㄺㅅ"),
+                new TestCase("rts", "ㄳㄴ"),
+                new TestCase("frk", "ㄹ가"),
+                new TestCase("gkfrk", "할가"));
     }
 
     @ParameterizedTest

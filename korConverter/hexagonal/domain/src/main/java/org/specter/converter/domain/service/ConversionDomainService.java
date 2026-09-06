@@ -100,7 +100,7 @@ public class ConversionDomainService {
             final KrDataIndex indexInfo, StringBuilder resultStringBuilder, int currentChoIndex) {
         var resultInfo = indexInfo;
 
-        if (!resultInfo.chosungIndexed() && resultInfo.jungsungIndexed()) { // 초성없이 종성있음, 종성 처리
+        if (!resultInfo.chosungIndexed() && resultInfo.jongsungIndexed()) { // 초성없이 종성있음, 종성 처리
             resultStringBuilder.append(KeyboardIndex.JONG_DATA.charAt(resultInfo.jongsung()));
             resultInfo = resultInfo.clearJongsung();
         }
@@ -192,8 +192,8 @@ public class ConversionDomainService {
 
         if (returnIndex.chosungIndexed()) { // 앞글자가 초성+중성+(종성)
             res.append(composeSyllableFromIndex(returnIndex));
-        } else { // 복자음만 있던 경우
-            res.append(KeyboardIndex.JONG_DATA.charAt(indexInfo.jongsung()));
+        } else if (returnIndex.jongsungIndexed()) { // 복자음만 있던 경우, 분해하고 남은 앞 자음만 결과에 넣는다
+            res.append(KeyboardIndex.JONG_DATA.charAt(returnIndex.jongsung()));
         }
 
         returnIndex = KrDataIndex.create().withChosung(tempCho);
