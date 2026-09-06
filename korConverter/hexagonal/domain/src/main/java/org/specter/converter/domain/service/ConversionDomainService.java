@@ -82,9 +82,9 @@ public class ConversionDomainService {
         final var currentChoIndex = getChosungIndex(currentKor);
 
         if (indexInfo.jungsungIndexed() && !indexInfo.chosungIndexed()) { // 초성없이 중성만 있음
-            // 이전에 입력했던 중성을 그대로 결과에 넣고 초성위치 지정
+            // 이전에 입력했던 중성을 그대로 결과에 넣고 초성위치 지정 (지정된 초성은 다음 입력에서 조합)
             resultStringBuilder.append(KeyboardIndex.JUNG_DATA.charAt(indexInfo.jungsung()));
-            indexInfo = indexInfo.clearJungsung().withChosung(currentChoIndex);
+            return indexInfo.clearJungsung().withChosung(currentChoIndex);
         }
 
         if (indexInfo.jungsungIndexed()) {
@@ -100,7 +100,7 @@ public class ConversionDomainService {
             final KrDataIndex indexInfo, StringBuilder resultStringBuilder, int currentChoIndex) {
         var resultInfo = indexInfo;
 
-        if (!resultInfo.chosungIndexed() && resultInfo.jungsungIndexed()) { // 초성없이 종성있음, 종성 처리
+        if (!resultInfo.chosungIndexed() && resultInfo.jongsungIndexed()) { // 초성없이 종성있음, 종성 처리
             resultStringBuilder.append(KeyboardIndex.JONG_DATA.charAt(resultInfo.jongsung()));
             resultInfo = resultInfo.clearJongsung();
         }
@@ -192,8 +192,8 @@ public class ConversionDomainService {
 
         if (returnIndex.chosungIndexed()) { // 앞글자가 초성+중성+(종성)
             res.append(composeSyllableFromIndex(returnIndex));
-        } else { // 복자음만 있던 경우
-            res.append(KeyboardIndex.JONG_DATA.charAt(indexInfo.jongsung()));
+        } else if (returnIndex.jongsungIndexed()) { // 복자음만 있던 경우, 분해하고 남은 앞 자음만 결과에 넣는다
+            res.append(KeyboardIndex.JONG_DATA.charAt(returnIndex.jongsung()));
         }
 
         returnIndex = KrDataIndex.create().withChosung(tempCho);
@@ -291,7 +291,7 @@ public class ConversionDomainService {
 
             if (KeyboardIndex.ENG_INDEX_MAP.containsKey(ch)) {
                 isCorrectEng = true;
-            } else if (!isSpace(ch) && !isSpecificCode(ch) && !isNumber(ch)) {
+            } else if (!isSpace(ch) && !isSpecificCode(ch) && !isNumber(ch) && !isAlphabet(ch)) {
                 return false;
             }
         }
@@ -307,12 +307,25 @@ public class ConversionDomainService {
         return c == ' ';
     }
 
+    /**
+     * 변환에 쓰이지 않지만 원본 그대로 통과시키는 ASCII 기호인지 검사한다.
+     *
+     * <p>백틱(0x60)은 디스코드 코드 블록 구분자이므로 어느 범위에도 넣지 않는다. 백틱이 포함된 메시지는 변환 대상에서 제외된다.
+     */
     private boolean isSpecificCode(char c) {
-        return ('!' <= c && c <= '/') || (':' <= c && c <= '@') || ('[' < c && c < '`') || ('{' < c && c < '~');
+        return ('!' <= c && c <= '/') // 0x21~0x2F
+                || (':' <= c && c <= '@') // 0x3A~0x40
+                || ('[' <= c && c <= '_') // 0x5B~0x5F
+                || ('{' <= c && c <= '~'); // 0x7B~0x7E
     }
 
     private boolean isNumber(char c) {
         return ('0' <= c && c <= '9');
+    }
+
+    /** 한글키에 대응되지 않는 영문 알파벳(대문자 등). 변환 시 원본 그대로 통과된다. */
+    private boolean isAlphabet(char c) {
+        return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z');
     }
 
     /** 두개의 자음을 하나의 이중자음으로 변환 */
