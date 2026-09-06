@@ -307,8 +307,16 @@ public class ConversionDomainService {
         return c == ' ';
     }
 
+    /**
+     * 변환에 쓰이지 않지만 원본 그대로 통과시키는 ASCII 기호인지 검사한다.
+     *
+     * <p>백틱(0x60)은 디스코드 코드 블록 구분자이므로 어느 범위에도 넣지 않는다. 백틱이 포함된 메시지는 변환 대상에서 제외된다.
+     */
     private boolean isSpecificCode(char c) {
-        return ('!' <= c && c <= '/') || (':' <= c && c <= '@') || ('[' < c && c < '`') || ('{' < c && c < '~');
+        return ('!' <= c && c <= '/') // 0x21~0x2F
+                || (':' <= c && c <= '@') // 0x3A~0x40
+                || ('[' <= c && c <= '_') // 0x5B~0x5F
+                || ('{' <= c && c <= '~'); // 0x7B~0x7E
     }
 
     private boolean isNumber(char c) {
