@@ -42,8 +42,36 @@ class ConverterTest {
                 new TestCase("djEja", "어떰"),
                 new TestCase("gufak", "혈마"),
                 new TestCase("gufak?", "혈마?"),
-                new TestCase("gkausgka", "하면함"));
+                new TestCase("gkausgka", "하면함"),
+                new TestCase("kt", "ㅏㅅ"),
+                new TestCase("dkssudGktpdy", "안녕Gㅏ세요"),
+                new TestCase("gkArk", "하A가"),
+                new TestCase("gh ZZ dhk", "호 ZZ 와"));
+    }
+
+    @ParameterizedTest
+    @DisplayName("checkAvailableStr 테스트")
+    @MethodSource("provideAvailableParams")
+    void t2(AvailableCase param) {
+        var available = converterCore.checkAvailableStr(param.message());
+
+        assertThat(available).isEqualTo(param.available());
+    }
+
+    protected static Stream<AvailableCase> provideAvailableParams() {
+        return Stream.of(
+                new AvailableCase("dkssudGktpdy", true),
+                new AvailableCase("gkArk", true),
+                // 한글키에 대응되는 영문이 하나도 없으면 변환 대상이 아니다
+                new AvailableCase("ABC", false),
+                // 기존 가드 유지
+                new AvailableCase("https://example.com", false),
+                new AvailableCase("<@1234567890>", false),
+                new AvailableCase("안녕 dk", false),
+                new AvailableCase("gk😀rk", false));
     }
 
     protected record TestCase(String eng, String kor) {}
+
+    protected record AvailableCase(String message, boolean available) {}
 }

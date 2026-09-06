@@ -82,9 +82,9 @@ public class ConversionDomainService {
         final var currentChoIndex = getChosungIndex(currentKor);
 
         if (indexInfo.jungsungIndexed() && !indexInfo.chosungIndexed()) { // 초성없이 중성만 있음
-            // 이전에 입력했던 중성을 그대로 결과에 넣고 초성위치 지정
+            // 이전에 입력했던 중성을 그대로 결과에 넣고 초성위치 지정 (지정된 초성은 다음 입력에서 조합)
             resultStringBuilder.append(KeyboardIndex.JUNG_DATA.charAt(indexInfo.jungsung()));
-            indexInfo = indexInfo.clearJungsung().withChosung(currentChoIndex);
+            return indexInfo.clearJungsung().withChosung(currentChoIndex);
         }
 
         if (indexInfo.jungsungIndexed()) {
@@ -291,7 +291,7 @@ public class ConversionDomainService {
 
             if (KeyboardIndex.ENG_INDEX_MAP.containsKey(ch)) {
                 isCorrectEng = true;
-            } else if (!isSpace(ch) && !isSpecificCode(ch) && !isNumber(ch)) {
+            } else if (!isSpace(ch) && !isSpecificCode(ch) && !isNumber(ch) && !isAlphabet(ch)) {
                 return false;
             }
         }
@@ -313,6 +313,11 @@ public class ConversionDomainService {
 
     private boolean isNumber(char c) {
         return ('0' <= c && c <= '9');
+    }
+
+    /** 한글키에 대응되지 않는 영문 알파벳(대문자 등). 변환 시 원본 그대로 통과된다. */
+    private boolean isAlphabet(char c) {
+        return ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z');
     }
 
     /** 두개의 자음을 하나의 이중자음으로 변환 */
