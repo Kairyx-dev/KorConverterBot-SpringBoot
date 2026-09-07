@@ -9,10 +9,10 @@ spotless = "8.10.1"
 pitest-gradle = "1.19.0"
 pitest-core = "1.23.0"
 jooq = "3.19.37"
-flyway = "13.4.0"
+flyway = "13.5.0"
 
 # libs
-projectlombok-lombok = "1.18.46"
+projectlombok-lombok = "1.18.48"
 junit-bom = "6.1.3"
 slf4j-api = "2.0.18"
 mapstruct = "1.6.3"
