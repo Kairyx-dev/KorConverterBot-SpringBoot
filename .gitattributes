@@ -1,3 +1,9 @@
-/gradlew text eol=lf
-*.bat text eol=crlf
 *.jar binary
+
+# Windows 전용 스크립트는 체크아웃 시 CRLF 유지
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# 셸 스크립트는 항상 LF 유지
+*.sh text eol=lf
+gradlew text eol=lf
