@@ -6,6 +6,7 @@ Discord 영타 -> 한글 변환 봇. Java 25 + Spring Boot 4 기반.
 ## 아키텍처
 순수주의 DDD + 헥사고날 아키텍처. CQRS Level 1 (단일 DB).
 AutoConfiguration per module (not @ComponentScan).
+공통 빌드 설정은 `build-logic/conventions/src/main/kotlin/*-conventions.gradle.kts` (java/spring/test/boot). 모듈은 자기 `build.gradle.kts`의 `plugins { id("…-conventions") }`로 명시 선언한다 — 자동 적용 없음, `:boot`는 spring → boot 순서 고정.
 
 ## 모듈 구조 (6 modules)
 - `domain`: 순수 Java. 외부 의존 제로. Aggregate, VO, Domain Event, Domain Service.
@@ -16,7 +17,7 @@ AutoConfiguration per module (not @ComponentScan).
 - `boot`: Spring Boot 진입점. @SpringBootApplication.
 
 ## 기술 스택
-- Java 25, Spring Boot 4.0.x, Gradle 9.x (linecorp build-recipe-plugin)
+- Java 25, Spring Boot 4.0.x, Gradle 9.x (build-logic convention plugins — ADR-0004)
 - JDA (Discord API), jOOQ + Flyway, PostgreSQL
 - ErrorProne + NullAway (정적 분석), JSpecify (Adapter/Configuration에서만)
 - Testcontainers, ArchUnit, jqwik (PBT)

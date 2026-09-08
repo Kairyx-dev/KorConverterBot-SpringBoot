@@ -7,6 +7,8 @@ plugins {
     // spring-conventions 가 이미 적용했더라도 여기서 빼면
     // Unresolved reference 'springBoot' 로 컴파일이 실패한다. 적용 자체는 멱등이다.
     // 중복으로 보인다는 이유로 제거하지 말 것 — specs/001-build-logic-migration/research.md R-3 참조
+    // 이 묶음은 spring-conventions 뒤에 선언해야 한다 — BootJar.enabled 가 spring(false) → boot(true)
+    // configureEach 순서로 결정되며, 순서가 바뀌면 bootJar 가 조용히 SKIPPED 된다.
     alias(libs.plugins.springframework.boot)
     alias(libs.plugins.com.google.cloud.tools.jib)
 }

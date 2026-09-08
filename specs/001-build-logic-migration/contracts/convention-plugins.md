@@ -99,7 +99,7 @@ plugins {
 - `springBoot { buildInfo() }`
 - jib: base image `amazoncorretto:25.0.1-alpine`, target `kor-bot-spring:${version}`, `USE_CURRENT_TIMESTAMP`, jvmFlags 2종, workingDirectory `/app`
 
-**전제 조건**: `spring-conventions`와 함께 선언해야 한다. 단독 선언은 지원 대상이 아니다 — `bootJar`를 켜지만 Spring 런타임 의존성이 없는 아카이브가 나온다.
+**전제 조건**: `spring-conventions`와 함께, 그리고 **그 뒤에** 선언해야 한다. 단독 선언은 지원 대상이 아니다 — `bootJar`를 켜지만 Spring 런타임 의존성이 없는 아카이브가 나온다. 순서가 바뀌면 `BootJar.enabled` 가 false 로 끝나 `bootJar` 가 조용히 SKIPPED 된다 (jib 은 성공하므로 눈에 띄지 않는다).
 
 **계약상 주의 — Spring Boot 플러그인 재선언은 의도된 것이다**
 이 묶음의 `plugins {}` 블록은 `spring-conventions`가 이미 적용한 Spring Boot 플러그인을 다시 선언한다. precompiled script plugin의 타입 접근자(`springBoot {}`)가 자기 `plugins {}` 블록 기준으로만 생성되기 때문이다. 빼면 컴파일이 실패한다. 적용 자체는 멱등이라 런타임 영향은 없다. **중복으로 보인다는 이유로 제거하지 말 것.**

@@ -64,7 +64,7 @@ checkstyle {
     isIgnoreFailures = false
 }
 tasks.withType<Checkstyle>().configureEach {
-    // Exclude jOOQ generated sources
+    // jOOQ 생성 소스 제외
     exclude("**/generated/**")
 }
 

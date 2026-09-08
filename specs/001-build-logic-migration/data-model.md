@@ -121,6 +121,8 @@
 | C-3 | `settings.gradle.kts` | 최상단에 `pluginManagement { includeBuild("build-logic"); repositories { gradlePluginPortal() } }` 추가. 기존 `module()` 헬퍼와 6개 include는 **변경 없음** |
 | C-4 | `.github/dependabot.yml` gradle 항목 | `directory: /` → `directories: ["/", "/build-logic"]` (FR-015) |
 | C-5 | `korConverter/**/gradle.properties` 6개 | 삭제. 다른 키가 없음을 확인함 — 파일 자체를 제거 |
+| C-6 | `.gitignore` | `.kotlin/` 추가 — Kotlin 2.x 가 `build-logic/.kotlin/` 을 생성한다 |
+| C-7 | `docs/decisions/index.md` | ADR-0004 행 추가 (T031) |
 
 **불변식 INV-8**: C-5의 6개 파일에는 `label=` 외의 키가 없다. 삭제 전 재확인한다.
 
