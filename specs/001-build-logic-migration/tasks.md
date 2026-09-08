@@ -61,10 +61,10 @@ description: "Task list for build-recipe-plugin → build-logic convention plugi
 
 ### 설정 묶음 작성 (4개 파일 — 전부 병렬 가능)
 
-- [ ] T008 [P] [US1] `build-logic/conventions/src/main/kotlin/java-conventions.gradle.kts` 작성 — [data-model.md](./data-model.md) E2의 J-1~J-12 인벤토리 전체 이관. J-6(NullAway `"com.uber"`)과 J-8(JaCoCo 미연결 규칙)은 **하자이나 그대로 유지**하고, 주석에는 **아직 존재하지 않는 이슈 번호 대신 `specs/001-build-logic-migration/data-model.md` J-6 / J-8 앵커를 참조**한다 (이슈 생성은 Phase 7 T032다 — 이 시점에 번호가 없다). J-11의 `targetExclude("**/build/**", "**/generated/**")` 누락 금지 ([research.md](./research.md) R-9)
-- [ ] T009 [P] [US1] `build-logic/conventions/src/main/kotlin/spring-conventions.gradle.kts` 작성 — [data-model.md](./data-model.md) E3의 S-1~S-4. Spring Boot 플러그인 적용이 BOM 공급원이므로 제거 불가임을 주석으로 명시 (INV-4). S-4로 `tasks.withType<BootJar>().configureEach { enabled = false }` 포함
-- [ ] T010 [P] [US1] `build-logic/conventions/src/main/kotlin/test-conventions.gradle.kts` 작성 — [data-model.md](./data-model.md) E4의 T-1~T-4 (JUnit BOM/API/Params/Engine/Launcher, AssertJ)
-- [ ] T011 [P] [US1] `build-logic/conventions/src/main/kotlin/boot-conventions.gradle.kts` 작성 — [data-model.md](./data-model.md) E5의 B-1~B-6. **Spring Boot 플러그인 재선언 필수**이며 그 이유(타입 접근자 생성 범위, [research.md](./research.md) R-3)를 주석으로 남긴다. 없으면 `Unresolved reference 'springBoot'`로 컴파일 실패
+- [X] T008 [P] [US1] `build-logic/conventions/src/main/kotlin/java-conventions.gradle.kts` 작성 — [data-model.md](./data-model.md) E2의 J-1~J-12 인벤토리 전체 이관. J-6(NullAway `"com.uber"`)과 J-8(JaCoCo 미연결 규칙)은 **하자이나 그대로 유지**하고, 주석에는 **아직 존재하지 않는 이슈 번호 대신 `specs/001-build-logic-migration/data-model.md` J-6 / J-8 앵커를 참조**한다 (이슈 생성은 Phase 7 T032다 — 이 시점에 번호가 없다). J-11의 `targetExclude("**/build/**", "**/generated/**")` 누락 금지 ([research.md](./research.md) R-9)
+- [X] T009 [P] [US1] `build-logic/conventions/src/main/kotlin/spring-conventions.gradle.kts` 작성 — [data-model.md](./data-model.md) E3의 S-1~S-4. Spring Boot 플러그인 적용이 BOM 공급원이므로 제거 불가임을 주석으로 명시 (INV-4). S-4로 `tasks.withType<BootJar>().configureEach { enabled = false }` 포함
+- [X] T010 [P] [US1] `build-logic/conventions/src/main/kotlin/test-conventions.gradle.kts` 작성 — [data-model.md](./data-model.md) E4의 T-1~T-4 (JUnit BOM/API/Params/Engine/Launcher, AssertJ)
+- [X] T011 [P] [US1] `build-logic/conventions/src/main/kotlin/boot-conventions.gradle.kts` 작성 — [data-model.md](./data-model.md) E5의 B-1~B-6. **Spring Boot 플러그인 재선언 필수**이며 그 이유(타입 접근자 생성 범위, [research.md](./research.md) R-3)를 주석으로 남긴다. 없으면 `Unresolved reference 'springBoot'`로 컴파일 실패
 
 ### 최상위 빌드 정리
 
