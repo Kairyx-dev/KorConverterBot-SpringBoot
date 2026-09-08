@@ -28,9 +28,9 @@ description: "Task list for build-recipe-plugin → build-logic convention plugi
 
 **Purpose**: 격리된 작업 공간 확보와, 이후 모든 검증의 기준이 되는 의존성 기준선 캡처
 
-- [ ] T001 `.worktrees/build-logic-migration`에 `chore/build-logic-migration` 브랜치로 워크트리 생성 (`git worktree add`). 이후 모든 작업은 이 워크트리에서 수행하고 `main` 워크트리는 건드리지 않는다
-- [ ] T002 **[선행 필수]** 미변경 상태의 워크트리에서 기준선 42건 캡처 → 스크래치패드 `baseline/`. 6개 모듈(domain, application, adapter-bot, adapter-persistence, configuration, boot) × 7축(compileClasspath, runtimeClasspath, testCompileClasspath, testRuntimeClasspath, annotationProcessor, testAnnotationProcessor, errorprone). 절차는 [quickstart.md](./quickstart.md) V-0
-- [ ] T003 [P] `korConverter/**/gradle.properties` 6개 파일에 `label=` 외의 키가 없음을 재확인 ([data-model.md](./data-model.md) INV-8). 다른 키가 있으면 삭제가 아니라 그 키만 남기는 편집으로 계획을 수정한다
+- [X] T001 `.worktrees/build-logic-migration`에 `chore/build-logic-migration` 브랜치로 워크트리 생성 (`git worktree add`). 이후 모든 작업은 이 워크트리에서 수행하고 `main` 워크트리는 건드리지 않는다
+- [X] T002 **[선행 필수]** 미변경 상태의 워크트리에서 기준선 42건 캡처 → 스크래치패드 `baseline/`. 6개 모듈(domain, application, adapter-bot, adapter-persistence, configuration, boot) × 7축(compileClasspath, runtimeClasspath, testCompileClasspath, testRuntimeClasspath, annotationProcessor, testAnnotationProcessor, errorprone). 절차는 [quickstart.md](./quickstart.md) V-0
+- [X] T003 [P] `korConverter/**/gradle.properties` 6개 파일에 `label=` 외의 키가 없음을 재확인 ([data-model.md](./data-model.md) INV-8). 다른 키가 있으면 삭제가 아니라 그 키만 남기는 편집으로 계획을 수정한다
 
 **⚠️ CRITICAL**: T002를 건너뛰거나 전환 이후에 수행하면 SC-001이 아무것도 검증하지 못한다 ([data-model.md](./data-model.md) INV-9)
 
