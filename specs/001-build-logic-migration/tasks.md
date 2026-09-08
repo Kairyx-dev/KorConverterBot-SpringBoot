@@ -136,11 +136,11 @@ description: "Task list for build-recipe-plugin → build-logic convention plugi
 
 - [X] T030 [P] `docs/decisions/0004-build-logic-convention-plugins.md` 작성 — 전환 배경(build-recipe의 라벨 문자열 간접참조: IDE 정의 이동·자동완성·타입 검사 모두 불가), 채택 구조(multi-project build-logic + typesafe-conventions), **수용한 제약 2건**(Isolated Projects 사용 불가 — [research.md](./research.md) R-6 / build-logic 단독 구동 금지 — R-7), **불변식 1건**(toolchain 25 고정, 팀에 더 낮은 JVM이 생기면 그 하한으로 내린다 — R-5), 후속 과제(configuration cache 도입) (FR-016, SC-009)
 - [X] T031 `docs/decisions/index.md`에 ADR-0004 행 추가 (제목 / Accepted / 2026-09-08)
-- [ ] T032 [P] 후속 이슈 4건 등록 (`gh issue create`) — ① `JacocoCoverageVerification` 80% 룰이 `check`에 미연결되어 실효 없음, ② `NullAway:AnnotatedPackages`가 `"com.uber"`로 박혀 `org.specter.converter`를 검사하지 않음, ③ `test-conventions`와 `:domain/build.gradle.kts`의 junit/assertj 중복 선언, ④ configuration cache 도입(Isolated Projects는 #186 때문에 build-logic 구조 재검토 필요) (FR-017, SC-008)
+- [X] T032 [P] 후속 이슈 4건 등록 (`gh issue create`) — ① `JacocoCoverageVerification` 80% 룰이 `check`에 미연결되어 실효 없음, ② `NullAway:AnnotatedPackages`가 `"com.uber"`로 박혀 `org.specter.converter`를 검사하지 않음, ③ `test-conventions`와 `:domain/build.gradle.kts`의 junit/assertj 중복 선언, ④ configuration cache 도입(Isolated Projects는 #186 때문에 build-logic 구조 재검토 필요) (FR-017, SC-008)
 - [X] T033 최종 확인 — `find korConverter -name gradle.properties`가 빈 결과(SC-005), `build-logic/conventions/build.gradle.kts`에 toolchain 선언 1곳 존재하고 데몬 JVM 위임 지점 0곳(SC-010), `git diff main`에 애플리케이션 `.java` 변경 0건
 - [X] T033a **명시 선언 검증 (SC-006)** — 6개 모듈 `build.gradle.kts` 각각이 자기 파일 안에 `id("...-conventions")`를 선언하는지 확인. 기대: 6/6. 라벨·상속·`subprojects` 등 다른 파일을 읽어야 알 수 있는 암묵적 적용 경로가 0건이어야 한다 (`grep -c 'id("[a-z-]*-conventions")' <각 모듈 스크립트>`)
 - [X] T033b **버전 중복 검증 (SC-007)** — `build-logic/` 이하에서 리터럴 버전 문자열을 추출해 `gradle/libs.versions.toml`의 항목과 대조. 카탈로그에 이미 있는 구성요소의 버전이 빌드 정의에 리터럴로 재선언된 건이 0건이어야 한다. **유일한 허용 예외**는 `build-logic/settings.gradle.kts`의 typesafe-conventions 버전 1건(자기 참조 순환 회피). 2건 이상이면 실패 — 이 기준이 typesafe-conventions 채택의 근거이므로([research.md](./research.md) R-1) 반드시 판정한다
-- [ ] T034 PR 생성 — 본문에 T023의 diff 결과(42건 0차이)와 T028의 게이트 결과를 기록한다. 기준선 파일 자체는 커밋하지 않는다 ([data-model.md](./data-model.md) E8)
+- [X] T034 PR 생성 — 본문에 T023의 diff 결과(42건 0차이)와 T028의 게이트 결과를 기록한다. 기준선 파일 자체는 커밋하지 않는다 ([data-model.md](./data-model.md) E8)
 
 ---
 
