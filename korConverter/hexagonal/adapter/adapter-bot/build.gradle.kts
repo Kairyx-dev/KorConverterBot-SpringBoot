@@ -1,3 +1,8 @@
+plugins {
+    id("java-conventions")
+    id("spring-conventions")
+}
+
 dependencies {
     implementation(project(":application"))
 

@@ -1,4 +1,6 @@
 plugins {
+    id("java-conventions")
+    id("spring-conventions")
     alias(libs.plugins.jooq.codegen)
 }
 

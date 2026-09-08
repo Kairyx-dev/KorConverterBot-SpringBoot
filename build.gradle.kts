@@ -1,156 +1,16 @@
-import com.linecorp.support.project.multi.recipe.configureByLabel
-import net.ltgt.gradle.errorprone.errorprone
-import org.springframework.boot.gradle.tasks.bundling.BootJar
-
 plugins {
-    java
-    alias(libs.plugins.springframework.boot)
-    alias(libs.plugins.spring.dependency.management)
-    alias(libs.plugins.linecorp.build.recipe.plugin)
-    alias(libs.plugins.com.google.cloud.tools.jib)
-    alias(libs.plugins.net.ltgt.errorprone)
-    alias(libs.plugins.spotless)
+    // Spotless 는 SpotlessTaskService 라는 공유 BuildService 를 쓴다. 루트에 올리지 않고
+    // 서브프로젝트에만 적용하면 프로젝트마다 별도 클래스로더가 같은 클래스를 각자 로드해
+    // 실패한다. 여기서는 클래스로더 공유만 담당하고 실제 설정은 java-conventions 에 있다.
+    // specs/001-build-logic-migration/research.md R-9 참조
+    alias(libs.plugins.spotless) apply false
 }
 
 allprojects {
     group = "org.specter.converter"
     version = "2.2.1"
 
-    tasks.withType<BootJar> {
-        enabled = false
-    }
-}
-
-repositories {
-    mavenCentral()
-}
-
-configureByLabel("java") {
-    apply(plugin = "idea")
-    apply(plugin = "java")
-    apply(plugin = "net.ltgt.errorprone")
-    apply(plugin = "jacoco")
-    apply(plugin = "checkstyle")
-
-    java.toolchain.languageVersion = JavaLanguageVersion.of(25)
-
-    dependencies {
-        // Library
-        implementation(rootProject.libs.projectlombok.lombok)
-        annotationProcessor(rootProject.libs.projectlombok.lombok)
-
-        // Static Analysis
-        errorprone(rootProject.libs.com.google.errorprone.core)
-        errorprone(rootProject.libs.com.uber.nullaway)
-
-        testImplementation(rootProject.libs.projectlombok.lombok)
-        testAnnotationProcessor(rootProject.libs.projectlombok.lombok)
-    }
-
     repositories {
         mavenCentral()
-    }
-
-    tasks.withType<Test> {
-        useJUnitPlatform()
-    }
-
-    tasks.withType<JavaCompile> {
-        options.errorprone {
-            option("NullAway:AnnotatedPackages", "com.uber")
-        }
-    }
-
-    // JaCoCo
-    tasks.withType<JacocoReport> {
-        dependsOn(tasks.named("test"))
-    }
-    tasks.withType<JacocoCoverageVerification> {
-        violationRules {
-            rule {
-                limit {
-                    minimum = 0.80.toBigDecimal()
-                }
-            }
-        }
-    }
-
-    // Checkstyle
-    configure<CheckstyleExtension> {
-        toolVersion = rootProject.libs.versions.checkstyle.get()
-        configFile = rootProject.file("config/checkstyle/checkstyle.xml")
-        isIgnoreFailures = false
-    }
-    tasks.withType<Checkstyle> {
-        // Exclude jOOQ generated sources
-        exclude("**/generated/**")
-    }
-}
-
-configureByLabel("spring") {
-    apply(plugin = "org.springframework.boot")
-    apply(plugin = "io.spring.dependency-management")
-
-    dependencies {
-        implementation(rootProject.libs.springframework.boot.starter)
-        implementation(rootProject.libs.springframework.boot.starter.web)
-        implementation(rootProject.libs.springframework.boot.starter.opentelemetry)
-        implementation(rootProject.libs.springframework.boot.starter.validation)
-        implementation(rootProject.libs.springframework.boot.starter.actuator)
-        implementation(rootProject.libs.springframework.boot.starter.json)
-
-        testImplementation(rootProject.libs.springframework.boot.starter.test)
-    }
-}
-
-configureByLabel("test") {
-    dependencies {
-
-        testRuntimeOnly(rootProject.libs.junit.platform.launcher)
-        testRuntimeOnly(rootProject.libs.junit.jupiter.engine)
-
-        testImplementation(platform(rootProject.libs.junit.bom))
-        testImplementation(rootProject.libs.junit.jupiter.api)
-        testImplementation(rootProject.libs.junit.jupiter.params)
-        testImplementation(rootProject.libs.assertj)
-    }
-}
-
-configureByLabel("boot") {
-    apply(plugin = "com.google.cloud.tools.jib")
-    tasks.withType<BootJar> {
-        enabled = true
-    }
-
-    springBoot {
-        buildInfo()
-    }
-
-    jib {
-        from {
-            image = "amazoncorretto:25.0.1-alpine"
-        }
-
-        to {
-            image = "kor-bot-spring"
-            tags = setOf("${project.version}")
-        }
-
-        container {
-            creationTime.set("USE_CURRENT_TIMESTAMP")
-            jvmFlags = listOf(
-                "-Dspring.config.location=file:./cfg/application.yml",
-                "-Dlogging.config=file:./cfg/logback-spring.xml"
-            )
-            workingDirectory = "/app"
-        }
-    }
-}
-
-spotless {
-    java {
-        target("**/*.java")
-        targetExclude("**/build/**", "**/generated/**")
-        palantirJavaFormat(libs.versions.palantir.java.format.get())
     }
 }

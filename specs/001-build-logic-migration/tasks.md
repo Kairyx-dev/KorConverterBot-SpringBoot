@@ -68,21 +68,21 @@ description: "Task list for build-recipe-plugin → build-logic convention plugi
 
 ### 최상위 빌드 정리
 
-- [ ] T012 [US1] `build.gradle.kts` 재작성 — [data-model.md](./data-model.md) E6의 RT-1~RT-7. `configureByLabel` 4블록과 관련 import 전부 삭제, `plugins`는 `alias(libs.plugins.spotless) apply false`만 남김(BuildService 클래스로더 이유를 주석으로), `allprojects`에 group/version/`repositories { mavenCentral() }` 통합
+- [X] T012 [US1] `build.gradle.kts` 재작성 — [data-model.md](./data-model.md) E6의 RT-1~RT-7. `configureByLabel` 4블록과 관련 import 전부 삭제, `plugins`는 `alias(libs.plugins.spotless) apply false`만 남김(BuildService 클래스로더 이유를 주석으로), `allprojects`에 group/version/`repositories { mavenCentral() }` 통합
 
 ### 모듈 스크립트에 설정 묶음 선언 (6개 파일 — 전부 병렬 가능)
 
-- [ ] T013 [P] [US1] `korConverter/hexagonal/domain/build.gradle.kts`에 `plugins { id("java-conventions"); id("test-conventions"); alias(libs.plugins.pitest) }` 적용. 기존 `pitest {}` 블록과 `dependencies {}`는 변경하지 않는다
-- [ ] T014 [P] [US1] `korConverter/hexagonal/application/build.gradle.kts`에 `plugins { id("java-conventions") }` 추가. 기존 `dependencies {}` 변경 없음
-- [ ] T015 [P] [US1] `korConverter/hexagonal/adapter/adapter-bot/build.gradle.kts`에 `plugins { id("java-conventions"); id("spring-conventions") }` 추가
-- [ ] T016 [P] [US1] `korConverter/hexagonal/adapter/adapter-persistence/build.gradle.kts`에 `id("java-conventions")`, `id("spring-conventions")`를 기존 `alias(libs.plugins.jooq.codegen)`과 함께 선언. `jooq {}`·`sourceSets`·`compileJava dependsOn jooqCodegen` 블록은 변경하지 않는다
-- [ ] T017 [P] [US1] `korConverter/configuration/build.gradle.kts`에 `plugins { id("java-conventions"); id("spring-conventions") }` 추가
-- [ ] T018 [P] [US1] `korConverter/boot/build.gradle.kts`에 `plugins { id("java-conventions"); id("spring-conventions"); id("boot-conventions") }` 추가
+- [X] T013 [P] [US1] `korConverter/hexagonal/domain/build.gradle.kts`에 `plugins { id("java-conventions"); id("test-conventions"); alias(libs.plugins.pitest) }` 적용. 기존 `pitest {}` 블록과 `dependencies {}`는 변경하지 않는다
+- [X] T014 [P] [US1] `korConverter/hexagonal/application/build.gradle.kts`에 `plugins { id("java-conventions") }` 추가. 기존 `dependencies {}` 변경 없음
+- [X] T015 [P] [US1] `korConverter/hexagonal/adapter/adapter-bot/build.gradle.kts`에 `plugins { id("java-conventions"); id("spring-conventions") }` 추가
+- [X] T016 [P] [US1] `korConverter/hexagonal/adapter/adapter-persistence/build.gradle.kts`에 `id("java-conventions")`, `id("spring-conventions")`를 기존 `alias(libs.plugins.jooq.codegen)`과 함께 선언. `jooq {}`·`sourceSets`·`compileJava dependsOn jooqCodegen` 블록은 변경하지 않는다
+- [X] T017 [P] [US1] `korConverter/configuration/build.gradle.kts`에 `plugins { id("java-conventions"); id("spring-conventions") }` 추가
+- [X] T018 [P] [US1] `korConverter/boot/build.gradle.kts`에 `plugins { id("java-conventions"); id("spring-conventions"); id("boot-conventions") }` 추가
 
 ### 라벨 메커니즘 제거
 
-- [ ] T019 [US1] `korConverter/**/gradle.properties` 6개 파일 삭제 (boot, configuration, hexagonal/application, hexagonal/domain, hexagonal/adapter/adapter-bot, hexagonal/adapter/adapter-persistence)
-- [ ] T020 [US1] `gradle/libs.versions.toml`에서 `[versions] linecorp-build-recipe-plugin`과 `[plugins] linecorp-build-recipe-plugin` 두 항목 삭제 ([data-model.md](./data-model.md) C-1, C-2)
+- [X] T019 [US1] `korConverter/**/gradle.properties` 6개 파일 삭제 (boot, configuration, hexagonal/application, hexagonal/domain, hexagonal/adapter/adapter-bot, hexagonal/adapter/adapter-persistence)
+- [X] T020 [US1] `gradle/libs.versions.toml`에서 `[versions] linecorp-build-recipe-plugin`과 `[plugins] linecorp-build-recipe-plugin` 두 항목 삭제 ([data-model.md](./data-model.md) C-1, C-2)
 
 **Checkpoint**: 라벨 파일 0개, `configureByLabel` 참조 0건. 이 시점의 빌드 성공 여부는 아직 검증되지 않았다 — Phase 4가 판정한다
 
@@ -94,9 +94,9 @@ description: "Task list for build-recipe-plugin → build-logic convention plugi
 
 **Independent Test**: 42건 의존성 보고서 diff가 0건이고, 빌드·실행 아카이브·컨테이너 이미지 산출이 전환 전과 동일
 
-- [ ] T021 [US2] `./gradlew help --console=plain` 재실행하여 4개 설정 묶음이 전부 해석되는지 확인. 실패 유형별 대응은 [quickstart.md](./quickstart.md) V-1 표 참조
-- [ ] T022 [US2] 전환 후 42건 덤프 → 스크래치패드 `after/`. T002와 **완전히 동일한 모듈·축·명령**으로 수행 ([quickstart.md](./quickstart.md) V-2)
-- [ ] T023 [US2] **핵심 게이트** — `diff -r baseline/ after/` 실행. 출력 0건, 종료 코드 0이어야 한다. 차이 발생 시 해당 모듈·축 파일을 열어 [data-model.md](./data-model.md) E2~E5 인벤토리에서 누락된 항목을 찾아 수정 후 T022부터 재실행 (SC-001)
+- [X] T021 [US2] `./gradlew help --console=plain` 재실행하여 4개 설정 묶음이 전부 해석되는지 확인. 실패 유형별 대응은 [quickstart.md](./quickstart.md) V-1 표 참조
+- [X] T022 [US2] 전환 후 42건 덤프 → 스크래치패드 `after/`. T002와 **완전히 동일한 모듈·축·명령**으로 수행 ([quickstart.md](./quickstart.md) V-2)
+- [X] T023 [US2] **핵심 게이트** — `diff -r baseline/ after/` 실행. 출력 0건, 종료 코드 0이어야 한다. 차이 발생 시 해당 모듈·축 파일을 열어 [data-model.md](./data-model.md) E2~E5 인벤토리에서 누락된 항목을 찾아 수정 후 T022부터 재실행 (SC-001)
 - [ ] T024 [US2] `./gradlew clean build --console=plain` 실행. `:boot:bootJar` 산출물 생성, `:configuration`/`:adapter-bot`/`:adapter-persistence`의 `bootJar`는 `SKIPPED`이고 산출물 없음을 확인 ([quickstart.md](./quickstart.md) V-3, SC-003)
 - [ ] T025 [US2] `./gradlew :boot:jibBuildTar` 실행 후 `korConverter/boot/build/jib-image.tar` 존재 확인. **경로가 바뀌면 `tag-cd.yml`의 SCP 전송이 깨진다** ([quickstart.md](./quickstart.md) V-6)
 - [ ] T026 [US2] `spotlessCheck`가 `:adapter-persistence`의 jOOQ 생성 소스를 검사 대상에 포함하지 않음을 확인 ([quickstart.md](./quickstart.md) V-4, FR-012)

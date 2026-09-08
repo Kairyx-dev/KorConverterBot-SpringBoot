@@ -1,3 +1,9 @@
+plugins {
+    id("java-conventions")
+    id("spring-conventions")
+    id("boot-conventions")
+}
+
 dependencies {
     implementation(project(":configuration"))
     implementation(project(":adapter-bot"))
