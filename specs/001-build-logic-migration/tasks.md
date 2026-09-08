@@ -124,7 +124,7 @@ description: "Task list for build-recipe-plugin → build-logic convention plugi
 
 **Independent Test**: Dependabot 설정이 build-logic 디렉터리를 스캔 대상으로 선언
 
-- [ ] T029 [US4] `.github/dependabot.yml`의 gradle 항목에서 `directory: /`를 `directories: ["/", "/build-logic"]`로 변경. 기존 `ignore`/`groups`/`assignees`/`labels` 설정은 유지 (FR-015)
+- [X] T029 [US4] `.github/dependabot.yml`의 gradle 항목에서 `directory: /`를 `directories: ["/", "/build-logic"]`로 변경. 기존 `ignore`/`groups`/`assignees`/`labels` 설정은 유지 (FR-015)
 
 **Checkpoint**: build-logic의 typesafe-conventions 버전이 갱신 대상에 포함됨
 
@@ -134,8 +134,8 @@ description: "Task list for build-recipe-plugin → build-logic convention plugi
 
 **Purpose**: 결정 기록, 후속 작업 분리, 최종 확인
 
-- [ ] T030 [P] `docs/decisions/0004-build-logic-convention-plugins.md` 작성 — 전환 배경(build-recipe의 라벨 문자열 간접참조: IDE 정의 이동·자동완성·타입 검사 모두 불가), 채택 구조(multi-project build-logic + typesafe-conventions), **수용한 제약 2건**(Isolated Projects 사용 불가 — [research.md](./research.md) R-6 / build-logic 단독 구동 금지 — R-7), **불변식 1건**(toolchain 25 고정, 팀에 더 낮은 JVM이 생기면 그 하한으로 내린다 — R-5), 후속 과제(configuration cache 도입) (FR-016, SC-009)
-- [ ] T031 `docs/decisions/index.md`에 ADR-0004 행 추가 (제목 / Accepted / 2026-09-08)
+- [X] T030 [P] `docs/decisions/0004-build-logic-convention-plugins.md` 작성 — 전환 배경(build-recipe의 라벨 문자열 간접참조: IDE 정의 이동·자동완성·타입 검사 모두 불가), 채택 구조(multi-project build-logic + typesafe-conventions), **수용한 제약 2건**(Isolated Projects 사용 불가 — [research.md](./research.md) R-6 / build-logic 단독 구동 금지 — R-7), **불변식 1건**(toolchain 25 고정, 팀에 더 낮은 JVM이 생기면 그 하한으로 내린다 — R-5), 후속 과제(configuration cache 도입) (FR-016, SC-009)
+- [X] T031 `docs/decisions/index.md`에 ADR-0004 행 추가 (제목 / Accepted / 2026-09-08)
 - [ ] T032 [P] 후속 이슈 4건 등록 (`gh issue create`) — ① `JacocoCoverageVerification` 80% 룰이 `check`에 미연결되어 실효 없음, ② `NullAway:AnnotatedPackages`가 `"com.uber"`로 박혀 `org.specter.converter`를 검사하지 않음, ③ `test-conventions`와 `:domain/build.gradle.kts`의 junit/assertj 중복 선언, ④ configuration cache 도입(Isolated Projects는 #186 때문에 build-logic 구조 재검토 필요) (FR-017, SC-008)
 - [X] T033 최종 확인 — `find korConverter -name gradle.properties`가 빈 결과(SC-005), `build-logic/conventions/build.gradle.kts`에 toolchain 선언 1곳 존재하고 데몬 JVM 위임 지점 0곳(SC-010), `git diff main`에 애플리케이션 `.java` 변경 0건
 - [X] T033a **명시 선언 검증 (SC-006)** — 6개 모듈 `build.gradle.kts` 각각이 자기 파일 안에 `id("...-conventions")`를 선언하는지 확인. 기대: 6/6. 라벨·상속·`subprojects` 등 다른 파일을 읽어야 알 수 있는 암묵적 적용 경로가 0건이어야 한다 (`grep -c 'id("[a-z-]*-conventions")' <각 모듈 스크립트>`)
