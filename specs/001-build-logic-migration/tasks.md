@@ -44,10 +44,10 @@ description: "Task list for build-recipe-plugin → build-logic convention plugi
 
 **⚠️ CRITICAL**: 이 Phase가 끝나기 전에는 어떤 설정 묶음도 작성할 수 없다
 
-- [ ] T004 `build-logic/settings.gradle.kts` 생성 — `pluginManagement { repositories { gradlePluginPortal() } }`, `plugins { id("dev.panuszewski.typesafe-conventions") version "0.11.1" }`, `rootProject.name = "build-logic"`, `include("conventions")`. 버전을 카탈로그에 넣지 않는 이유(자기 자신이 카탈로그 등록 주체라 순환)를 주석으로 남긴다
-- [ ] T005 `build-logic/conventions/build.gradle.kts` 생성 — `plugins { \`kotlin-dsl\` }`, `repositories { gradlePluginPortal(); mavenCentral() }`, **Java toolchain 25 명시 고정** ([research.md](./research.md) R-5), `dependencies`에 `pluginMarker(...)` 5종: springframework-boot, spring-dependency-management, net-ltgt-errorprone, spotless, com-google-cloud-tools-jib
-- [ ] T006 `settings.gradle.kts` 최상단에 `pluginManagement { includeBuild("build-logic"); repositories { gradlePluginPortal() } }` 추가. 기존 `module()` 헬퍼와 6개 include는 변경하지 않는다 ([data-model.md](./data-model.md) C-3)
-- [ ] T007 `./gradlew help --console=plain` 실행하여 build-logic 조립 확인. `:build-logic:conventions:compileKotlin`과 `:jar`가 수행되고 `BUILD SUCCESSFUL`이어야 한다 ([quickstart.md](./quickstart.md) V-1)
+- [X] T004 `build-logic/settings.gradle.kts` 생성 — `pluginManagement { repositories { gradlePluginPortal() } }`, `plugins { id("dev.panuszewski.typesafe-conventions") version "0.11.1" }`, `rootProject.name = "build-logic"`, `include("conventions")`. 버전을 카탈로그에 넣지 않는 이유(자기 자신이 카탈로그 등록 주체라 순환)를 주석으로 남긴다
+- [X] T005 `build-logic/conventions/build.gradle.kts` 생성 — `plugins { \`kotlin-dsl\` }`, `repositories { gradlePluginPortal(); mavenCentral() }`, **Java toolchain 25 명시 고정** ([research.md](./research.md) R-5), `dependencies`에 `pluginMarker(...)` 5종: springframework-boot, spring-dependency-management, net-ltgt-errorprone, spotless, com-google-cloud-tools-jib
+- [X] T006 `settings.gradle.kts` 최상단에 `pluginManagement { includeBuild("build-logic"); repositories { gradlePluginPortal() } }` 추가. 기존 `module()` 헬퍼와 6개 include는 변경하지 않는다 ([data-model.md](./data-model.md) C-3)
+- [X] T007 `./gradlew help --console=plain` 실행하여 build-logic 조립 확인. `:build-logic:conventions:compileKotlin`과 `:jar`가 수행되고 `BUILD SUCCESSFUL`이어야 한다 ([quickstart.md](./quickstart.md) V-1)
 
 **Checkpoint**: build-logic이 빌드에 참여하나 아직 아무 설정 묶음도 없다. 루트는 여전히 build-recipe로 동작 중이며 빌드가 깨지지 않은 상태여야 한다
 
