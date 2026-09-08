@@ -97,9 +97,9 @@ description: "Task list for build-recipe-plugin → build-logic convention plugi
 - [X] T021 [US2] `./gradlew help --console=plain` 재실행하여 4개 설정 묶음이 전부 해석되는지 확인. 실패 유형별 대응은 [quickstart.md](./quickstart.md) V-1 표 참조
 - [X] T022 [US2] 전환 후 42건 덤프 → 스크래치패드 `after/`. T002와 **완전히 동일한 모듈·축·명령**으로 수행 ([quickstart.md](./quickstart.md) V-2)
 - [X] T023 [US2] **핵심 게이트** — `diff -r baseline/ after/` 실행. 출력 0건, 종료 코드 0이어야 한다. 차이 발생 시 해당 모듈·축 파일을 열어 [data-model.md](./data-model.md) E2~E5 인벤토리에서 누락된 항목을 찾아 수정 후 T022부터 재실행 (SC-001)
-- [ ] T024 [US2] `./gradlew clean build --console=plain` 실행. `:boot:bootJar` 산출물 생성, `:configuration`/`:adapter-bot`/`:adapter-persistence`의 `bootJar`는 `SKIPPED`이고 산출물 없음을 확인 ([quickstart.md](./quickstart.md) V-3, SC-003)
-- [ ] T025 [US2] `./gradlew :boot:jibBuildTar` 실행 후 `korConverter/boot/build/jib-image.tar` 존재 확인. **경로가 바뀌면 `tag-cd.yml`의 SCP 전송이 깨진다** ([quickstart.md](./quickstart.md) V-6)
-- [ ] T026 [US2] `spotlessCheck`가 `:adapter-persistence`의 jOOQ 생성 소스를 검사 대상에 포함하지 않음을 확인 ([quickstart.md](./quickstart.md) V-4, FR-012)
+- [X] T024 [US2] `./gradlew clean build --console=plain` 실행. `:boot:bootJar` 산출물 생성, `:configuration`/`:adapter-bot`/`:adapter-persistence`의 `bootJar`는 `SKIPPED`이고 산출물 없음을 확인 ([quickstart.md](./quickstart.md) V-3, SC-003)
+- [X] T025 [US2] `./gradlew :boot:jibBuildTar` 실행 후 `korConverter/boot/build/jib-image.tar` 존재 확인. **경로가 바뀌면 `tag-cd.yml`의 SCP 전송이 깨진다** ([quickstart.md](./quickstart.md) V-6)
+- [X] T026 [US2] `spotlessCheck`가 `:adapter-persistence`의 jOOQ 생성 소스를 검사 대상에 포함하지 않음을 확인 ([quickstart.md](./quickstart.md) V-4, FR-012)
 
 **Checkpoint**: 무행위변경 계약 증명 완료. 이 시점이 **MVP 완료 지점**이며 머지 가능한 최소 상태다
 
@@ -111,8 +111,8 @@ description: "Task list for build-recipe-plugin → build-logic convention plugi
 
 **Independent Test**: CI/훅 정의 파일의 diff가 비어 있고, 거기 적힌 명령이 그대로 성공
 
-- [ ] T027 [US3] `git diff main -- .github/workflows/ lefthook.yml`이 **빈 diff**임을 확인. 변경이 있으면 그 변경이 정말 불가피한지 재검토한다 (SC-004)
-- [ ] T028 [US3] CI 4개 게이트를 로컬에서 재현 — `./gradlew spotlessCheck checkstyleMain compileJava`, `./gradlew :domain:test :application:test :boot:test`, `./gradlew :adapter-persistence:test`(Docker 필요), `./gradlew :domain:pitest`. Docker 미가용 시 Gate 3만 CI에 위임 ([quickstart.md](./quickstart.md) V-5, SC-002)
+- [X] T027 [US3] `git diff main -- .github/workflows/ lefthook.yml`이 **빈 diff**임을 확인. 변경이 있으면 그 변경이 정말 불가피한지 재검토한다 (SC-004)
+- [X] T028 [US3] CI 4개 게이트를 로컬에서 재현 — `./gradlew spotlessCheck checkstyleMain compileJava`, `./gradlew :domain:test :application:test :boot:test`, `./gradlew :adapter-persistence:test`(Docker 필요), `./gradlew :domain:pitest`. Docker 미가용 시 Gate 3만 CI에 위임 ([quickstart.md](./quickstart.md) V-5, SC-002)
 
 **Checkpoint**: 파이프라인과 훅이 변경 없이 동작
 
@@ -137,9 +137,9 @@ description: "Task list for build-recipe-plugin → build-logic convention plugi
 - [ ] T030 [P] `docs/decisions/0004-build-logic-convention-plugins.md` 작성 — 전환 배경(build-recipe의 라벨 문자열 간접참조: IDE 정의 이동·자동완성·타입 검사 모두 불가), 채택 구조(multi-project build-logic + typesafe-conventions), **수용한 제약 2건**(Isolated Projects 사용 불가 — [research.md](./research.md) R-6 / build-logic 단독 구동 금지 — R-7), **불변식 1건**(toolchain 25 고정, 팀에 더 낮은 JVM이 생기면 그 하한으로 내린다 — R-5), 후속 과제(configuration cache 도입) (FR-016, SC-009)
 - [ ] T031 `docs/decisions/index.md`에 ADR-0004 행 추가 (제목 / Accepted / 2026-09-08)
 - [ ] T032 [P] 후속 이슈 4건 등록 (`gh issue create`) — ① `JacocoCoverageVerification` 80% 룰이 `check`에 미연결되어 실효 없음, ② `NullAway:AnnotatedPackages`가 `"com.uber"`로 박혀 `org.specter.converter`를 검사하지 않음, ③ `test-conventions`와 `:domain/build.gradle.kts`의 junit/assertj 중복 선언, ④ configuration cache 도입(Isolated Projects는 #186 때문에 build-logic 구조 재검토 필요) (FR-017, SC-008)
-- [ ] T033 최종 확인 — `find korConverter -name gradle.properties`가 빈 결과(SC-005), `build-logic/conventions/build.gradle.kts`에 toolchain 선언 1곳 존재하고 데몬 JVM 위임 지점 0곳(SC-010), `git diff main`에 애플리케이션 `.java` 변경 0건
-- [ ] T033a **명시 선언 검증 (SC-006)** — 6개 모듈 `build.gradle.kts` 각각이 자기 파일 안에 `id("...-conventions")`를 선언하는지 확인. 기대: 6/6. 라벨·상속·`subprojects` 등 다른 파일을 읽어야 알 수 있는 암묵적 적용 경로가 0건이어야 한다 (`grep -c 'id("[a-z-]*-conventions")' <각 모듈 스크립트>`)
-- [ ] T033b **버전 중복 검증 (SC-007)** — `build-logic/` 이하에서 리터럴 버전 문자열을 추출해 `gradle/libs.versions.toml`의 항목과 대조. 카탈로그에 이미 있는 구성요소의 버전이 빌드 정의에 리터럴로 재선언된 건이 0건이어야 한다. **유일한 허용 예외**는 `build-logic/settings.gradle.kts`의 typesafe-conventions 버전 1건(자기 참조 순환 회피). 2건 이상이면 실패 — 이 기준이 typesafe-conventions 채택의 근거이므로([research.md](./research.md) R-1) 반드시 판정한다
+- [X] T033 최종 확인 — `find korConverter -name gradle.properties`가 빈 결과(SC-005), `build-logic/conventions/build.gradle.kts`에 toolchain 선언 1곳 존재하고 데몬 JVM 위임 지점 0곳(SC-010), `git diff main`에 애플리케이션 `.java` 변경 0건
+- [X] T033a **명시 선언 검증 (SC-006)** — 6개 모듈 `build.gradle.kts` 각각이 자기 파일 안에 `id("...-conventions")`를 선언하는지 확인. 기대: 6/6. 라벨·상속·`subprojects` 등 다른 파일을 읽어야 알 수 있는 암묵적 적용 경로가 0건이어야 한다 (`grep -c 'id("[a-z-]*-conventions")' <각 모듈 스크립트>`)
+- [X] T033b **버전 중복 검증 (SC-007)** — `build-logic/` 이하에서 리터럴 버전 문자열을 추출해 `gradle/libs.versions.toml`의 항목과 대조. 카탈로그에 이미 있는 구성요소의 버전이 빌드 정의에 리터럴로 재선언된 건이 0건이어야 한다. **유일한 허용 예외**는 `build-logic/settings.gradle.kts`의 typesafe-conventions 버전 1건(자기 참조 순환 회피). 2건 이상이면 실패 — 이 기준이 typesafe-conventions 채택의 근거이므로([research.md](./research.md) R-1) 반드시 판정한다
 - [ ] T034 PR 생성 — 본문에 T023의 diff 결과(42건 0차이)와 T028의 게이트 결과를 기록한다. 기준선 파일 자체는 커밋하지 않는다 ([data-model.md](./data-model.md) E8)
 
 ---
