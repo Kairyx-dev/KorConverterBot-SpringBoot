@@ -1,10 +1,8 @@
 plugins {
-    id("java-conventions")
+    java
 }
 
 dependencies {
-    implementation(project(":domain"))
-
     testRuntimeOnly(libs.junit.platform.launcher)
     testRuntimeOnly(libs.junit.jupiter.engine)
 
@@ -12,6 +10,4 @@ dependencies {
     testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.junit.jupiter.params)
     testImplementation(libs.assertj)
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.junit)
 }

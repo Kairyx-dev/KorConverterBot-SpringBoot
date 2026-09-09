@@ -1,4 +1,6 @@
 plugins {
+    id("java-conventions")
+    id("test-conventions")
     alias(libs.plugins.pitest)
 }
 

@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: gradle
-    directory: /
+    directories: ["/", "/build-logic"]
     schedule:
       interval: daily
       day: monday

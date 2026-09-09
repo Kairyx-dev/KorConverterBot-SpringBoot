@@ -1,3 +1,10 @@
+// 순서 고정 (java → spring → boot) — BootJar.enabled 는 spring(false) → boot(true) configureEach 순서로 결정된다.
+plugins {
+    id("java-conventions")
+    id("spring-conventions")
+    id("boot-conventions")
+}
+
 dependencies {
     implementation(project(":configuration"))
     implementation(project(":adapter-bot"))
